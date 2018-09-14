@@ -39,10 +39,7 @@ public class DiceController : MonoBehaviour {
 		prevPos = target;
 
 		if (Input.GetKey (KeyCode.RightArrow)) {
-			if (script.board)
-			{
-					
-			}
+
 			target = transform.position + MOVEX;
 			SetAnimationParam (1);
 			return;
@@ -71,4 +68,69 @@ public class DiceController : MonoBehaviour {
 	void Move(){
 		transform.position = Vector3.MoveTowards (transform.position, target, step * Time.deltaTime);
 	}
+
+    /**
+     * さいころの各状態と入力からさいころの次の状態を求める
+     * @param int a 面Aの数字
+     * @param int b 面Bの数字
+     * @param string direction 入力方向(up/down/left/right)
+     * @return int 2桁の数字(56なら面Aが5, 面Bが6)
+     */
+     int computeNextDice(int a, int b, string direction)
+    {
+        int nextA = 0, nextB = 0;
+        switch (a)
+        {
+            case 1:
+                switch (direction)
+                {
+                    case "up":
+                        nextA = b;
+                        nextB = 6;
+                        break;
+                    case "down":
+                        nextA = 7-b;
+                        nextB = 1;
+                        break;
+                    case "left":
+                        switch (b)
+                        {
+                            case 2:
+                                nextA = 3;
+                                break;
+                            case 3:
+                                nextA = 5;
+                                break;
+                            case 4:
+                                nextA = 2;
+                                break;
+                            case 5:
+                                nextA = 4;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                    case "right":
+                        //ここから
+
+                        break; 
+                }
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+
+        }
+
+        return nextA * 10 + nextB;
+    }
+
+    int 
 }
