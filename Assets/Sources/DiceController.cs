@@ -10,6 +10,7 @@ public class DiceController : MonoBehaviour {
 	Vector3 MOVEX = new Vector3(1, 0, 0);
 	Vector3 MOVEZ = new Vector3(0, 0, 1);
 
+	public int X = 0, Z = 0;
 	public int diceId = 0; //!サイコロのID
 	public int surfaceA = 1;
 	public int surfaceB = 2;
@@ -39,27 +40,52 @@ public class DiceController : MonoBehaviour {
 		prevPos = target;
 
 		if (Input.GetKey (KeyCode.RightArrow)) {
-			if (script.board)
+			if (X+1 < script.board.GetLength(0) && script.board[X+1, Z] == -1)
 			{
-					
+				target = transform.position + MOVEX;
+				script.board[X, Z] = -1;
+				X += 1;
+				script.board[X, Z] = diceId;
+				Debug.Log("X = " + X + " " + "Z = " + Z);
+				SetAnimationParam (1);
 			}
-			target = transform.position + MOVEX;
-			SetAnimationParam (1);
 			return;
 		}
 		if (Input.GetKey (KeyCode.LeftArrow)) {
-			target = transform.position - MOVEX;
-			SetAnimationParam (2);
+			if (0 <= X-1 && script.board[X-1, Z] == -1)
+			{
+				target = transform.position - MOVEX;
+				script.board[X, Z] = -1;
+				X -= 1;
+				script.board[X, Z] = diceId;
+				Debug.Log("X = " + X + " " + "Z = " + Z);
+				SetAnimationParam (2);
+			}
 			return;
 		}
 		if (Input.GetKey (KeyCode.UpArrow)) {
-			target = transform.position + MOVEZ;
-			SetAnimationParam (3);
+			if (Z+1 < script.board.GetLength(1) && script.board[X, Z+1] == -1)
+			{
+				target = transform.position + MOVEZ;
+				script.board[X, Z] = -1;
+				Z += 1;
+				script.board[X, Z] = diceId;
+				Debug.Log("X = " + X + " " + "Z = " + Z);
+				SetAnimationParam (3);
+
+			}
 			return;
 		}
 		if (Input.GetKey (KeyCode.DownArrow)) {
-			target = transform.position - MOVEZ;
-			SetAnimationParam (0);
+			if (0 <= Z-1 && script.board[X, Z-1] == -1)
+			{
+				target = transform.position - MOVEZ;
+				script.board[X, Z] = -1;
+				Z -= 1;
+				script.board[X, Z] = diceId;
+				Debug.Log("X = " + X + " " + "Z = " + Z);
+				SetAnimationParam (0);
+			}
 			return;
 		}
 	}
