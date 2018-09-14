@@ -115,11 +115,11 @@ public class DiceController : MonoBehaviour {
                 {
                     case "up":
                         nextA = b;
-                        nextB = 6;
+                        nextB = 7-a;
                         break;
                     case "down":
                         nextA = 7-b;
-                        nextB = 1;
+                        nextB = a;
                         break;
                     case "left":
                         switch (b)
@@ -140,20 +140,269 @@ public class DiceController : MonoBehaviour {
                         nextB = b;
                         break;
                     case "right":
-                        //ここから
-
+                        switch (b)
+                        {
+                            case 2:
+                                nextA = 4;
+                                break;
+                            case 3:
+                                nextA = 2;
+                                break;
+                            case 4:
+                                nextA = 5;
+                                break;
+                            case 5:
+                                nextA = 3;
+                                break;
+                        }
+                        nextB = b;
                         break; 
                 }
                 break;
             case 2:
+                switch (direction)
+                {
+                    case "up":
+                        nextA = b;
+                        nextB = 7 - a;
+                        break;
+                    case "down":
+                        nextA = 7 - b;
+                        nextB = a;
+                        break;
+                    case "left":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 4;
+                                break;
+                            case 3:
+                                nextA = 1;
+                                break;
+                            case 4:
+                                nextA = 6;
+                                break;
+                            case 6:
+                                nextA = 3;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                    case "right":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 3;
+                                break;
+                            case 3:
+                                nextA = 6;
+                                break;
+                            case 4:
+                                nextA = 1;
+                                break;
+                            case 6:
+                                nextA = 4;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                }
                 break;
             case 3:
+                switch (direction)
+                {
+                    case "up":
+                        nextA = b;
+                        nextB = 7 - a;
+                        break;
+                    case "down":
+                        nextA = 7 - b;
+                        nextB = a;
+                        break;
+                    case "left":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 2;
+                                break;
+                            case 2:
+                                nextA = 6;
+                                break;
+                            case 5:
+                                nextA = 1;
+                                break;
+                            case 6:
+                                nextA = 5;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                    case "right":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 5;
+                                break;
+                            case 2:
+                                nextA = 1;
+                                break;
+                            case 5:
+                                nextA = 6;
+                                break;
+                            case 6:
+                                nextA = 2;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                }
                 break;
             case 4:
+                switch (direction)
+                {
+                    case "up":
+                        nextA = b;
+                        nextB = 7 - a;
+                        break;
+                    case "down":
+                        nextA = 7 - b;
+                        nextB = a;
+                        break;
+                    case "left":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 5;
+                                break;
+                            case 2:
+                                nextA = 1;
+                                break;
+                            case 5:
+                                nextA = 6;
+                                break;
+                            case 6:
+                                nextA = 2;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                    case "right":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 2;
+                                break;
+                            case 2:
+                                nextA = 6;
+                                break;
+                            case 5:
+                                nextA = 1;
+                                break;
+                            case 6:
+                                nextA = 5;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                }
                 break;
             case 5:
+                switch (direction)
+                {
+                    case "up":
+                        nextA = b;
+                        nextB = 7 - a;
+                        break;
+                    case "down":
+                        nextA = 7 - b;
+                        nextB = a;
+                        break;
+                    case "left":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 3;
+                                break;
+                            case 3:
+                                nextA = 6;
+                                break;
+                            case 4:
+                                nextA = 1;
+                                break;
+                            case 6:
+                                nextA = 4;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                    case "right":
+                        switch (b)
+                        {
+                            case 1:
+                                nextA = 4;
+                                break;
+                            case 3:
+                                nextA = 1;
+                                break;
+                            case 4:
+                                nextA = 6;
+                                break;
+                            case 6:
+                                nextA = 3;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                }
                 break;
             case 6:
+                switch (direction)
+                {
+                    case "up":
+                        nextA = b;
+                        nextB = 7 - a;
+                        break;
+                    case "down":
+                        nextA = 7 - b;
+                        nextB = a;
+                        break;
+                    case "left":
+                        switch (b)
+                        {
+                            case 2:
+                                nextA = 4;
+                                break;
+                            case 3:
+                                nextA = 2;
+                                break;
+                            case 4:
+                                nextA = 5;
+                                break;
+                            case 5:
+                                nextA = 3;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                    case "right":
+                        switch (b)
+                        {
+                            case 2:
+                                nextA = 3;
+                                break;
+                            case 3:
+                                nextA = 5;
+                                break;
+                            case 4:
+                                nextA = 2;
+                                break;
+                            case 5:
+                                nextA = 4;
+                                break;
+                        }
+                        nextB = b;
+                        break;
+                }
                 break;
 
         }
