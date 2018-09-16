@@ -9,9 +9,9 @@ public class DiceController : MonoBehaviour {
 
 	Vector3 rotatePoint = Vector3.zero;
 	Vector3 rotateAxis = Vector3.zero;
-	float cubeAngle = 0f;
+	float diceAngle = 0f;
 
-	float cubeSizeHalf;
+	float diceSizeHalf;
 	bool isRotate = false;
 
 	public int X = 0, Z = 0;
@@ -24,7 +24,7 @@ public class DiceController : MonoBehaviour {
 	void Start () {
 		Board = GameObject.Find ("Board");
 		script = Board.GetComponent<MainGameController>();
-		cubeSizeHalf = transform.localScale.x / 2f;
+		diceSizeHalf = transform.localScale.x / 2f;
 	}
 	
 	// Update is called once per frame
@@ -43,9 +43,9 @@ public class DiceController : MonoBehaviour {
 				script.board[X, Z] = -1;
 				X += 1;
 				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(cubeSizeHalf, -cubeSizeHalf, 0f);
+				rotatePoint = transform.position + new Vector3(diceSizeHalf, -diceSizeHalf, 0f);
 				rotateAxis = new Vector3 (0, 0, -1);
-				StartCoroutine (MoveCube());
+				StartCoroutine (MoveDice());
 			}
 			return;
 		}
@@ -55,9 +55,9 @@ public class DiceController : MonoBehaviour {
 				script.board[X, Z] = -1;
 				X -= 1;
 				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(-cubeSizeHalf, -cubeSizeHalf, 0f);
+				rotatePoint = transform.position + new Vector3(-diceSizeHalf, -diceSizeHalf, 0f);
 				rotateAxis = new Vector3 (0, 0, 1);
-				StartCoroutine (MoveCube());
+				StartCoroutine (MoveDice());
 			}
 			return;
 		}
@@ -67,9 +67,9 @@ public class DiceController : MonoBehaviour {
 				script.board[X, Z] = -1;
 				Z += 1;
 				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(0f, -cubeSizeHalf, cubeSizeHalf);
+				rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, diceSizeHalf);
 				rotateAxis = new Vector3 (1, 0, 0);
-				StartCoroutine (MoveCube());
+				StartCoroutine (MoveDice());
 			}
 			return;
 		}
@@ -79,27 +79,27 @@ public class DiceController : MonoBehaviour {
 				script.board[X, Z] = -1;
 				Z -= 1;
 				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(0f, -cubeSizeHalf, -cubeSizeHalf);
+				rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, -diceSizeHalf);
 				rotateAxis = new Vector3 (-1, 0, 0);
-				StartCoroutine (MoveCube());
+				StartCoroutine (MoveDice());
 			}
 			return;
 		}
 	}
 
-	IEnumerator MoveCube(){
+	IEnumerator MoveDice(){
 		isRotate = true;
 
 		float sumAngle = 0f;
 		while (sumAngle < 90f) {
-			cubeAngle = 15f;
-			sumAngle += cubeAngle;
+			diceAngle = 5f;
+			sumAngle += diceAngle;
 
 			if (sumAngle > 90f)
 			{
-				cubeAngle -= sumAngle - 90f;
+				diceAngle -= sumAngle - 90f;
 			}
-			transform.RotateAround (rotatePoint, rotateAxis, cubeAngle);
+			transform.RotateAround (rotatePoint, rotateAxis, diceAngle);
 
 			yield return null;
 		}
@@ -116,7 +116,7 @@ public class DiceController : MonoBehaviour {
      * @param string direction 入力方向(up/down/left/right)
      * @return int 2桁の数字(56なら面Aが5, 面Bが6)
      */
-     int computeNextDice(int a, int b, string direction)
+     int ComputeNextDice(int a, int b, string direction)
     {
         int nextA = 0, nextB = 0;
         switch (a)
