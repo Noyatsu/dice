@@ -7,95 +7,106 @@ public class DiceController : MonoBehaviour {
 	GameObject Board;
 	MainGameController script;
 
-	Vector3 MOVEX = new Vector3(1, 0, 0);
-	Vector3 MOVEZ = new Vector3(0, 0, 1);
+	Vector3 rotatePoint = Vector3.zero;
+	Vector3 rotateAxis = Vector3.zero;
+	float cubeAngle = 0f;
+
+	float cubeSizeHalf;
+	bool isRotate = false;
 
 	public int X = 0, Z = 0;
 	public int diceId = 0; //!サイコロのID
 	public int surfaceA = 1;
 	public int surfaceB = 2;
 	float step = 2f;
-	Vector3 target;
-	Vector3 prevPos;
-	Animator animator;
 
 	// Use this for initialization
 	void Start () {
-		target = transform.position;
-		animator = GetComponent<Animator> ();
 		Board = GameObject.Find ("Board");
 		script = Board.GetComponent<MainGameController>();
+		cubeSizeHalf = transform.localScale.x / 2f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (transform.position == target)
+		if (!isRotate)
 		{
-				SetTargetPosition ();
+			SetTargetPosition ();
 		}
-		Move ();
 	}
 
 	void SetTargetPosition(){
-		prevPos = target;
 
 		if (Input.GetKey (KeyCode.RightArrow)) {
 			if (X+1 < script.board.GetLength(0) && script.board[X+1, Z] == -1)
 			{
-				target = transform.position + MOVEX;
 				script.board[X, Z] = -1;
 				X += 1;
 				script.board[X, Z] = diceId;
-				Debug.Log("X = " + X + " " + "Z = " + Z);
-				SetAnimationParam (1);
+				rotatePoint = transform.position + new Vector3(cubeSizeHalf, -cubeSizeHalf, 0f);
+				rotateAxis = new Vector3 (0, 0, -1);
+				StartCoroutine (MoveCube());
 			}
 			return;
 		}
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 			if (0 <= X-1 && script.board[X-1, Z] == -1)
 			{
-				target = transform.position - MOVEX;
 				script.board[X, Z] = -1;
 				X -= 1;
 				script.board[X, Z] = diceId;
-				Debug.Log("X = " + X + " " + "Z = " + Z);
-				SetAnimationParam (2);
+				rotatePoint = transform.position + new Vector3(-cubeSizeHalf, -cubeSizeHalf, 0f);
+				rotateAxis = new Vector3 (0, 0, 1);
+				StartCoroutine (MoveCube());
 			}
 			return;
 		}
 		if (Input.GetKey (KeyCode.UpArrow)) {
 			if (Z+1 < script.board.GetLength(1) && script.board[X, Z+1] == -1)
 			{
-				target = transform.position + MOVEZ;
 				script.board[X, Z] = -1;
 				Z += 1;
 				script.board[X, Z] = diceId;
-				Debug.Log("X = " + X + " " + "Z = " + Z);
-				SetAnimationParam (3);
-
+				rotatePoint = transform.position + new Vector3(0f, -cubeSizeHalf, cubeSizeHalf);
+				rotateAxis = new Vector3 (1, 0, 0);
+				StartCoroutine (MoveCube());
 			}
 			return;
 		}
 		if (Input.GetKey (KeyCode.DownArrow)) {
 			if (0 <= Z-1 && script.board[X, Z-1] == -1)
 			{
-				target = transform.position - MOVEZ;
 				script.board[X, Z] = -1;
 				Z -= 1;
 				script.board[X, Z] = diceId;
-				Debug.Log("X = " + X + " " + "Z = " + Z);
-				SetAnimationParam (0);
+				rotatePoint = transform.position + new Vector3(0f, -cubeSizeHalf, -cubeSizeHalf);
+				rotateAxis = new Vector3 (-1, 0, 0);
+				StartCoroutine (MoveCube());
 			}
 			return;
 		}
 	}
 
-	void SetAnimationParam(int param){
-		animator.SetInteger ("WalkParam", param);
-	}
+	IEnumerator MoveCube(){
+		isRotate = true;
 
-	void Move(){
-		transform.position = Vector3.MoveTowards (transform.position, target, step * Time.deltaTime);
+		float sumAngle = 0f;
+		while (sumAngle < 90f) {
+			cubeAngle = 15f;
+			sumAngle += cubeAngle;
+
+			if (sumAngle > 90f)
+			{
+				cubeAngle -= sumAngle - 90f;
+			}
+			transform.RotateAround (rotatePoint, rotateAxis, cubeAngle);
+
+			yield return null;
+		}
+
+		isRotate = false;
+
+		yield break;
 	}
 
     /**
@@ -410,5 +421,4 @@ public class DiceController : MonoBehaviour {
         return nextA * 10 + nextB;
     }
 
-    int 
 }
