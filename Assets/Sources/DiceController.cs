@@ -13,6 +13,7 @@ public class DiceController : MonoBehaviour {
 
 	float diceSizeHalf;
 	bool isRotate = false;
+    public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
 
 	public int X = 0, Z = 0;
 	public int diceId = 0; //!サイコロのID
@@ -35,57 +36,105 @@ public class DiceController : MonoBehaviour {
 		}
 	}
 
-	void SetTargetPosition(){
+    void SetTargetPosition()
+    {
+        //もし上にキャラクターが乗っていたら
+        if (isSelected)
+        {
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                if (X + 1 < script.board.GetLength(0) && script.board[X + 1, Z] == -1)
+                {
+                    //現在の位置に-1を代入
+                    script.board[X, Z] = -1;
+                    script.board_num[X, Z] = -1;
+                    X += 1; //インクリメント
 
-		if (Input.GetKey (KeyCode.RightArrow)) {
-			if (X+1 < script.board.GetLength(0) && script.board[X+1, Z] == -1)
-			{
-				script.board[X, Z] = -1;
-				X += 1;
-				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(diceSizeHalf, -diceSizeHalf, 0f);
-				rotateAxis = new Vector3 (0, 0, -1);
-				StartCoroutine (MoveDice());
-			}
-			return;
-		}
-		if (Input.GetKey (KeyCode.LeftArrow)) {
-			if (0 <= X-1 && script.board[X-1, Z] == -1)
-			{
-				script.board[X, Z] = -1;
-				X -= 1;
-				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(-diceSizeHalf, -diceSizeHalf, 0f);
-				rotateAxis = new Vector3 (0, 0, 1);
-				StartCoroutine (MoveDice());
-			}
-			return;
-		}
-		if (Input.GetKey (KeyCode.UpArrow)) {
-			if (Z+1 < script.board.GetLength(1) && script.board[X, Z+1] == -1)
-			{
-				script.board[X, Z] = -1;
-				Z += 1;
-				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, diceSizeHalf);
-				rotateAxis = new Vector3 (1, 0, 0);
-				StartCoroutine (MoveDice());
-			}
-			return;
-		}
-		if (Input.GetKey (KeyCode.DownArrow)) {
-			if (0 <= Z-1 && script.board[X, Z-1] == -1)
-			{
-				script.board[X, Z] = -1;
-				Z -= 1;
-				script.board[X, Z] = diceId;
-				rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, -diceSizeHalf);
-				rotateAxis = new Vector3 (-1, 0, 0);
-				StartCoroutine (MoveDice());
-			}
-			return;
-		}
-	}
+                    //さいころの面を計算
+                    int result = ComputeNextDice(surfaceA, surfaceB, "right");
+                    surfaceA = result / 10;
+                    surfaceB = result - surfaceA*10;
+
+                    //新たなる位置に代入
+                    script.board[X, Z] = diceId;
+                    script.board_num[X, Z] = surfaceA;
+
+                    rotatePoint = transform.position + new Vector3(diceSizeHalf, -diceSizeHalf, 0f);
+                    rotateAxis = new Vector3(0, 0, -1);
+                    StartCoroutine(MoveDice());
+                }
+                Debug.Log(surfaceA);
+                return;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                if (0 <= X - 1 && script.board[X - 1, Z] == -1)
+                {
+                    script.board[X, Z] = -1;
+                    script.board_num[X, Z] = -1;
+                    X -= 1;
+
+                    //さいころの面を計算
+                    int result = ComputeNextDice(surfaceA, surfaceB, "left");
+                    surfaceA = result / 10;
+                    surfaceB = result - surfaceA*10;
+
+                    script.board[X, Z] = diceId;
+                    script.board_num[X, Z] = surfaceA;
+                    rotatePoint = transform.position + new Vector3(-diceSizeHalf, -diceSizeHalf, 0f);
+                    rotateAxis = new Vector3(0, 0, 1);
+                    StartCoroutine(MoveDice());
+                }
+                Debug.Log(surfaceA);
+                return;
+            }
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                if (Z + 1 < script.board.GetLength(1) && script.board[X, Z + 1] == -1)
+                {
+                    script.board[X, Z] = -1;
+                    script.board_num[X, Z] = -1;
+                    Z += 1;
+
+                    //さいころの面を計算
+                    int result = ComputeNextDice(surfaceA, surfaceB, "up");
+                    surfaceA = result / 10;
+                    surfaceB = result - surfaceA*10;
+
+                    script.board[X, Z] = diceId;
+                    script.board_num[X, Z] = surfaceA;
+                    rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, diceSizeHalf);
+                    rotateAxis = new Vector3(1, 0, 0);
+                    StartCoroutine(MoveDice());
+                }
+                Debug.Log(surfaceA);
+                return;
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                if (0 <= Z - 1 && script.board[X, Z - 1] == -1)
+                {
+                    script.board[X, Z] = -1;
+                    script.board_num[X, Z] = -1;
+                    Z -= 1;
+
+                    //さいころの面を計算
+                    int result = ComputeNextDice(surfaceA, surfaceB, "down");
+                    surfaceA = result / 10;
+                    surfaceB = result - surfaceA*10;
+
+                    script.board[X, Z] = diceId;
+                    script.board_num[X, Z] = surfaceA;
+                    rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, -diceSizeHalf);
+                    rotateAxis = new Vector3(-1, 0, 0);
+                    StartCoroutine(MoveDice());
+                }
+                Debug.Log(surfaceA);
+                return;
+            }
+        }
+    }
+	
 
 	IEnumerator MoveDice(){
 		isRotate = true;
@@ -417,7 +466,6 @@ public class DiceController : MonoBehaviour {
                 break;
 
         }
-
         return nextA * 10 + nextB;
     }
 
