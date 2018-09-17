@@ -13,7 +13,7 @@ public class DiceController : MonoBehaviour {
 
 	float diceSizeHalf;
 	bool isRotate = false;
-    bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
+    public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
 
 	public int X = 0, Z = 0;
 	public int diceId = 0; //!サイコロのID
