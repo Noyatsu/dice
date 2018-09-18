@@ -494,6 +494,7 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 236856146f27f6e44a3fe59aff9500b4, type: 2}
   m_IsPrefabAsset: 0
+
 --- !u!1001 &2032933063
 Prefab:
   m_ObjectHideFlags: 0
