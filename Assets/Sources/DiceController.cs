@@ -12,7 +12,6 @@ public class DiceController : MonoBehaviour {
 	float diceAngle = 0f;
 
 	float diceSizeHalf;
-	bool isRotate = false;
     public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
 
 	public int X = 0, Z = 0;
@@ -30,7 +29,7 @@ public class DiceController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!isRotate)
+		if (!script.isRotate)
 		{
 			SetTargetPosition ();
 		}
@@ -137,7 +136,7 @@ public class DiceController : MonoBehaviour {
 	
 
 	IEnumerator MoveDice(){
-		isRotate = true;
+        script.isRotate = true;
 
 		float sumAngle = 0f;
 		while (sumAngle < 90f) {
@@ -153,7 +152,7 @@ public class DiceController : MonoBehaviour {
 			yield return null;
 		}
 
-		isRotate = false;
+        script.isRotate = false;
 
 		yield break;
 	}
