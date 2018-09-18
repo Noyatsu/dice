@@ -45,9 +45,6 @@ public class DiceController : MonoBehaviour {
             {
                 if (X + 1 < script.board.GetLength(0) && script.board[X + 1, Z] == -1)
                 {
-                    //現在の位置に-1を代入
-                    script.board[X, Z] = -1;
-                    script.board_num[X, Z] = -1;
                     X += 1; //インクリメント
 
                     //さいころの面を計算
@@ -62,6 +59,10 @@ public class DiceController : MonoBehaviour {
                     rotatePoint = transform.position + new Vector3(diceSizeHalf, -diceSizeHalf, 0f);
                     rotateAxis = new Vector3(0, 0, -1);
                     StartCoroutine(MoveDice());
+
+                    //過去の位置に-1を代入
+                    script.board[X-1, Z] = -1;
+                    script.board_num[X-1, Z] = -1;
                 }
                 Debug.Log(surfaceA);
                 return;
@@ -70,8 +71,6 @@ public class DiceController : MonoBehaviour {
             {
                 if (0 <= X - 1 && script.board[X - 1, Z] == -1)
                 {
-                    script.board[X, Z] = -1;
-                    script.board_num[X, Z] = -1;
                     X -= 1;
 
                     //さいころの面を計算
@@ -84,6 +83,9 @@ public class DiceController : MonoBehaviour {
                     rotatePoint = transform.position + new Vector3(-diceSizeHalf, -diceSizeHalf, 0f);
                     rotateAxis = new Vector3(0, 0, 1);
                     StartCoroutine(MoveDice());
+
+                    script.board[X+1, Z] = -1;
+                    script.board_num[X+1, Z] = -1;
                 }
                 Debug.Log(surfaceA);
                 return;
@@ -92,8 +94,6 @@ public class DiceController : MonoBehaviour {
             {
                 if (Z + 1 < script.board.GetLength(1) && script.board[X, Z + 1] == -1)
                 {
-                    script.board[X, Z] = -1;
-                    script.board_num[X, Z] = -1;
                     Z += 1;
 
                     //さいころの面を計算
@@ -106,6 +106,9 @@ public class DiceController : MonoBehaviour {
                     rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, diceSizeHalf);
                     rotateAxis = new Vector3(1, 0, 0);
                     StartCoroutine(MoveDice());
+
+                    script.board[X, Z-1] = -1;
+                    script.board_num[X, Z-1] = -1;
                 }
                 Debug.Log(surfaceA);
                 return;
@@ -114,20 +117,21 @@ public class DiceController : MonoBehaviour {
             {
                 if (0 <= Z - 1 && script.board[X, Z - 1] == -1)
                 {
-                    script.board[X, Z] = -1;
-                    script.board_num[X, Z] = -1;
                     Z -= 1;
 
                     //さいころの面を計算
                     int result = ComputeNextDice(surfaceA, surfaceB, "down");
                     surfaceA = result / 10;
-                    surfaceB = result - surfaceA*10;
+                    surfaceB = result - surfaceA * 10;
 
                     script.board[X, Z] = diceId;
                     script.board_num[X, Z] = surfaceA;
                     rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, -diceSizeHalf);
                     rotateAxis = new Vector3(-1, 0, 0);
                     StartCoroutine(MoveDice());
+
+                    script.board[X, Z+1] = -1;
+                    script.board_num[X, Z+1] = -1;
                 }
                 Debug.Log(surfaceA);
                 return;
