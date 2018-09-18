@@ -7,6 +7,7 @@ public class MainGameController : MonoBehaviour
 
     public int[,] board = new int[10, 10]; //!<さいころのIDを格納
     public int[,] board_num = new int[10, 10]; //!< さいころの面を格納
+    List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     double timeElapsed = 0.0; //!< イベント用フレームカウント
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
@@ -29,14 +30,13 @@ public class MainGameController : MonoBehaviour
             }
         }
 
-        //以下仮
+        //初期用配列設定
         board[0, 0] = maxDiceId;
         board_num[0, 0] = 1;
-        maxDiceId++;
-        board[4, 4] = maxDiceId;
-        board_num[4, 4] = 1;
         
         Dice = GameObject.Find("Dice");
+        dices.Add(Dice);  //リストにオブジェクトを追加
+
         Aqui = GameObject.Find("Aqui");
         objAquiController = Aqui.GetComponent<AquiController>();
         objDiceController = Dice.GetComponent<DiceController>();
@@ -68,6 +68,15 @@ public class MainGameController : MonoBehaviour
                 objAquiController.SetTargetPosition(3);
                 objDiceController.SetTargetPosition(3);
             }
+            //動いたときにダイスが変わる場合
+            if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
+            {
+                objDiceController.isSelected = false; //選択解除
+                Dice = dices[board[objAquiController.x, objAquiController.z]];
+                Debug.Log(board[objAquiController.x, objAquiController.z]);
+                objDiceController = Dice.GetComponent<DiceController>();
+                objDiceController.isSelected = true; //選択
+            }
         }
 
         timeElapsed += Time.deltaTime;
@@ -76,8 +85,8 @@ public class MainGameController : MonoBehaviour
         if (timeElapsed >= 5.0)
         {
             // 配置する座標を決定
-            int x = Random.Range(1, 7);
-            int z = Random.Range(1, 7);
+            int x = Random.Range(0, 10);
+            int z = Random.Range(0, 10);
 
             // 配置する面を決定
             int a = Random.Range(1, 6);
@@ -234,6 +243,8 @@ public class MainGameController : MonoBehaviour
                 objDiceController.Z = z;
                 objDiceController.surfaceA = a;
                 objDiceController.surfaceB = b;
+                objDiceController.diceId = maxDiceId;
+                dices.Add(objDice); //リストにオブジェクトを追加
                 Debug.Log(objDiceController.surfaceA);
                 Debug.Log(objDiceController.surfaceB);
                 board_num[x, z] = a;
