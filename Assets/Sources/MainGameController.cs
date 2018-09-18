@@ -9,8 +9,12 @@ public class MainGameController : MonoBehaviour
     public int[,] board_num = new int[10, 10]; //!< さいころの面を格納
     double timeElapsed = 0.0; //!< イベント用フレームカウント
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
+    public bool isRotate_dice = false; //!< さいころが回転中かどうか
+    public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
 
-    GameObject Dice;
+    GameObject Dice, Aqui;
+    AquiController objAquiController;
+    DiceController objDiceController;
 
     // Use this for initialization
     void Start()
@@ -33,11 +37,39 @@ public class MainGameController : MonoBehaviour
         board_num[4, 4] = 1;
         
         Dice = GameObject.Find("Dice");
+        Aqui = GameObject.Find("Aqui");
+        objAquiController = Aqui.GetComponent<AquiController>();
+        objDiceController = Dice.GetComponent<DiceController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // キー入力一括制御
+        if (isRotate_dice == false && isRotate_charactor == false)
+        {
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                objAquiController.SetTargetPosition(2);
+                objDiceController.SetTargetPosition(2);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                objAquiController.SetTargetPosition(0);
+                objDiceController.SetTargetPosition(0);
+            }
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                objAquiController.SetTargetPosition(1);
+                objDiceController.SetTargetPosition(1);
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                objAquiController.SetTargetPosition(3);
+                objDiceController.SetTargetPosition(3);
+            }
+        }
+
         timeElapsed += Time.deltaTime;
 
         // 5秒ごとにさいころ追加
