@@ -9,6 +9,7 @@ public class MainGameController : MonoBehaviour
     public int[,] board_num = new int[10, 10]; //!< さいころの面を格納
     double timeElapsed = 0.0; //!< イベント用フレームカウント
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
+    public bool isRotate = false; //!< さいころが回転中かどうか
 
     GameObject Dice;
 
