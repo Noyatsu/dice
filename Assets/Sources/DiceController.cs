@@ -29,18 +29,15 @@ public class DiceController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!script.isRotate)
-		{
-			SetTargetPosition ();
-		}
+
 	}
 
-    void SetTargetPosition()
+    public void SetTargetPosition(int d)
     {
         //もし上にキャラクターが乗っていたら
         if (isSelected)
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (d == 2)
             {
                 if (X + 1 < script.board.GetLength(0) && script.board[X + 1, Z] == -1)
                 {
@@ -65,7 +62,7 @@ public class DiceController : MonoBehaviour {
                 Debug.Log(surfaceA);
                 return;
             }
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (d == 0)
             {
                 if (0 <= X - 1 && script.board[X - 1, Z] == -1)
                 {
@@ -87,7 +84,7 @@ public class DiceController : MonoBehaviour {
                 Debug.Log(surfaceA);
                 return;
             }
-            if (Input.GetKey(KeyCode.UpArrow))
+            if (d == 1)
             {
                 if (Z + 1 < script.board.GetLength(1) && script.board[X, Z + 1] == -1)
                 {
@@ -109,7 +106,7 @@ public class DiceController : MonoBehaviour {
                 Debug.Log(surfaceA);
                 return;
             }
-            if (Input.GetKey(KeyCode.DownArrow))
+            if (d == 3)
             {
                 if (0 <= Z - 1 && script.board[X, Z - 1] == -1)
                 {
@@ -136,7 +133,7 @@ public class DiceController : MonoBehaviour {
 	
 
 	IEnumerator MoveDice(){
-        script.isRotate = true;
+        script.isRotate_dice = true;
 
 		float sumAngle = 0f;
 		while (sumAngle < 90f) {
@@ -152,9 +149,9 @@ public class DiceController : MonoBehaviour {
 			yield return null;
 		}
 
-        script.isRotate = false;
+        script.isRotate_dice = false;
 
-		yield break;
+        yield break;
 	}
 
     /**
