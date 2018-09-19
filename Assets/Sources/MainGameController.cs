@@ -94,7 +94,7 @@ public class MainGameController : MonoBehaviour
         timeElapsed += Time.deltaTime;
 
         // 5秒ごとにさいころ追加
-        if (timeElapsed >= 7f/level)
+        if (timeElapsed >= (10.0f/level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
