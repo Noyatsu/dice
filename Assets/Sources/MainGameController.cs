@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class MainGameController : MonoBehaviour
 {
-
+    public int boardSize = 10;
     public int[,] board = new int[10, 10]; //!<さいころのIDを格納
     public int[,] board_num = new int[10, 10]; //!< さいころの面を格納
     List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
+    List<GameObject> vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
     double timeElapsed = 0.0; //!< イベント用フレームカウント
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
 
-    GameObject Dice, Aqui;
+    GameObject Dice, Aqui, VanishingDice;
     AquiController objAquiController;
     DiceController objDiceController;
 
@@ -51,29 +52,40 @@ public class MainGameController : MonoBehaviour
             if (Input.GetKey(KeyCode.RightArrow))
             {
                 objAquiController.SetTargetPosition(2);
-                objDiceController.SetTargetPosition(2);
+                if(objDiceController.SetTargetPosition(2)) {
+                    VanishDice(objDiceController.X, objDiceController.Z);
+                }
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 objAquiController.SetTargetPosition(0);
-                objDiceController.SetTargetPosition(0);
+                if (objDiceController.SetTargetPosition(0))
+                {
+                    VanishDice(objDiceController.X, objDiceController.Z);
+                }
             }
             if (Input.GetKey(KeyCode.UpArrow))
             {
                 objAquiController.SetTargetPosition(1);
-                objDiceController.SetTargetPosition(1);
+                if (objDiceController.SetTargetPosition(1))
+                {
+                    VanishDice(objDiceController.X, objDiceController.Z);
+                }
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 objAquiController.SetTargetPosition(3);
-                objDiceController.SetTargetPosition(3);
+                if (objDiceController.SetTargetPosition(3))
+                {
+                    VanishDice(objDiceController.X, objDiceController.Z);
+                }
             }
             //動いたときにダイスが変わる場合
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
                 objDiceController.isSelected = false; //選択解除
                 Dice = dices[board[objAquiController.x, objAquiController.z]];
-                Debug.Log(board[objAquiController.x, objAquiController.z]);
+                //Debug.Log(board[objAquiController.x, objAquiController.z]);
                 objDiceController = Dice.GetComponent<DiceController>();
                 objDiceController.isSelected = true; //選択
             }
@@ -82,7 +94,7 @@ public class MainGameController : MonoBehaviour
         timeElapsed += Time.deltaTime;
 
         // 5秒ごとにさいころ追加
-        if (timeElapsed >= 5.0)
+        if (timeElapsed >= 2.0)
         {
             // 配置する座標を決定
             int x = Random.Range(0, 10);
@@ -245,8 +257,8 @@ public class MainGameController : MonoBehaviour
                 objDiceController.surfaceB = b;
                 objDiceController.diceId = maxDiceId;
                 dices.Add(objDice); //リストにオブジェクトを追加
-                Debug.Log(objDiceController.surfaceA);
-                Debug.Log(objDiceController.surfaceB);
+                //Debug.Log(objDiceController.surfaceA);
+                //Debug.Log(objDiceController.surfaceB);
                 board_num[x, z] = a;
                 StartCoroutine(RisingDice(objDice));
             }
@@ -263,5 +275,83 @@ public class MainGameController : MonoBehaviour
             yield return null;
         }
         yield break;
+    }
+
+    //サイコロ消える
+    void VanishDice(int x, int z)
+    {
+
+        int count = 1; //隣接サイコロ数
+
+        //カウントしたダイスのリストを初期化
+        vanishingDices.Clear();
+        vanishingDices.Add(dices[board[x, z]]);
+
+        //隣接する同じ目のダイス数の計算
+        count = CountDice(x, z, count);
+
+        Debug.Log("隣接するダイス数:"+count);
+
+        //消す処理
+        if(count >= board_num[x,z]) {
+            vanishingDices.Add(dices[board[x, z]]);
+            DiceController temp;
+            for (int j = 0; j < count; j++)
+            {
+                temp = vanishingDices[j].GetComponent<DiceController>();
+                board[temp.X, temp.Z] = -1;
+                board_num[temp.X, temp.Z] = -1;
+                Destroy(vanishingDices[j],1f);
+            }
+
+        }
+
+    }
+
+    int CountDice(int x, int z, int cnt) {
+
+
+        bool flag = false; //脱出用
+
+        while (flag == false)
+        {
+            flag = true;
+            if (x != 9 && board_num[x + 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x + 1, z]]))
+            {
+                cnt++;
+                vanishingDices.Add(dices[board[x + 1, z]]);
+                flag = false;
+                Debug.Log(x + "," + z);
+                cnt = CountDice(x + 1, z, cnt);
+            }
+
+            if (x != 0 && board_num[x - 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x - 1, z]]))
+            {
+                cnt++;
+                vanishingDices.Add(dices[board[x - 1, z]]);
+                flag = false;
+                Debug.Log(x + "," + z);
+                cnt = CountDice(x - 1, z, cnt);
+            }
+            if (z != 9 && board_num[x, z + 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z + 1]]))
+            {
+                cnt++;
+                vanishingDices.Add(dices[board[x, z + 1]]);
+                flag = false;
+                Debug.Log(x + "," + z);
+                cnt = CountDice(x, z + 1, cnt);
+            }
+            if (z != 0 && board_num[x, z - 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z - 1]]))
+            {
+                cnt++;
+                vanishingDices.Add(dices[board[x, z - 1]]);
+                flag = false;
+                Debug.Log(x + "," + z);
+                cnt = CountDice(x, z - 1, cnt);
+            }
+        }
+
+            return cnt;
+    
     }
 }
