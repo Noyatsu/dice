@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class MainGameController : MonoBehaviour
 {
+    public int level = 1; //!< ゲームのレベル
+    public int score = 0; //!< ゲームのスコア
 
-    public int[,] board = new int[10, 10]; //!<さいころのIDを格納
+    public int[,] board = new int[10, 10]; //!< さいころのIDを格納
     public int[,] board_num = new int[10, 10]; //!< さいころの面を格納
     List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     double timeElapsed = 0.0; //!< イベント用フレームカウント
@@ -13,7 +15,7 @@ public class MainGameController : MonoBehaviour
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
 
-    GameObject Dice, Aqui;
+    GameObject Dice, Aqui, ScoreTxt, LevelTxt;
     AquiController objAquiController;
     DiceController objDiceController;
 
@@ -40,6 +42,9 @@ public class MainGameController : MonoBehaviour
         Aqui = GameObject.Find("Aqui");
         objAquiController = Aqui.GetComponent<AquiController>();
         objDiceController = Dice.GetComponent<DiceController>();
+
+        ScoreTxt = GameObject.Find("ScoreText");
+        LevelTxt = GameObject.Find("LevelText");
 
         //さいころをいくつか追加
         for(int i = 0; i < 10; i++)
@@ -89,7 +94,7 @@ public class MainGameController : MonoBehaviour
         timeElapsed += Time.deltaTime;
 
         // 5秒ごとにさいころ追加
-        if (timeElapsed >= 5.0)
+        if (timeElapsed >= 7f/level)
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
@@ -247,7 +252,7 @@ public class MainGameController : MonoBehaviour
         // その座標が空だったらさいころを追加
         if (board[x, z] == -1)
         {
-            maxDiceId++;
+            maxDiceId++; 
             board[x, z] = maxDiceId;
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
             GameObject objDice = (GameObject)Instantiate(Dice, position, Quaternion.Euler(xi, yi, zi));
