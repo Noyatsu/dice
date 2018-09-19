@@ -46,8 +46,9 @@ public class AquiController : MonoBehaviour {
     {
         script.isRotate_charactor = true;
         prevPos = target;
+        Debug.Log(script.boardSize);
         //右
-        if (d == 2 && x < 9) {
+        if (d == 2 && x < (script.boardSize - 1)) {
             x++;
             RotateCharactor(2);
         }
@@ -57,7 +58,7 @@ public class AquiController : MonoBehaviour {
             RotateCharactor(0);
         }
         //上
-        if (d == 1 && z < 9) {
+        if (d == 1 && z < (script.boardSize - 1)) {
             z++;
             RotateCharactor(1);
         }
@@ -101,6 +102,5 @@ public class AquiController : MonoBehaviour {
     void Move()
     {
         transform.position = Vector3.MoveTowards(transform.position, target, step * Time.deltaTime);
-        
     }
 }
