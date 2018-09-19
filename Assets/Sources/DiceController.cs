@@ -32,7 +32,7 @@ public class DiceController : MonoBehaviour {
 
 	}
 
-    public void SetTargetPosition(int d)
+    public bool SetTargetPosition(int d)
     {
         //もし上にキャラクターが乗っていたら
         if (isSelected)
@@ -60,8 +60,8 @@ public class DiceController : MonoBehaviour {
                     script.board[X-1, Z] = -1;
                     script.board_num[X-1, Z] = -1;
                 }
-                Debug.Log(surfaceA);
-                return;
+                if (surfaceA == 1) return false;
+                return true;
             }
             if (d == 0)
             {
@@ -83,7 +83,9 @@ public class DiceController : MonoBehaviour {
                     script.board[X+1, Z] = -1;
                     script.board_num[X+1, Z] = -1;
                 }
-                return;
+
+                if (surfaceA == 1) return false;
+                return true;
             }
             if (d == 1)
             {
@@ -105,8 +107,9 @@ public class DiceController : MonoBehaviour {
                     script.board[X, Z-1] = -1;
                     script.board_num[X, Z-1] = -1;
                 }
-                Debug.Log(surfaceA);
-                return;
+
+                if (surfaceA == 1) return false;
+                return true;
             }
             if (d == 3)
             {
@@ -128,10 +131,12 @@ public class DiceController : MonoBehaviour {
                     script.board[X, Z+1] = -1;
                     script.board_num[X, Z+1] = -1;
                 }
-                Debug.Log(surfaceA);
-                return;
+
+                if (surfaceA == 1) return false;
+                return true;
             }
         }
+        return false;
     }
 	
 
@@ -469,3 +474,4 @@ public class DiceController : MonoBehaviour {
     }
 
 }
+
