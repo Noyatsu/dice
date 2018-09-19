@@ -375,7 +375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 5
   score: 0
-  boardSize: 10
+  boardSize: 7
   isRotate_dice: 0
   isRotate_charactor: 0
 --- !u!1001 &1294582975

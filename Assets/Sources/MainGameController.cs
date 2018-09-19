@@ -7,9 +7,9 @@ public class MainGameController : MonoBehaviour
     public int level = 1; //!< ゲームのレベル
     public int score = 0; //!< ゲームのスコア
 
-    public int boardSize = 10;
-    public int[,] board = new int[10, 10]; //!<さいころのIDを格納
-    public int[,] board_num = new int[10, 10]; //!< さいころの面を格納
+    public int boardSize = 7; //!< 盤面のサイズ
+    public int[,] board = new int[7, 7]; //!< さいころのIDを格納
+    public int[,] board_num = new int[7, 7]; //!< さいころの面を格納
     List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     List<GameObject> vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
     double timeElapsed = 0.0; //!< イベント用フレームカウント
@@ -94,7 +94,6 @@ public class MainGameController : MonoBehaviour
             {
                 objDiceController.isSelected = false; //選択解除
                 Dice = dices[board[objAquiController.x, objAquiController.z]];
-               Debug.Log(board[objAquiController.x, objAquiController.z]);
                 objDiceController = Dice.GetComponent<DiceController>();
                 objDiceController.isSelected = true; //選択
             }
@@ -113,8 +112,8 @@ public class MainGameController : MonoBehaviour
     void randomDiceGenerate()
     {
         // 配置する座標を決定
-        int x = Random.Range(0, 10);
-        int z = Random.Range(0, 10);
+        int x = Random.Range(0, boardSize);
+        int z = Random.Range(0, boardSize);
 
         // 配置する面を決定
         int a = Random.Range(1, 6);
@@ -305,7 +304,7 @@ public class MainGameController : MonoBehaviour
         //隣接する同じ目のダイス数の計算
         count = CountDice(x, z, count);
 
-        Debug.Log("隣接するダイス数:"+count);
+        Debug.Log("隣接するダイス数:" + count);
 
         //消す処理
         if(count >= board_num[x,z]) {
@@ -324,14 +323,12 @@ public class MainGameController : MonoBehaviour
     }
 
     int CountDice(int x, int z, int cnt) {
-
-
         bool flag = false; //脱出用
 
         while (flag == false)
         {
             flag = true;
-            if (x != 9 && board_num[x + 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x + 1, z]]))
+            if (x < boardSize - 1 && board_num[x + 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x + 1, z]]))
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x + 1, z]]);
@@ -340,7 +337,7 @@ public class MainGameController : MonoBehaviour
                 cnt = CountDice(x + 1, z, cnt);
             }
 
-            if (x != 0 && board_num[x - 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x - 1, z]]))
+            if (x > 0 && board_num[x - 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x - 1, z]]))
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x - 1, z]]);
@@ -348,7 +345,7 @@ public class MainGameController : MonoBehaviour
                 Debug.Log(x + "," + z);
                 cnt = CountDice(x - 1, z, cnt);
             }
-            if (z != 9 && board_num[x, z + 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z + 1]]))
+            if (z < boardSize - 1 && board_num[x, z + 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z + 1]]))
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x, z + 1]]);
@@ -356,7 +353,7 @@ public class MainGameController : MonoBehaviour
                 Debug.Log(x + "," + z);
                 cnt = CountDice(x, z + 1, cnt);
             }
-            if (z != 0 && board_num[x, z - 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z - 1]]))
+            if (z > 0 && board_num[x, z - 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z - 1]]))
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x, z - 1]]);
@@ -367,7 +364,6 @@ public class MainGameController : MonoBehaviour
         }
 
             return cnt;
-    
     }
 }
 
