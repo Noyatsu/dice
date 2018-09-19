@@ -83,7 +83,6 @@ public class DiceController : MonoBehaviour {
                     script.board[X+1, Z] = -1;
                     script.board_num[X+1, Z] = -1;
                 }
-                Debug.Log(surfaceA);
                 return;
             }
             if (d == 1)
