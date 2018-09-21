@@ -309,18 +309,36 @@ public class MainGameController : MonoBehaviour
         //消す処理
         if(count >= board_num[x,z]) {
             vanishingDices.Add(dices[board[x, z]]);
-            DiceController temp;
+            // DiceController temp;
             for (int j = 0; j < count; j++)
             {
-                temp = vanishingDices[j].GetComponent<DiceController>();
-                board[temp.X, temp.Z] = -1;
-                board_num[temp.X, temp.Z] = -1;
-                Destroy(vanishingDices[j],1f);
+                // temp = vanishingDices[j].GetComponent<DiceController>();
+                // board[temp.X, temp.Z] = -1;
+                // board_num[temp.X, temp.Z] = -1;
+                StartCoroutine(sinkingDice(vanishingDices[j]));
             }
 
         }
 
     }
+
+    IEnumerator sinkingDice(GameObject dc) {
+        while (isRotate_dice == true) {
+            yield return new WaitForEndOfFrame ();
+        }
+        Vector3 position = dc.transform.position;
+        for (int i = 1; i < 300; i++) {
+            position.y = 0.5f - i * 1f / 300f;
+            dc.transform.position = position;
+            yield return null;
+        }
+        DiceController temp = dc.GetComponent<DiceController>();
+        board[temp.X, temp.Z] = -1;
+        board_num[temp.X, temp.Z] = -1;
+        Destroy(dc);
+        yield break;
+    }
+
 
     int CountDice(int x, int z, int cnt) {
         bool flag = false; //脱出用
