@@ -309,12 +309,13 @@ public class MainGameController : MonoBehaviour
         //消す処理
         if(count >= board_num[x,z]) {
             vanishingDices.Add(dices[board[x, z]]);
-            // DiceController temp;
+            DiceController temp;
             for (int j = 0; j < count; j++)
             {
-                // temp = vanishingDices[j].GetComponent<DiceController>();
+                temp = vanishingDices[j].GetComponent<DiceController>();
                 // board[temp.X, temp.Z] = -1;
                 // board_num[temp.X, temp.Z] = -1;
+                temp.isVanishing = true;
                 StartCoroutine(sinkingDice(vanishingDices[j]));
             }
 

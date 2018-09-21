@@ -14,6 +14,8 @@ public class DiceController : MonoBehaviour {
 	float diceSizeHalf;
     public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
 
+    public bool isVanishing = false; // サイコロが消滅中かどうか
+
 	public int X = 0, Z = 0;
 	public int diceId = 0; //!サイコロのID
 	public int surfaceA = 1;
@@ -37,6 +39,10 @@ public class DiceController : MonoBehaviour {
         //もし上にキャラクターが乗っていたら
         if (isSelected)
         {
+            if (isVanishing == true)
+            {
+                return false;
+            }
             if (d == 2)
             {
                 if (X + 1 < script.board.GetLength(0) && script.board[X + 1, Z] == -1)
