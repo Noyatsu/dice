@@ -92,10 +92,12 @@ public class MainGameController : MonoBehaviour
             //動いたときにダイスが変わる場合
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
-                objDiceController.isSelected = false; //選択解除
-                Dice = dices[board[objAquiController.x, objAquiController.z]];
-                objDiceController = Dice.GetComponent<DiceController>();
-                objDiceController.isSelected = true; //選択
+                if (board[objAquiController.x, objAquiController.z] != -1) // 移動先にサイコロが存在するならば
+                {
+                    Dice = dices[board[objAquiController.x, objAquiController.z]];
+                    objDiceController = Dice.GetComponent<DiceController>();
+                    objDiceController.isSelected = true; //選択
+                }
             }
         }
 
