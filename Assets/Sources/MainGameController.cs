@@ -313,8 +313,6 @@ public class MainGameController : MonoBehaviour
             for (int j = 0; j < count; j++)
             {
                 temp = vanishingDices[j].GetComponent<DiceController>();
-                // board[temp.X, temp.Z] = -1;
-                // board_num[temp.X, temp.Z] = -1;
                 temp.isVanishing = true;
                 StartCoroutine(sinkingDice(vanishingDices[j]));
             }
@@ -332,6 +330,10 @@ public class MainGameController : MonoBehaviour
             position.y = 0.5f - i * 1f / 300f;
             dc.transform.position = position;
             yield return null;
+            if (dc.transform.position != position)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときに位置が変わっている
+            {
+                yield break;
+            }
         }
         DiceController temp = dc.GetComponent<DiceController>();
         board[temp.X, temp.Z] = -1;
