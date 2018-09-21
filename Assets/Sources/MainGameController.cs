@@ -92,10 +92,12 @@ public class MainGameController : MonoBehaviour
             //動いたときにダイスが変わる場合
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
-                objDiceController.isSelected = false; //選択解除
-                Dice = dices[board[objAquiController.x, objAquiController.z]];
-                objDiceController = Dice.GetComponent<DiceController>();
-                objDiceController.isSelected = true; //選択
+                if (board[objAquiController.x, objAquiController.z] != -1) // 移動先にサイコロが存在するならば
+                {
+                    Dice = dices[board[objAquiController.x, objAquiController.z]];
+                    objDiceController = Dice.GetComponent<DiceController>();
+                    objDiceController.isSelected = true; //選択
+                }
             }
         }
 
@@ -382,7 +384,6 @@ public class MainGameController : MonoBehaviour
                     temp.isVanishing = true;
                     StartCoroutine(sinkingDice(vanishingDices[j]));
                 }
-
             }
         }
 
@@ -397,6 +398,10 @@ public class MainGameController : MonoBehaviour
             position.y = 0.5f - i * 1f / 300f;
             dc.transform.position = position;
             yield return null;
+            if (dc.transform.position != position)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときに位置が変わっている
+            {
+                yield break;
+            }
         }
         DiceController temp = dc.GetComponent<DiceController>();
         board[temp.X, temp.Z] = -1;
