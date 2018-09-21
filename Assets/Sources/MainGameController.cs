@@ -294,31 +294,96 @@ public class MainGameController : MonoBehaviour
     //サイコロ消える
     void VanishDice(int x, int z)
     {
+        if (board_num[x, z] == 1)
+        {
+            bool flag = false;
 
-        int count = 1; //隣接サイコロ数
-
-        //カウントしたダイスのリストを初期化
-        vanishingDices.Clear();
-        vanishingDices.Add(dices[board[x, z]]);
-
-        //隣接する同じ目のダイス数の計算
-        count = CountDice(x, z, count);
-
-        Debug.Log("隣接するダイス数:" + count);
-
-        //消す処理
-        if(count >= board_num[x,z]) {
-            vanishingDices.Add(dices[board[x, z]]);
-            DiceController temp;
-            for (int j = 0; j < count; j++)
-            {
-                temp = vanishingDices[j].GetComponent<DiceController>();
-                // board[temp.X, temp.Z] = -1;
-                // board_num[temp.X, temp.Z] = -1;
-                temp.isVanishing = true;
-                StartCoroutine(sinkingDice(vanishingDices[j]));
+            if(x < boardSize - 1 && board[x+1,z] != -1){
+                DiceController right = dices[board[x + 1, z]].GetComponent<DiceController>();
+                if(right.isVanishing == true && board_num[x + 1, z] != 1) 
+                {
+                    flag = true;
+                }
             }
 
+            if (x > 0 && board[x - 1, z] != -1)
+            {
+                DiceController left = dices[board[x - 1, z]].GetComponent<DiceController>();
+                if (left.isVanishing == true && board_num[x - 1, z] != 1)
+                {
+                    flag = true;
+                }
+            }
+
+            if (z < boardSize - 1 && board[x, z + 1] != -1)
+            {
+                DiceController up = dices[board[x, z + 1]].GetComponent<DiceController>();
+                if (up.isVanishing == true && board_num[x, z + 1] != 1)
+                {
+                    flag = true;
+                }
+            }
+
+
+            if (z > 0  && board[x, z - 1] != -1)
+            {
+                DiceController down = dices[board[x, z - 1]].GetComponent<DiceController>();
+                if (down.isVanishing == true && board_num[x, z - 1] != 1)
+                {
+                    flag = true;
+                }
+            }
+
+            if (flag)
+            {
+                Debug.Log("ハッピーワン！");
+                int sum = 0;
+                vanishingDices.Clear(); //カウントしたダイスのリストを初期化
+                for (int i = 0; i < boardSize; i++){ //1のダイスを検索
+                    for (int j = 0; j < boardSize; j++) {
+                        if(board_num[i,j]==1){
+                            vanishingDices.Add(dices[board[i, j]]); //削除リストへ追加
+                            sum++; //数を記録
+                        }
+                    }
+                }
+                vanishingDices.Remove(dices[board[x, z]]); //足元のダイスのみ削除リストから減らす
+                int count = 0;
+                while (count < sum-1)
+                {
+                    StartCoroutine(sinkingDice(vanishingDices[count]));
+                    count++;
+                }
+            }
+        }
+        else
+        {
+            int count = 1; //隣接サイコロ数
+
+            //カウントしたダイスのリストを初期化
+            vanishingDices.Clear();
+            vanishingDices.Add(dices[board[x, z]]);
+
+            //隣接する同じ目のダイス数の計算
+            count = CountDice(x, z, count);
+
+            Debug.Log("隣接するダイス数:" + count);
+
+            //消す処理
+            if (count >= board_num[x, z])
+            {
+                vanishingDices.Add(dices[board[x, z]]);
+                DiceController temp;
+                for (int j = 0; j < count; j++)
+                {
+                    temp = vanishingDices[j].GetComponent<DiceController>();
+                    // board[temp.X, temp.Z] = -1;
+                    // board_num[temp.X, temp.Z] = -1;
+                    temp.isVanishing = true;
+                    StartCoroutine(sinkingDice(vanishingDices[j]));
+                }
+
+            }
         }
 
     }
