@@ -10,7 +10,7 @@ public class MainGameController : MonoBehaviour
     public int boardSize = 7; //!< 盤面のサイズ
     public int[,] board = new int[7, 7]; //!< さいころのIDを格納
     public int[,] board_num = new int[7, 7]; //!< さいころの面を格納
-    List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
+    public List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     List<GameObject> vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
     double timeElapsed = 0.0; //!< イベント用フレームカウント
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
@@ -90,6 +90,7 @@ public class MainGameController : MonoBehaviour
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
             }
+
             //動いたときにダイスが変わる場合
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
@@ -100,6 +101,7 @@ public class MainGameController : MonoBehaviour
                     objDiceController.isSelected = true; //選択
                 }
             }
+
         }
 
         timeElapsed += Time.deltaTime;
@@ -275,8 +277,6 @@ public class MainGameController : MonoBehaviour
             objDiceController.surfaceB = b;
             objDiceController.diceId = maxDiceId;
             dices.Add(objDice); //リストにオブジェクトを追加
-            Debug.Log(objDiceController.surfaceA);
-            Debug.Log(objDiceController.surfaceB);
             board_num[x, z] = a;
             StartCoroutine(RisingDice(objDice));
         }

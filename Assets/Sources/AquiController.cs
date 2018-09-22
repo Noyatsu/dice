@@ -9,6 +9,7 @@ public class AquiController : MonoBehaviour {
     MainGameController script;
 
     public int x = 0; //< キャラクターのX座標
+    public float y = 1.1f; //キャラクターのY座標
     public int z = 0; //< キャラクターのZ座標
 
     float step = 3f;     //!< 移動速度
@@ -34,19 +35,21 @@ public class AquiController : MonoBehaviour {
         {
             anim.SetBool("isWalking", false);
         }
-        if (target == transform.position)
+        if (target.x == transform.position.x && target.z == transform.position.z)
         {
             script.isRotate_charactor = false;
         }
         Move();
+
+
     }
 
     // 入力に応じて移動後の位置を算出
     public void SetTargetPosition(int d)
     {
+
         script.isRotate_charactor = true;
         prevPos = target;
-        Debug.Log(script.boardSize);
         //右
         if (d == 2 && x < (script.boardSize - 1)) {
             x++;
@@ -67,7 +70,7 @@ public class AquiController : MonoBehaviour {
             z--;
             RotateCharactor(3);
         }
-        target = new Vector3(-4.5f + x * 1.0f, 1.0f, -4.5f + z * 1.0f);
+        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
         return;
     }
 
