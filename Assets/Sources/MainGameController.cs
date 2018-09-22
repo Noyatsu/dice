@@ -17,7 +17,7 @@ public class MainGameController : MonoBehaviour
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
 
-    GameObject Dice, Aqui, VanishingDice;
+    GameObject Dice, DiceBase, Aqui, VanishingDice;
     AquiController objAquiController;
     DiceController objDiceController;
 
@@ -38,6 +38,7 @@ public class MainGameController : MonoBehaviour
         board[0, 0] = maxDiceId;
         board_num[0, 0] = 1;
         
+        DiceBase =(GameObject)Resources.Load("Dice");
         Dice = GameObject.Find("Dice");
         dices.Add(Dice);  //リストにオブジェクトを追加
 
@@ -265,7 +266,7 @@ public class MainGameController : MonoBehaviour
             maxDiceId++; 
             board[x, z] = maxDiceId;
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
-            GameObject objDice = (GameObject)Instantiate(Dice, position, Quaternion.Euler(xi, yi, zi));
+            GameObject objDice = (GameObject)Instantiate(DiceBase, position, Quaternion.Euler(xi, yi, zi));
             DiceController objDiceController = objDice.GetComponent<DiceController>();
             objDiceController.isSelected = false;
             objDiceController.X = x;
