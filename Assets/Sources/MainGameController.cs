@@ -20,6 +20,7 @@ public class MainGameController : MonoBehaviour
     GameObject Dice, DiceBase, Aqui, VanishingDice;
     AquiController objAquiController;
     DiceController objDiceController;
+    
 
     // Use this for initialization
     void Start()
@@ -45,9 +46,10 @@ public class MainGameController : MonoBehaviour
         Aqui = GameObject.Find("Aqui");
         objAquiController = Aqui.GetComponent<AquiController>();
         objDiceController = Dice.GetComponent<DiceController>();
-        
-              //さいころをいくつか追加
-        for(int i = 0; i < 5; i++)
+
+
+        //さいころをいくつか追加
+        for (int i = 0; i < 5; i++)
         {
             randomDiceGenerate();
         }
@@ -385,12 +387,13 @@ public class MainGameController : MonoBehaviour
                     temp.isVanishing = true;
                     StartCoroutine(sinkingDice(vanishingDices[j]));
                 }
+                score += count * board_num[x, z]; //スコア計算(仮)
             }
         }
 
     }
 
-    // ダイスを鎮めるアニメ
+    // ダイスをしずめるアニメ
     IEnumerator sinkingDice(GameObject dc) {
         while (isRotate_dice == true) {
             yield return new WaitForEndOfFrame ();
