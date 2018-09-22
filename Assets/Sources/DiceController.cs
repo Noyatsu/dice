@@ -26,7 +26,7 @@ public class DiceController : MonoBehaviour {
 	void Start () {
 		Board = GameObject.Find ("Board");
 		script = Board.GetComponent<MainGameController>();
-		diceSizeHalf = transform.localScale.x / 2f;
+        diceSizeHalf = transform.localScale.x / 2f;
 	}
 	
 	// Update is called once per frame

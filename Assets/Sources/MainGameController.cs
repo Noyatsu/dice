@@ -10,7 +10,7 @@ public class MainGameController : MonoBehaviour
     public int boardSize = 7; //!< 盤面のサイズ
     public int[,] board = new int[7, 7]; //!< さいころのIDを格納
     public int[,] board_num = new int[7, 7]; //!< さいころの面を格納
-    List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
+    public List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     List<GameObject> vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
     double timeElapsed = 0.0; //!< イベント用フレームカウント
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
@@ -20,6 +20,7 @@ public class MainGameController : MonoBehaviour
     GameObject Dice, DiceBase, Aqui, VanishingDice;
     AquiController objAquiController;
     DiceController objDiceController;
+    
 
     // Use this for initialization
     void Start()
@@ -45,9 +46,10 @@ public class MainGameController : MonoBehaviour
         Aqui = GameObject.Find("Aqui");
         objAquiController = Aqui.GetComponent<AquiController>();
         objDiceController = Dice.GetComponent<DiceController>();
-        
-              //さいころをいくつか追加
-        for(int i = 0; i < 10; i++)
+
+
+        //さいころをいくつか追加
+        for (int i = 0; i < 5; i++)
         {
             randomDiceGenerate();
         }
@@ -61,35 +63,36 @@ public class MainGameController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.RightArrow))
             {
-                objAquiController.SetTargetPosition(2);
                 if(objDiceController.SetTargetPosition(2)) {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(2);
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                objAquiController.SetTargetPosition(0);
                 if (objDiceController.SetTargetPosition(0))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(0);
             }
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                objAquiController.SetTargetPosition(1);
                 if (objDiceController.SetTargetPosition(1))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(1);
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                objAquiController.SetTargetPosition(3);
                 if (objDiceController.SetTargetPosition(3))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(3);
             }
+
             //動いたときにダイスが変わる場合
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
@@ -100,6 +103,7 @@ public class MainGameController : MonoBehaviour
                     objDiceController.isSelected = true; //選択
                 }
             }
+
         }
 
         timeElapsed += Time.deltaTime;
@@ -275,8 +279,6 @@ public class MainGameController : MonoBehaviour
             objDiceController.surfaceB = b;
             objDiceController.diceId = maxDiceId;
             dices.Add(objDice); //リストにオブジェクトを追加
-            Debug.Log(objDiceController.surfaceA);
-            Debug.Log(objDiceController.surfaceB);
             board_num[x, z] = a;
             StartCoroutine(RisingDice(objDice));
         }
@@ -370,7 +372,7 @@ public class MainGameController : MonoBehaviour
             //隣接する同じ目のダイス数の計算
             count = CountDice(x, z, count);
 
-            Debug.Log("隣接するダイス数:" + count);
+            //Debug.Log("隣接するダイス数:" + count);
 
             //消す処理
             if (count >= board_num[x, z])
@@ -385,11 +387,13 @@ public class MainGameController : MonoBehaviour
                     temp.isVanishing = true;
                     StartCoroutine(sinkingDice(vanishingDices[j]));
                 }
+                score += count * board_num[x, z]; //スコア計算(仮)
             }
         }
 
     }
 
+    // ダイスをしずめるアニメ
     IEnumerator sinkingDice(GameObject dc) {
         while (isRotate_dice == true) {
             yield return new WaitForEndOfFrame ();
@@ -397,9 +401,10 @@ public class MainGameController : MonoBehaviour
         Vector3 position = dc.transform.position;
         for (int i = 1; i < 300; i++) {
             position.y = 0.5f - i * 1f / 300f;
+            ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 300f));
             dc.transform.position = position;
             yield return null;
-            if (dc.transform.position != position)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときに位置が変わっている
+            if (dc.transform.position.x != position.x && dc.transform.position.z != position.z)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときに位置が変わっている
             {
                 yield break;
             }
@@ -411,6 +416,26 @@ public class MainGameController : MonoBehaviour
         yield break;
     }
 
+    //親オブジェクトを入力すると親と子オブジェクトの色を変更してくれる
+    private void ChangeColorOfGameObject(GameObject targetObject, Color color)
+    {
+
+        //入力されたオブジェクトのRendererを全て取得し、さらにそのRendererに設定されている全Materialの色を変える
+        foreach (Renderer targetRenderer in targetObject.GetComponents<Renderer>())
+        {
+            foreach (Material material in targetRenderer.materials)
+            {
+                material.color = color;
+            }
+        }
+
+        //入力されたオブジェクトの子にも同様の処理を行う
+        for (int i = 0; i < targetObject.transform.childCount; i++)
+        {
+            ChangeColorOfGameObject(targetObject.transform.GetChild(i).gameObject, color);
+        }
+
+    }
 
     int CountDice(int x, int z, int cnt) {
         bool flag = false; //脱出用
@@ -423,7 +448,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x + 1, z]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x + 1, z, cnt);
             }
 
@@ -432,7 +456,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x - 1, z]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x - 1, z, cnt);
             }
             if (z < boardSize - 1 && board_num[x, z + 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z + 1]]))
@@ -440,7 +463,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x, z + 1]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x, z + 1, cnt);
             }
             if (z > 0 && board_num[x, z - 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z - 1]]))
@@ -448,7 +470,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x, z - 1]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x, z - 1, cnt);
             }
         }
