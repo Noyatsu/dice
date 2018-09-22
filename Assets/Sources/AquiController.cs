@@ -39,9 +39,8 @@ public class AquiController : MonoBehaviour {
         {
             script.isRotate_charactor = false;
         }
+
         Move();
-
-
     }
 
     // 入力に応じて移動後の位置を算出
@@ -50,6 +49,7 @@ public class AquiController : MonoBehaviour {
 
         script.isRotate_charactor = true;
         prevPos = target;
+
         //右
         if (d == 2 && x < (script.boardSize - 1)) {
             x++;
@@ -69,6 +69,22 @@ public class AquiController : MonoBehaviour {
         if (d == 3 && z > 0) {
             z--;
             RotateCharactor(3);
+        }
+
+        //キャラクターのy座標の設定
+        if (script.board[x, z] != -1)
+        {
+            //現在位置の下にダイスがあるとき
+            y = script.dices[script.board[x, z]].transform.position.y + 0.5f;
+        }
+        else if (script.isRotate_dice)
+        {
+            y = 1.0f;
+        }
+        else
+        {
+            //ダイスがないとき
+            y = 0.0f;
         }
         target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
         return;

@@ -47,7 +47,7 @@ public class MainGameController : MonoBehaviour
         objDiceController = Dice.GetComponent<DiceController>();
         
               //さいころをいくつか追加
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < 5; i++)
         {
             randomDiceGenerate();
         }
@@ -61,34 +61,34 @@ public class MainGameController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.RightArrow))
             {
-                objAquiController.SetTargetPosition(2);
                 if(objDiceController.SetTargetPosition(2)) {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(2);
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                objAquiController.SetTargetPosition(0);
                 if (objDiceController.SetTargetPosition(0))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(0);
             }
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                objAquiController.SetTargetPosition(1);
                 if (objDiceController.SetTargetPosition(1))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(1);
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                objAquiController.SetTargetPosition(3);
                 if (objDiceController.SetTargetPosition(3))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
+                objAquiController.SetTargetPosition(3);
             }
 
             //動いたときにダイスが変わる場合
@@ -370,7 +370,7 @@ public class MainGameController : MonoBehaviour
             //隣接する同じ目のダイス数の計算
             count = CountDice(x, z, count);
 
-            Debug.Log("隣接するダイス数:" + count);
+            //Debug.Log("隣接するダイス数:" + count);
 
             //消す処理
             if (count >= board_num[x, z])
@@ -399,7 +399,7 @@ public class MainGameController : MonoBehaviour
             position.y = 0.5f - i * 1f / 300f;
             dc.transform.position = position;
             yield return null;
-            if (dc.transform.position != position)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときに位置が変わっている
+            if (dc.transform.position.x != position.x && dc.transform.position.z != position.z)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときに位置が変わっている
             {
                 yield break;
             }
@@ -423,7 +423,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x + 1, z]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x + 1, z, cnt);
             }
 
@@ -432,7 +431,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x - 1, z]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x - 1, z, cnt);
             }
             if (z < boardSize - 1 && board_num[x, z + 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z + 1]]))
@@ -440,7 +438,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x, z + 1]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x, z + 1, cnt);
             }
             if (z > 0 && board_num[x, z - 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z - 1]]))
@@ -448,7 +445,6 @@ public class MainGameController : MonoBehaviour
                 cnt++;
                 vanishingDices.Add(dices[board[x, z - 1]]);
                 flag = false;
-                Debug.Log(x + "," + z);
                 cnt = CountDice(x, z - 1, cnt);
             }
         }
