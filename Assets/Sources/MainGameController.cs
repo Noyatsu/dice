@@ -390,6 +390,7 @@ public class MainGameController : MonoBehaviour
 
     }
 
+    // ダイスを鎮めるアニメ
     IEnumerator sinkingDice(GameObject dc) {
         while (isRotate_dice == true) {
             yield return new WaitForEndOfFrame ();
@@ -397,6 +398,7 @@ public class MainGameController : MonoBehaviour
         Vector3 position = dc.transform.position;
         for (int i = 1; i < 300; i++) {
             position.y = 0.5f - i * 1f / 300f;
+            ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 300f));
             dc.transform.position = position;
             yield return null;
             if (dc.transform.position.x != position.x && dc.transform.position.z != position.z)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときに位置が変わっている
@@ -411,6 +413,26 @@ public class MainGameController : MonoBehaviour
         yield break;
     }
 
+    //親オブジェクトを入力すると親と子オブジェクトの色を変更してくれる
+    private void ChangeColorOfGameObject(GameObject targetObject, Color color)
+    {
+
+        //入力されたオブジェクトのRendererを全て取得し、さらにそのRendererに設定されている全Materialの色を変える
+        foreach (Renderer targetRenderer in targetObject.GetComponents<Renderer>())
+        {
+            foreach (Material material in targetRenderer.materials)
+            {
+                material.color = color;
+            }
+        }
+
+        //入力されたオブジェクトの子にも同様の処理を行う
+        for (int i = 0; i < targetObject.transform.childCount; i++)
+        {
+            ChangeColorOfGameObject(targetObject.transform.GetChild(i).gameObject, color);
+        }
+
+    }
 
     int CountDice(int x, int z, int cnt) {
         bool flag = false; //脱出用

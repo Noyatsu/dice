@@ -356,7 +356,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 9b01c8038e2b74f62ba5f10f5eb308e7, type: 2}
+  - {fileID: 2100000, guid: aed64e36d46eb41468514364af27c46a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -656,6 +656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 1
+  isVanishing: 0
   X: 0
   Z: 0
   diceId: 0
