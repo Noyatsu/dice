@@ -86,6 +86,12 @@ public class AquiController : MonoBehaviour {
             //ダイスがないとき
             y = 0.0f;
         }
+
+        // ジャンプアニメ
+        if (Mathf.Abs(prevPos.y - y) > 0.3f)
+        {
+            anim.Play("Jump");
+        }
         target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
         return;
     }
