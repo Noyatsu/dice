@@ -165,10 +165,10 @@ public class MainGameController : MonoBehaviour
         }
 
         if (count == 0) {
-            Debug.Log("GameOver!");
-            objScreenText.setText("Game Over!");
-            objAquiController.deathMotion();
-            //Time.timeScale = 0f;
+ 
+              objScreenText.setText("Game Over!");
+              objAquiController.deathMotion();           
+            
             return; 
         } //全部埋まってた場合
 
@@ -416,7 +416,7 @@ public class MainGameController : MonoBehaviour
                     count++;
                 }
                 score += count; //スコア計算(仮)
-                objStatusText.setText("+" + level + " (ハッピーワン!)");
+                objStatusText.setText("+" + count + " (ハッピーワン!)");
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
@@ -569,10 +569,10 @@ public class MainGameController : MonoBehaviour
 
         level = lv;
         stageBefore = stage;
-        stage = level % 18 / 3 - 3;
-        if (stage < 0)
+        stage = level % 18 / 3 + 1;
+        if (stage == 6)
         {
-            stage += 6;
+            stage -= 6;
         }
 
     }
