@@ -407,8 +407,8 @@ public class MainGameController : MonoBehaviour
                     temp = vanishingDices[j].GetComponent<DiceController>();
                     // board[temp.X, temp.Z] = -1;
                     // board_num[temp.X, temp.Z] = -1;
-                    temp.isVanishing = true;
                     StartCoroutine(sinkingDice(vanishingDices[j]));
+                    temp.isVanishing = true;
                 }
                 score += count * board_num[x, z]; //スコア計算(仮)
             }
@@ -418,6 +418,11 @@ public class MainGameController : MonoBehaviour
 
     // ダイスをしずめるアニメ
     IEnumerator sinkingDice(GameObject dc) {
+        DiceController temp = dc.GetComponent<DiceController> ();
+        if (temp.isVanishing == true)
+        {
+            yield break;
+        }
         while (isRotate_dice == true) {
             yield return new WaitForEndOfFrame ();
         }
@@ -428,7 +433,6 @@ public class MainGameController : MonoBehaviour
             dc.transform.position = position;
             yield return null;
         }
-        DiceController temp = dc.GetComponent<DiceController>();
         board[temp.X, temp.Z] = -1;
         board_num[temp.X, temp.Z] = -1;
         Destroy(dc);
