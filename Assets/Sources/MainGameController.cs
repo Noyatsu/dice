@@ -119,8 +119,28 @@ public class MainGameController : MonoBehaviour
     void randomDiceGenerate()
     {
         // 配置する座標を決定
-        int x = Random.Range(0, boardSize);
-        int z = Random.Range(0, boardSize);
+
+        int count = 0;
+        int[,] chusen = new int[boardSize*boardSize,2];
+        for (int j = 0; j < boardSize; j++){
+            for (int k = 0; k < boardSize; k++){
+                if(board[j,k]==-1){
+                    chusen[count,0] = j;
+                    chusen[count,1] = k;
+                    count++; //空白の座標をchusenに保存
+                }
+            }
+        }
+
+        if (count == 0) {
+            Debug.Log("GameOver!");
+            return; 
+        } //全部埋まってた場合
+
+        int choose = Random.Range(0, count); //配置する場所をランダムに決定
+        int x = chusen[choose,0];
+        int z = chusen[choose,1];
+
 
         // 配置する面を決定
         int a = Random.Range(1, 6);
