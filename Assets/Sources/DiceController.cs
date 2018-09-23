@@ -147,7 +147,7 @@ public class DiceController : MonoBehaviour {
 
 		float sumAngle = 0f;
 		while (sumAngle < 90f) {
-			diceAngle = 4f;
+			diceAngle = 5f;
 			sumAngle += diceAngle;
 
 			if (sumAngle > 90f)

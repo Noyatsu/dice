@@ -60,7 +60,7 @@ public class MainGameController : MonoBehaviour
 
 
         //さいころをいくつか追加
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
         {
             randomDiceGenerate();
         }
@@ -118,24 +118,20 @@ public class MainGameController : MonoBehaviour
         }
 
         timeElapsed += Time.deltaTime;
-
-        // 5秒ごとにさいころ追加
-        if (timeElapsed >= (15.0f/level))
+       
+        if(level > 20) { //現状レベル20で速さは打ち止め
+            if (timeElapsed >= 1.5)
+            {
+                randomDiceGenerate();
+                timeElapsed = 0.0f;
+            }
+        }
+        // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
+        else if (timeElapsed >= (3.5f-0.1f*level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
         }
-
-        //レベルの変化
-
-        level = (int)Mathf.Sqrt(score) + 1;
-        stageBefore = stage;
-        stage = level % 18 / 3 - 3;
-        if (stage < 0)
-        {
-            stage += 6; 
-        }
-
 
         //ゲームステージの設定
         if (stage != stageBefore)
@@ -427,6 +423,7 @@ public class MainGameController : MonoBehaviour
                     score += count;
                     objScreenText.setText("ステージボーナス! +" + count*10);
                 }
+                ComputeLevel(); //レベル計算
             }
         }
         else
@@ -465,6 +462,7 @@ public class MainGameController : MonoBehaviour
                     score += board_num[x, z]*count;
                     objScreenText.setText("ステージボーナス! +" + board_num[x, z]*count);
                 }
+                ComputeLevel(); //レベル計算
             }
         }
 
@@ -553,5 +551,32 @@ public class MainGameController : MonoBehaviour
 
             return cnt;
     }
+
+    void ComputeLevel () {
+        int a = 120; //おおよそ1レベルの上昇に必要なスコア
+        int b = a; //前の必要経験値を記録する
+        int lv = 1;
+
+        //レベルの変化
+        while (true) {
+            b = (int)((a * lv + b * 1.1)/ 2);
+            if (score > b) {
+                lv++;
+            } else {
+                break;
+            }
+        }
+
+        level = lv;
+        stageBefore = stage;
+        stage = level % 18 / 3 - 3;
+        if (stage < 0)
+        {
+            stage += 6;
+        }
+
+    }
+
+
 }
 
