@@ -6,6 +6,8 @@ public class MainGameController : MonoBehaviour
 {
     public int level = 1; //!< ゲームのレベル
     public int score = 0; //!< ゲームのスコア
+    public int stage = 1; //!< ゲームのステージ(0-5)
+    private int stageBefore = 1; //!< 前フレームのゲームのステージ
 
     public int boardSize = 7; //!< 盤面のサイズ
     public int[,] board = new int[7, 7]; //!< さいころのIDを格納
@@ -17,10 +19,13 @@ public class MainGameController : MonoBehaviour
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
 
-    GameObject Dice, DiceBase, Aqui, VanishingDice;
+    GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText;
     AquiController objAquiController;
     DiceController objDiceController;
-    
+    StatusTextController objStatusText;
+
+    public Material[] _material;
+    public Material[] _skyboxMaterial;
 
     // Use this for initialization
     void Start()
@@ -47,6 +52,8 @@ public class MainGameController : MonoBehaviour
         objAquiController = Aqui.GetComponent<AquiController>();
         objDiceController = Dice.GetComponent<DiceController>();
 
+        StatusText = GameObject.Find("StatusText");
+        objStatusText = StatusText.GetComponent<StatusTextController>();
 
         //さいころをいくつか追加
         for (int i = 0; i < 5; i++)
@@ -109,14 +116,36 @@ public class MainGameController : MonoBehaviour
         timeElapsed += Time.deltaTime;
 
         // 5秒ごとにさいころ追加
-        if (timeElapsed >= (10.0f/level))
+        if (timeElapsed >= (15.0f/level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
         }
 
         //レベルの変化
+
         level = (int)Mathf.Sqrt(score) + 1;
+        stageBefore = stage;
+        stage = level % 18 / 3 - 3;
+        if (stage < 0)
+        {
+            stage += 6; 
+        }
+
+
+        //ゲームステージの設定
+        if (stage != stageBefore)
+        {
+            changeStage(stage);
+        }
+    }
+
+    // ステージを変える
+    void changeStage(int nextStage)
+    {
+        this.GetComponent<Renderer>().sharedMaterial = _material[nextStage];
+        RenderSettings.skybox = _skyboxMaterial[nextStage];
+        objStatusText.setText("Stage Changed!");
     }
 
     void randomDiceGenerate()
@@ -365,6 +394,7 @@ public class MainGameController : MonoBehaviour
             if (flag)
             {
                 Debug.Log("ハッピーワン！");
+                objStatusText.setText("ハッピーワン!");
                 int sum = 0;
                 vanishingDices.Clear(); //カウントしたダイスのリストを初期化
                 for (int i = 0; i < boardSize; i++){ //1のダイスを検索
@@ -382,6 +412,14 @@ public class MainGameController : MonoBehaviour
                     StartCoroutine(sinkingDice(vanishingDices[count]));
                     count++;
                 }
+                score += count; //スコア計算(仮)
+                //ステージボーナス
+                if (board_num[x, z] == stage + 1)
+                {
+                    score += level * 100;
+                    objStatusText.setText("ステージボーナス! +" + count * level * 10);
+                }
+
             }
         }
         else
@@ -411,6 +449,13 @@ public class MainGameController : MonoBehaviour
                     temp.isVanishing = true;
                 }
                 score += count * board_num[x, z]; //スコア計算(仮)
+
+                //ステージボーナス
+                if (board_num[x, z] == stage + 1)
+                {
+                    score += level * 100;
+                    objStatusText.setText("ステージボーナス! +" + count* level * 10);
+                }
             }
         }
 
