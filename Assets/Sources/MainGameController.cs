@@ -114,6 +114,9 @@ public class MainGameController : MonoBehaviour
             randomDiceGenerate();
             timeElapsed = 0.0f;
         }
+
+        //レベルの変化
+        level = (int)Mathf.Sqrt(score) + 1;
     }
 
     void randomDiceGenerate()
