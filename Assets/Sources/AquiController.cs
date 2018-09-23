@@ -43,6 +43,11 @@ public class AquiController : MonoBehaviour {
         Move();
     }
 
+    public void deathMotion()
+    {
+        anim.Play("Dead");
+    }
+
     // 入力に応じて移動後の位置を算出
     public void SetTargetPosition(int d)
     {

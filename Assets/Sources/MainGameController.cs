@@ -19,10 +19,11 @@ public class MainGameController : MonoBehaviour
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
 
-    GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText;
+    GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
     AquiController objAquiController;
     DiceController objDiceController;
     StatusTextController objStatusText;
+    ScreenTextController objScreenText;
 
     public Material[] _material;
     public Material[] _skyboxMaterial;
@@ -54,6 +55,9 @@ public class MainGameController : MonoBehaviour
 
         StatusText = GameObject.Find("StatusText");
         objStatusText = StatusText.GetComponent<StatusTextController>();
+        ScreenText = GameObject.Find("ScreenText");
+        objScreenText = ScreenText.GetComponent<ScreenTextController>();
+
 
         //さいころをいくつか追加
         for (int i = 0; i < 10; i++)
@@ -162,6 +166,9 @@ public class MainGameController : MonoBehaviour
 
         if (count == 0) {
             Debug.Log("GameOver!");
+            objScreenText.setText("Game Over!");
+            objAquiController.deathMotion();
+            //Time.timeScale = 0f;
             return; 
         } //全部埋まってた場合
 
@@ -390,7 +397,6 @@ public class MainGameController : MonoBehaviour
             if (flag)
             {
                 Debug.Log("ハッピーワン！");
-                objStatusText.setText("ハッピーワン!");
                 int sum = 0;
                 vanishingDices.Clear(); //カウントしたダイスのリストを初期化
                 for (int i = 0; i < boardSize; i++){ //1のダイスを検索
@@ -410,11 +416,12 @@ public class MainGameController : MonoBehaviour
                     count++;
                 }
                 score += count; //スコア計算(仮)
+                objStatusText.setText("+" + level + " (ハッピーワン!)");
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
-                    score += level * 100;
-                    objStatusText.setText("ステージボーナス! +" + count * level * 10);
+                    score += count;
+                    objScreenText.setText("ステージボーナス! +" + count*10);
                 }
                 ComputeLevel(); //レベル計算
             }
@@ -446,12 +453,14 @@ public class MainGameController : MonoBehaviour
                     temp.isVanishing = true;
                 }
                 score += count * board_num[x, z]; //スコア計算(仮)
+                objStatusText.setText("+" + count * board_num[x, z]);
 
+                Debug.Log("stage:" + stage + " num:" + board_num[x, z]);
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
-                    score += level * 100;
-                    objStatusText.setText("ステージボーナス! +" + count* level * 10);
+                    score += board_num[x, z]*count;
+                    objScreenText.setText("ステージボーナス! +" + board_num[x, z]*count);
                 }
                 ComputeLevel(); //レベル計算
             }
