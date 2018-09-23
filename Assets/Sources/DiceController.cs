@@ -65,9 +65,8 @@ public class DiceController : MonoBehaviour {
                     //過去の位置に-1を代入
                     script.board[X-1, Z] = -1;
                     script.board_num[X-1, Z] = -1;
+                    return true;
                 }
-                // if (surfaceA == 1) return false; 1の時もvanishdiceを呼び出してから判別を行う
-                return true;
             }
             if (d == 0)
             {
@@ -88,10 +87,9 @@ public class DiceController : MonoBehaviour {
 
                     script.board[X+1, Z] = -1;
                     script.board_num[X+1, Z] = -1;
+                    return true;
                 }
 
-                // if (surfaceA == 1) return false; 1の時もvanishdiceを呼び出してから判別を行う
-                return true;
             }
             if (d == 1)
             {
@@ -112,10 +110,9 @@ public class DiceController : MonoBehaviour {
 
                     script.board[X, Z-1] = -1;
                     script.board_num[X, Z-1] = -1;
+                    return true;
                 }
 
-                // if (surfaceA == 1) return false; 1の時もvanishdiceを呼び出してから判別を行う
-                return true;
             }
             if (d == 3)
             {
@@ -136,10 +133,9 @@ public class DiceController : MonoBehaviour {
 
                     script.board[X, Z+1] = -1;
                     script.board_num[X, Z+1] = -1;
+                    return true;
                 }
 
-               // if (surfaceA == 1) return false; 1の時もvanishdiceを呼び出してから判別を行う
-                return true;
             }
         }
         return false;
@@ -151,7 +147,7 @@ public class DiceController : MonoBehaviour {
 
 		float sumAngle = 0f;
 		while (sumAngle < 90f) {
-			diceAngle = 5f;
+			diceAngle = 8f;
 			sumAngle += diceAngle;
 
 			if (sumAngle > 90f)
