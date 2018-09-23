@@ -427,10 +427,6 @@ public class MainGameController : MonoBehaviour
             ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 300f));
             dc.transform.position = position;
             yield return null;
-            if (dc.transform.position.y != position.y)  // チェインするとこのコルーチンがもう一回始まっているので、処理の順番が回ってきたときにy位置が変わっている、そのとき古いコルーチンを終了する
-            {
-                yield break;
-            }
         }
         DiceController temp = dc.GetComponent<DiceController>();
         board[temp.X, temp.Z] = -1;
