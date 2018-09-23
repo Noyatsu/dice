@@ -75,7 +75,7 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(2);
             }
-            if (Input.GetKey(KeyCode.LeftArrow))
+            else if (Input.GetKey(KeyCode.LeftArrow))
             {
                 if (objDiceController.SetTargetPosition(0))
                 {
@@ -83,7 +83,7 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(0);
             }
-            if (Input.GetKey(KeyCode.UpArrow))
+            else if (Input.GetKey(KeyCode.UpArrow))
             {
                 if (objDiceController.SetTargetPosition(1))
                 {
@@ -91,7 +91,7 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(1);
             }
-            if (Input.GetKey(KeyCode.DownArrow))
+            else if (Input.GetKey(KeyCode.DownArrow))
             {
                 if (objDiceController.SetTargetPosition(3))
                 {
@@ -410,6 +410,7 @@ public class MainGameController : MonoBehaviour
                 while (count < sum-1)
                 {
                     StartCoroutine(sinkingDice(vanishingDices[count]));
+                    vanishingDices[count].GetComponent<DiceController>().isVanishing = true;
                     count++;
                 }
                 score += count; //スコア計算(仮)
@@ -472,9 +473,9 @@ public class MainGameController : MonoBehaviour
             yield return new WaitForEndOfFrame ();
         }
         Vector3 position = dc.transform.position;
-        for (int i = 1; i < 300; i++) {
-            position.y = 0.5f - i * 1f / 300f;
-            ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 300f));
+        for (int i = 1; i < 480; i++) {
+            position.y = 0.5f - i * 1f / 480f;
+            ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 480f));
             dc.transform.position = position;
             yield return null;
         }
