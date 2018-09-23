@@ -12,7 +12,7 @@ public class AquiController : MonoBehaviour {
     public float y = 1.1f; //キャラクターのY座標
     public int z = 0; //< キャラクターのZ座標
 
-    float step = 3f;     //!< 移動速度
+    float step = 4f;     //!< 移動速度
     int direction = 2; //!< キャラクターの向き
     Vector3 target;      //!< 入力受付時、移動後の位置を算出して保存
     Vector3 prevPos;     //!< 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
