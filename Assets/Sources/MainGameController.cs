@@ -610,7 +610,7 @@ public class MainGameController : MonoBehaviour
     }
 
     void ComputeLevel () {
-        int a = 12; //おおよそ1レベルの上昇に必要なスコア
+        int a = 120; //おおよそ1レベルの上昇に必要なスコア
         int b = a; //前の必要経験値を記録する
         int lv = 1;
 
