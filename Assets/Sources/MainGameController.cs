@@ -29,6 +29,10 @@ public class MainGameController : MonoBehaviour
     public Material[] _material;
     public Material[] _skyboxMaterial;
 
+    private AudioSource sound_one;
+    private AudioSource sound_levelup;
+    private AudioSource sound_vanish;
+
     // Use this for initialization
     void Start()
     {
@@ -67,6 +71,14 @@ public class MainGameController : MonoBehaviour
         {
             randomDiceGenerate();
         }
+
+        BgmManager.Instance.Play((stage+1).ToString()); //BGM
+
+        //AudioSourceコンポーネントを取得し、変数に格納
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        sound_one = audioSources[0];
+        sound_levelup = audioSources[1];
+        sound_vanish = audioSources[2];
     }
 
     // Update is called once per frame
@@ -120,6 +132,7 @@ public class MainGameController : MonoBehaviour
 
         }
 
+
         timeElapsed += Time.deltaTime;
        
         if(level > 20) { //現状レベル20で速さは打ち止め
@@ -146,9 +159,17 @@ public class MainGameController : MonoBehaviour
     // ステージを変える
     void changeStage(int nextStage)
     {
-        this.GetComponent<Renderer>().sharedMaterial = _material[nextStage];
-        RenderSettings.skybox = _skyboxMaterial[nextStage];
-        objStatusText.setText("Stage Changed!");
+        this.GetComponent<Renderer>().sharedMaterial = _material[nextStage]; //盤面
+        RenderSettings.skybox = _skyboxMaterial[nextStage]; //背景
+        BgmManager.Instance.Play((nextStage+1).ToString()); //BGM
+        if (nextStage == 6)
+        {
+            objStatusText.setText("Stage Changed! (ステージボーナスは無し!)");
+        }
+        else
+        {
+            objStatusText.setText("Stage Changed! (ステージボーナスは " + (nextStage + 1) + " の面)");
+        }
     }
 
     void randomDiceGenerate()
@@ -167,13 +188,38 @@ public class MainGameController : MonoBehaviour
             }
         }
 
-        if (count == 0) {
- 
+        if (count == 0) { 
             objScreenText.setText("Game Over!");
             objAquiController.deathMotion();
-            DontDestroyOnLoad(this);
-            Invoke("Delay", 3f); // 3秒待ってからシーン遷移
             
+            //全てのさいころがisVanishingかチェック
+            bool gameoverFlag = true;
+            foreach (GameObject tempDice in dices)
+            {
+                try
+                {
+                    if (tempDice.GetComponent<DiceController>().isVanishing)
+                    {
+                        gameoverFlag = false;
+                        break;
+                    }
+                }
+                catch (MissingReferenceException)
+                {
+                    
+                }
+            }
+
+            //ゲームオーバーの時
+            if(gameoverFlag)
+            {
+                BgmManager.Instance.Stop();
+                objScreenText.setText("Game Over!");
+                objAquiController.deathMotion();
+                DontDestroyOnLoad(this);
+                Invoke("Delay", 3f); // 3秒待ってからシーン遷移
+            }
+
             return; 
         } //全部埋まってた場合
 
@@ -434,6 +480,7 @@ public class MainGameController : MonoBehaviour
                     objScreenText.setText("ステージボーナス! +" + count*10);
                 }
                 ComputeLevel(); //レベル計算
+                sound_one.PlayOneShot(sound_one.clip);
             }
         }
         else
@@ -465,7 +512,6 @@ public class MainGameController : MonoBehaviour
                 score += count * board_num[x, z]; //スコア計算(仮)
                 objStatusText.setText("+" + count * board_num[x, z]);
 
-                Debug.Log("stage:" + stage + " num:" + board_num[x, z]);
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
@@ -473,6 +519,7 @@ public class MainGameController : MonoBehaviour
                     objScreenText.setText("ステージボーナス! +" + board_num[x, z]*count);
                 }
                 ComputeLevel(); //レベル計算
+                sound_vanish.PlayOneShot(sound_vanish.clip);
             }
         }
 
@@ -563,7 +610,7 @@ public class MainGameController : MonoBehaviour
     }
 
     void ComputeLevel () {
-        int a = 120; //おおよそ1レベルの上昇に必要なスコア
+        int a = 12; //おおよそ1レベルの上昇に必要なスコア
         int b = a; //前の必要経験値を記録する
         int lv = 1;
 
@@ -577,12 +624,18 @@ public class MainGameController : MonoBehaviour
             }
         }
 
+        if (level != lv)
+        {
+            sound_levelup.PlayOneShot(sound_levelup.clip);
+        }
+
+        // ステージの計算
         level = lv;
         stageBefore = stage;
-        stage = level % 18 / 3 + 1;
-        if (stage == 6)
+        stage = level % 21 / 3 + 1;
+        if (stage == 7)
         {
-            stage -= 6;
+            stage -= 7;
         }
 
     }

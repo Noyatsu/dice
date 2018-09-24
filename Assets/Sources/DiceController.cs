@@ -22,15 +22,21 @@ public class DiceController : MonoBehaviour {
 	public int surfaceB = 2;
 	float step = 2f;
 
-	// Use this for initialization
-	void Start () {
+    //音
+    private AudioSource sound_roll;
+
+
+    // Use this for initialization
+    void Start () {
 		Board = GameObject.Find ("Board");
 		script = Board.GetComponent<MainGameController>();
         diceSizeHalf = transform.localScale.x / 2f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+        sound_roll = GetComponent<AudioSource>();
+    }
+
+    // Update is called once per frame
+    void Update () {
 
 	}
 
@@ -43,6 +49,7 @@ public class DiceController : MonoBehaviour {
             {
                 return false;
             }
+
             if (d == 2)
             {
                 if (X + 1 < script.board.GetLength(0) && script.board[X + 1, Z] == -1)
@@ -65,6 +72,8 @@ public class DiceController : MonoBehaviour {
                     //過去の位置に-1を代入
                     script.board[X-1, Z] = -1;
                     script.board_num[X-1, Z] = -1;
+                    sound_roll.PlayOneShot(sound_roll.clip);
+
                     return true;
                 }
             }
@@ -87,6 +96,8 @@ public class DiceController : MonoBehaviour {
 
                     script.board[X+1, Z] = -1;
                     script.board_num[X+1, Z] = -1;
+                    sound_roll.PlayOneShot(sound_roll.clip);
+
                     return true;
                 }
 
@@ -110,6 +121,8 @@ public class DiceController : MonoBehaviour {
 
                     script.board[X, Z-1] = -1;
                     script.board_num[X, Z-1] = -1;
+                    sound_roll.PlayOneShot(sound_roll.clip);
+
                     return true;
                 }
 
@@ -133,6 +146,8 @@ public class DiceController : MonoBehaviour {
 
                     script.board[X, Z+1] = -1;
                     script.board_num[X, Z+1] = -1;
+                    sound_roll.PlayOneShot(sound_roll.clip);
+
                     return true;
                 }
 
