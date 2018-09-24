@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainGameController : MonoBehaviour
 {
     public int level = 1; //!< ゲームのレベル
-    public int score = 0; //!< ゲームのスコア
+    public static int score = 0; //!< ゲームのスコア
     public int stage = 1; //!< ゲームのステージ(0-5)
     private int stageBefore = 1; //!< 前フレームのゲームのステージ
 
@@ -31,6 +32,8 @@ public class MainGameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        score = 0;
+        
         //配列の初期化
         for (int i = 0; i < board.GetLength(0); i++)
         {
@@ -166,8 +169,10 @@ public class MainGameController : MonoBehaviour
 
         if (count == 0) {
  
-              objScreenText.setText("Game Over!");
-              objAquiController.deathMotion();           
+            objScreenText.setText("Game Over!");
+            objAquiController.deathMotion();
+            DontDestroyOnLoad(this);
+            Invoke("Delay", 3f); // 3秒待ってからシーン遷移
             
             return; 
         } //全部埋まってた場合
@@ -338,6 +343,11 @@ public class MainGameController : MonoBehaviour
             StartCoroutine(RisingDice(objDice));
         }
 
+    }
+
+    void Delay()
+    {
+        SceneManager.LoadScene("GameOver");
     }
     
 
