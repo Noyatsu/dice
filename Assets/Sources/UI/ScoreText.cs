@@ -20,6 +20,7 @@ public class ScoreText : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        text.text = "スコア: " + script.score;
+        // text.text = "スコア: " + script.score;
+        text.text = "スコア: " + MainGameController.score;
     }
 }
