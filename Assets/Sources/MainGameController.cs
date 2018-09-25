@@ -33,6 +33,10 @@ public class MainGameController : MonoBehaviour
     private AudioSource sound_levelup;
     private AudioSource sound_vanish;
 
+    private Vector3 touchStartPos; //フリック入力用
+    private Vector3 touchEndPos;
+
+
     // Use this for initialization
     void Start()
     {
@@ -80,6 +84,112 @@ public class MainGameController : MonoBehaviour
         sound_levelup = audioSources[1];
         sound_vanish = audioSources[2];
     }
+
+    void Flick() //タッチ位置・離した位置を取得
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            touchStartPos = new Vector3(Input.mousePosition.x,
+                                        Input.mousePosition.y,
+                                        Input.mousePosition.z);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            touchEndPos = new Vector3(Input.mousePosition.x,
+                                      Input.mousePosition.y,
+                                      Input.mousePosition.z);
+            GetDirection();
+        }
+    }
+
+    void GetDirection() //フリックされた方向を取得
+    {
+        float directionX = touchEndPos.x - touchStartPos.x;
+        float directionY = touchEndPos.y - touchStartPos.y;
+        string Direction="default";
+
+        if (Mathf.Abs(directionY) < Mathf.Abs(directionX))
+        {
+            if (30 < directionX)
+            {
+                //右向きにフリック
+                Direction = "right";
+            }
+            else if (-30 > directionX)
+            {
+                //左向きにフリック
+                Direction = "left";
+            }
+        }
+     else if (Mathf.Abs(directionX) < Mathf.Abs(directionY)){
+            if (30 < directionY){
+                //上向きにフリック
+                Direction = "up";
+            }else if (-30 > directionY){
+                //下向きのフリック
+                Direction = "down";
+            }
+    }else{
+                //タッチを検出
+                Direction = "touch";
+          }
+
+        if (isRotate_dice == false && isRotate_charactor == false)
+        {
+            switch (Direction)
+            {
+                case "up"://上フリックされた時の処理
+                    if (objDiceController.SetTargetPosition(1))
+                    {
+                        VanishDice(objDiceController.X, objDiceController.Z);
+                    }
+                    objAquiController.SetTargetPosition(1);
+                    break;
+
+                case "down"://下フリックされた時の処理
+                    if (objDiceController.SetTargetPosition(3))
+                    {
+                        VanishDice(objDiceController.X, objDiceController.Z);
+                    }
+                    objAquiController.SetTargetPosition(3);
+                    break;
+
+                case "right"://右フリックされた時の処理
+                    if (objDiceController.SetTargetPosition(2))
+                    {
+                        VanishDice(objDiceController.X, objDiceController.Z);
+                    }
+                    objAquiController.SetTargetPosition(2);
+                    break;
+
+                case "left"://左フリックされた時の処理
+                    if (objDiceController.SetTargetPosition(0))
+                    {
+                        VanishDice(objDiceController.X, objDiceController.Z);
+                    }
+                    objAquiController.SetTargetPosition(0);
+                    break;
+
+                case "touch":
+                    Debug.Log("タッチ");//タッチされた時の処理
+                    break;
+            }
+
+            if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
+            {
+                if (board[objAquiController.x, objAquiController.z] != -1) // 移動先にサイコロが存在するならば
+                {
+                    Dice = dices[board[objAquiController.x, objAquiController.z]];
+                    objDiceController = Dice.GetComponent<DiceController>();
+                    objDiceController.isSelected = true; //選択
+                }
+            }
+
+        }
+    }
+
+
 
     // Update is called once per frame
     void Update()
@@ -132,6 +242,7 @@ public class MainGameController : MonoBehaviour
 
         }
 
+        Flick(); //フリック検知
 
         timeElapsed += Time.deltaTime;
        
