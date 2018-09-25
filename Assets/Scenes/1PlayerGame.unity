@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.272
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.48582178, g: 0.46944106, b: 0.49017078, a: 0.272}
+  m_IndirectSpecularColor: {r: 0.34043393, g: 0.32837734, b: 0.3429399, a: 0.272}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1134,7 +1134,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: GameStart!
+  m_Text: Game Start!
 --- !u!222 &1186296376
 CanvasRenderer:
   m_ObjectHideFlags: 0
