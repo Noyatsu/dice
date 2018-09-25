@@ -136,7 +136,7 @@ public class MainGameController : MonoBehaviour
 
         timeElapsed += Time.deltaTime;
        
-        if(level > 20) { //現状レベル20で速さは打ち止め
+        if(level > 36) { //現状レベル36で速さは打ち止め
             if (timeElapsed >= 1.5)
             {
                 randomDiceGenerate();
@@ -144,7 +144,7 @@ public class MainGameController : MonoBehaviour
             }
         }
         // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-        else if (timeElapsed >= (3.5f-0.1f*level))
+        else if (timeElapsed >= (3.5f-(1/18f)*level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
@@ -605,13 +605,13 @@ public class MainGameController : MonoBehaviour
     }
 
     void ComputeLevel () {
-        int a = 120; //おおよそ1レベルの上昇に必要なスコア
+        int a = 110; //おおよそ1レベルの上昇に必要なスコア
         int b = a; //前の必要経験値を記録する
         int lv = 1;
 
         //レベルの変化
         while (true) {
-            b = (int)((a * lv + b * 1.1)/ 2);
+            b = (int)((a * lv + b * 1.08)/ 2);
             if (score > b) {
                 lv++;
             } else {
