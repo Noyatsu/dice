@@ -34,6 +34,10 @@ public class MainGameController : MonoBehaviour
     private AudioSource sound_levelup;
     private AudioSource sound_vanish;
 
+    private Vector3 touchStartPos; //フリック入力用
+    private Vector3 touchEndPos;
+
+
     // Use this for initialization
     void Start()
     {
@@ -82,20 +86,87 @@ public class MainGameController : MonoBehaviour
         sound_vanish = audioSources[2];
     }
 
+    int Flick() //タッチ位置・離した位置を取得
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            touchStartPos = new Vector3(Input.mousePosition.x,
+                                        Input.mousePosition.y,
+                                        Input.mousePosition.z);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            touchEndPos = new Vector3(Input.mousePosition.x,
+                                      Input.mousePosition.y,
+                                      Input.mousePosition.z);
+            int flick =GetDirection();
+            return flick;
+        }
+        return -1;
+    }
+
+    int GetDirection() //フリックされた方向を取得
+    {
+        float directionX = touchEndPos.x - touchStartPos.x;
+        float directionY = touchEndPos.y - touchStartPos.y;
+
+        if (Mathf.Abs(directionY) < Mathf.Abs(directionX))
+        {
+            if (30 < directionX)
+            {
+                //右向きにフリック
+                return 2;
+            }
+            else if (-30 > directionX)
+            {
+                //左向きにフリック
+                return 0;
+            }
+        }
+        else if (Mathf.Abs(directionX) < Mathf.Abs(directionY))
+        {
+            if (30 < directionY)
+            {
+                //上向きにフリック
+                return 1;
+            }
+            else if (-30 > directionY)
+            {
+                //下向きのフリック
+                return 3;
+            }
+        }
+        else
+        {
+            //タッチを検出
+            return 4;
+        } 
+
+        return -1; 
+            
+
+    }
+
+
+
     // Update is called once per frame
     void Update()
     {
+
+        int flick = Flick(); //フリック検知
+
         // キー入力一括制御
         if (isRotate_dice == false && isRotate_charactor == false && isGameovered == false)
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
             {
                 if(objDiceController.SetTargetPosition(2)) {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
                 objAquiController.SetTargetPosition(2);
-            }
-            else if (Input.GetKey(KeyCode.LeftArrow))
+                }
+            else if (Input.GetKey(KeyCode.LeftArrow) || flick == 0)
             {
                 if (objDiceController.SetTargetPosition(0))
                 {
@@ -103,7 +174,7 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(0);
             }
-            else if (Input.GetKey(KeyCode.UpArrow))
+            else if (Input.GetKey(KeyCode.UpArrow) || flick == 1)
             {
                 if (objDiceController.SetTargetPosition(1))
                 {
@@ -111,7 +182,7 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(1);
             }
-            else if (Input.GetKey(KeyCode.DownArrow))
+            else if (Input.GetKey(KeyCode.DownArrow) || flick == 3)
             {
                 if (objDiceController.SetTargetPosition(3))
                 {
@@ -169,7 +240,7 @@ public class MainGameController : MonoBehaviour
         }
         else
         {
-            objStatusText.setText("Stage Changed! (ステージボーナスは " + (nextStage + 1) + " の面)");
+            objStatusText.setText("Stage Changed! (ステージボーナス: " + (nextStage + 1));
         }
     }
 
