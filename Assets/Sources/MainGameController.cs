@@ -85,7 +85,7 @@ public class MainGameController : MonoBehaviour
         sound_vanish = audioSources[2];
     }
 
-    void Flick() //タッチ位置・離した位置を取得
+    int Flick() //タッチ位置・離した位置を取得
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -99,94 +99,52 @@ public class MainGameController : MonoBehaviour
             touchEndPos = new Vector3(Input.mousePosition.x,
                                       Input.mousePosition.y,
                                       Input.mousePosition.z);
-            GetDirection();
+            int flick =GetDirection();
+            return flick;
         }
+        return -1;
     }
 
-    void GetDirection() //フリックされた方向を取得
+    int GetDirection() //フリックされた方向を取得
     {
         float directionX = touchEndPos.x - touchStartPos.x;
         float directionY = touchEndPos.y - touchStartPos.y;
-        string Direction="default";
 
         if (Mathf.Abs(directionY) < Mathf.Abs(directionX))
         {
             if (30 < directionX)
             {
                 //右向きにフリック
-                Direction = "right";
+                return 2;
             }
             else if (-30 > directionX)
             {
                 //左向きにフリック
-                Direction = "left";
+                return 0;
             }
         }
-     else if (Mathf.Abs(directionX) < Mathf.Abs(directionY)){
-            if (30 < directionY){
-                //上向きにフリック
-                Direction = "up";
-            }else if (-30 > directionY){
-                //下向きのフリック
-                Direction = "down";
-            }
-    }else{
-                //タッチを検出
-                Direction = "touch";
-          }
-
-        if (isRotate_dice == false && isRotate_charactor == false)
+        else if (Mathf.Abs(directionX) < Mathf.Abs(directionY))
         {
-            switch (Direction)
+            if (30 < directionY)
             {
-                case "up"://上フリックされた時の処理
-                    if (objDiceController.SetTargetPosition(1))
-                    {
-                        VanishDice(objDiceController.X, objDiceController.Z);
-                    }
-                    objAquiController.SetTargetPosition(1);
-                    break;
-
-                case "down"://下フリックされた時の処理
-                    if (objDiceController.SetTargetPosition(3))
-                    {
-                        VanishDice(objDiceController.X, objDiceController.Z);
-                    }
-                    objAquiController.SetTargetPosition(3);
-                    break;
-
-                case "right"://右フリックされた時の処理
-                    if (objDiceController.SetTargetPosition(2))
-                    {
-                        VanishDice(objDiceController.X, objDiceController.Z);
-                    }
-                    objAquiController.SetTargetPosition(2);
-                    break;
-
-                case "left"://左フリックされた時の処理
-                    if (objDiceController.SetTargetPosition(0))
-                    {
-                        VanishDice(objDiceController.X, objDiceController.Z);
-                    }
-                    objAquiController.SetTargetPosition(0);
-                    break;
-
-                case "touch":
-                    Debug.Log("タッチ");//タッチされた時の処理
-                    break;
+                //上向きにフリック
+                return 1;
             }
-
-            if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
+            else if (-30 > directionY)
             {
-                if (board[objAquiController.x, objAquiController.z] != -1) // 移動先にサイコロが存在するならば
-                {
-                    Dice = dices[board[objAquiController.x, objAquiController.z]];
-                    objDiceController = Dice.GetComponent<DiceController>();
-                    objDiceController.isSelected = true; //選択
-                }
+                //下向きのフリック
+                return 3;
             }
-
         }
+        else
+        {
+            //タッチを検出
+            return 4;
+        } 
+
+        return -1; 
+            
+
     }
 
 
@@ -194,17 +152,22 @@ public class MainGameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        int flick = Flick(); //フリック検知
+
         // キー入力一括制御
+
+
         if (isRotate_dice == false && isRotate_charactor == false)
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
             {
                 if(objDiceController.SetTargetPosition(2)) {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
                 objAquiController.SetTargetPosition(2);
-            }
-            else if (Input.GetKey(KeyCode.LeftArrow))
+                }
+            else if (Input.GetKey(KeyCode.LeftArrow) || flick == 0)
             {
                 if (objDiceController.SetTargetPosition(0))
                 {
@@ -212,7 +175,7 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(0);
             }
-            else if (Input.GetKey(KeyCode.UpArrow))
+            else if (Input.GetKey(KeyCode.UpArrow) || flick == 1)
             {
                 if (objDiceController.SetTargetPosition(1))
                 {
@@ -220,7 +183,7 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(1);
             }
-            else if (Input.GetKey(KeyCode.DownArrow))
+            else if (Input.GetKey(KeyCode.DownArrow) || flick == 3)
             {
                 if (objDiceController.SetTargetPosition(3))
                 {
@@ -242,7 +205,6 @@ public class MainGameController : MonoBehaviour
 
         }
 
-        Flick(); //フリック検知
 
         timeElapsed += Time.deltaTime;
        
@@ -279,7 +241,7 @@ public class MainGameController : MonoBehaviour
         }
         else
         {
-            objStatusText.setText("Stage Changed! (ステージボーナスは " + (nextStage + 1) + " の面)");
+            objStatusText.setText("Stage Changed! (ステージボーナス: " + (nextStage + 1));
         }
     }
 
