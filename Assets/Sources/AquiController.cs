@@ -45,6 +45,7 @@ public class AquiController : MonoBehaviour {
 
     public void deathMotion()
     {
+        //anim.SetTrigger("Dead");
         anim.Play("Dead");
     }
 

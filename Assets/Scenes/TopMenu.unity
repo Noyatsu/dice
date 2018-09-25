@@ -1288,7 +1288,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: d987b594f1189ca4294c5842dc4dc616, type: 3}
-    m_FontSize: 14
+    m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 0
@@ -1299,7 +1299,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u30BF\u30A4\u30C8\u30EB"
+  m_Text: Six-sided Traveler
 --- !u!222 &1879532491
 CanvasRenderer:
   m_ObjectHideFlags: 0
