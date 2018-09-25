@@ -19,6 +19,7 @@ public class MainGameController : MonoBehaviour
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
+    bool isGameovered = false; //ゲームオーバーしたかどうか
 
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
     AquiController objAquiController;
@@ -85,7 +86,7 @@ public class MainGameController : MonoBehaviour
     void Update()
     {
         // キー入力一括制御
-        if (isRotate_dice == false && isRotate_charactor == false)
+        if (isRotate_dice == false && isRotate_charactor == false && isGameovered == false)
         {
             if (Input.GetKey(KeyCode.RightArrow))
             {
@@ -175,7 +176,6 @@ public class MainGameController : MonoBehaviour
     void randomDiceGenerate()
     {
         // 配置する座標を決定
-
         int count = 0;
         int[,] chusen = new int[boardSize*boardSize,2];
         for (int j = 0; j < boardSize; j++){
@@ -188,31 +188,26 @@ public class MainGameController : MonoBehaviour
             }
         }
 
-        if (count == 0) { 
-            objScreenText.setText("Game Over!");
-            objAquiController.deathMotion();
-            
+        if (count == 0 && isGameovered == false) { 
             //全てのさいころがisVanishingかチェック
             bool gameoverFlag = true;
-            foreach (GameObject tempDice in dices)
+
+            for (int j = 0; j < boardSize; j++)
             {
-                try
+                for (int k = 0; k < boardSize; k++)
                 {
-                    if (tempDice.GetComponent<DiceController>().isVanishing)
+                    if(dices[board[j,k]].GetComponent<DiceController>().isVanishing == true)
                     {
                         gameoverFlag = false;
                         break;
                     }
                 }
-                catch (MissingReferenceException)
-                {
-                    
-                }
             }
 
             //ゲームオーバーの時
-            if(gameoverFlag)
+            if(gameoverFlag == true && isGameovered == false)
             {
+                isGameovered = true;
                 BgmManager.Instance.Stop();
                 objScreenText.setText("Game Over!");
                 objAquiController.deathMotion();
@@ -472,7 +467,7 @@ public class MainGameController : MonoBehaviour
                     count++;
                 }
                 score += count; //スコア計算(仮)
-                objStatusText.setText("+" + count + " (ハッピーワン!)");
+                objStatusText.setText("+" + count + " (ワンゾロバニッシュ!!)");
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
