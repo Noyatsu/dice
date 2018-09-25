@@ -19,6 +19,7 @@ public class MainGameController : MonoBehaviour
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
+    bool isGameovered = false; //ゲームオーバーしたかどうか
 
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
     AquiController objAquiController;
@@ -156,9 +157,7 @@ public class MainGameController : MonoBehaviour
         int flick = Flick(); //フリック検知
 
         // キー入力一括制御
-
-
-        if (isRotate_dice == false && isRotate_charactor == false)
+        if (isRotate_dice == false && isRotate_charactor == false && isGameovered == false)
         {
             if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
             {
@@ -208,7 +207,7 @@ public class MainGameController : MonoBehaviour
 
         timeElapsed += Time.deltaTime;
        
-        if(level > 20) { //現状レベル20で速さは打ち止め
+        if(level > 36) { //現状レベル36で速さは打ち止め
             if (timeElapsed >= 1.5)
             {
                 randomDiceGenerate();
@@ -216,7 +215,7 @@ public class MainGameController : MonoBehaviour
             }
         }
         // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-        else if (timeElapsed >= (3.5f-0.1f*level))
+        else if (timeElapsed >= (3.5f-(1/18f)*level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
@@ -248,7 +247,6 @@ public class MainGameController : MonoBehaviour
     void randomDiceGenerate()
     {
         // 配置する座標を決定
-
         int count = 0;
         int[,] chusen = new int[boardSize*boardSize,2];
         for (int j = 0; j < boardSize; j++){
@@ -261,31 +259,26 @@ public class MainGameController : MonoBehaviour
             }
         }
 
-        if (count == 0) { 
-            objScreenText.setText("Game Over!");
-            objAquiController.deathMotion();
-            
+        if (count == 0 && isGameovered == false) { 
             //全てのさいころがisVanishingかチェック
             bool gameoverFlag = true;
-            foreach (GameObject tempDice in dices)
+
+            for (int j = 0; j < boardSize; j++)
             {
-                try
+                for (int k = 0; k < boardSize; k++)
                 {
-                    if (tempDice.GetComponent<DiceController>().isVanishing)
+                    if(dices[board[j,k]].GetComponent<DiceController>().isVanishing == true)
                     {
                         gameoverFlag = false;
                         break;
                     }
                 }
-                catch (MissingReferenceException)
-                {
-                    
-                }
             }
 
             //ゲームオーバーの時
-            if(gameoverFlag)
+            if(gameoverFlag == true && isGameovered == false)
             {
+                isGameovered = true;
                 BgmManager.Instance.Stop();
                 objScreenText.setText("Game Over!");
                 objAquiController.deathMotion();
@@ -545,7 +538,7 @@ public class MainGameController : MonoBehaviour
                     count++;
                 }
                 score += count; //スコア計算(仮)
-                objStatusText.setText("+" + count + " (ハッピーワン!)");
+                objStatusText.setText("+" + count + " (ワンゾロバニッシュ!!)");
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
@@ -683,13 +676,13 @@ public class MainGameController : MonoBehaviour
     }
 
     void ComputeLevel () {
-        int a = 120; //おおよそ1レベルの上昇に必要なスコア
+        int a = 110; //おおよそ1レベルの上昇に必要なスコア
         int b = a; //前の必要経験値を記録する
         int lv = 1;
 
         //レベルの変化
         while (true) {
-            b = (int)((a * lv + b * 1.1)/ 2);
+            b = (int)((a * lv + b * 1.08)/ 2);
             if (score > b) {
                 lv++;
             } else {
