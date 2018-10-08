@@ -7,6 +7,8 @@ public class OnlineGameController : MonoBehaviour
 {
     MainGameController script;
     private PhotonView objPhotonViewControl;
+    private AudioSource sound_enemy;
+
 
     public int enemyScore;
 
@@ -14,7 +16,7 @@ public class OnlineGameController : MonoBehaviour
     {
         script = GameObject.Find("Board").GetComponent<MainGameController>();
         script.gameType = 1; // ゲームタイプを1に設定
-
+        sound_enemy = GetComponent<AudioSource>();
         objPhotonViewControl = GetComponent<PhotonView>();
     }
 
@@ -52,6 +54,7 @@ public class OnlineGameController : MonoBehaviour
     private void setEnemyScore(int eScore)
     {
         enemyScore = eScore;
+        sound_enemy.PlayOneShot(sound_enemy.clip);
     }
 
     [PunRPC]
