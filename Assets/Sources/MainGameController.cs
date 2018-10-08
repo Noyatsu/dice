@@ -220,7 +220,7 @@ public class MainGameController : MonoBehaviour
             }
         }
         // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-        else if (timeElapsed >= (2.5f-(1/18f)*level))
+        else if (timeElapsed >= (3.5f-(1/18f)*level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
