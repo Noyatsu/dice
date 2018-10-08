@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class OnlineSystem : MonoBehaviour {
 
@@ -35,6 +36,11 @@ public class OnlineSystem : MonoBehaviour {
     void OnJoinedRoom()
     {
         Debug.Log("ルームへ入室しました。");
+        Debug.Log(PhotonNetwork.room.PlayerCount);
+        if(PhotonNetwork.room.PlayerCount == 2)
+        {
+            GameStart();
+        }
     }
 
     // ルームの入室に失敗すると呼ばれる
@@ -45,9 +51,33 @@ public class OnlineSystem : MonoBehaviour {
         if(mode == 1)
         {
             // ルームがないと入室に失敗するため、その時は自分で作る
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.maxPlayers = 2;
+            RoomOptions roomOptions = new RoomOptions()
+            {
+                maxPlayers = 2
+            };
             PhotonNetwork.CreateRoom(null, roomOptions, null);
         }
+    }
+
+    // ほかのプレイヤーが入室してきた際に呼ばれる
+    void OnPhotonPlayerConnected(PhotonPlayer player)
+    {
+        Debug.Log(player.name + " is joined.");
+        GameStart();
+    }
+
+
+    public void cancelButtonClicked()
+    {
+        PhotonNetwork.LeaveRoom();
+        PhotonNetwork.Disconnect();
+        objLoading.SetActive(false);
+    }
+
+    void GameStart()
+    {
+        //ゲームを開始
+        PhotonNetwork.room.IsOpen = false;
+        SceneManager.LoadScene("OnlineGame");
     }
 }

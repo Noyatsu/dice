@@ -42,4 +42,6 @@ MonoBehaviour:
   - RequestForPickupItems
   - RequestForPickupTimes
   - TaggedPlayer
+  - setEnemyScore
+  - youWin
   DisableAutoOpenWizard: 1
