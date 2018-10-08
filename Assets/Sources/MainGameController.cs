@@ -5,9 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class MainGameController : MonoBehaviour
 {
+    public int gameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン)
+    public int playerType = 0; //!< 0なら部屋主、1ならそれ以外(オンライン用)
+
     public int level = 1; //!< ゲームのレベル
     public static int score = 0; //!< ゲームのスコア
-    public int stage = 1; //!< ゲームのステージ(0-5)
+    public int sumScore = 0; //!< 対戦用合計スコア
+    public int stage = 1; //!< ゲームのステージ(0-6)
     private int stageBefore = 1; //!< 前フレームのゲームのステージ
 
     public int boardSize = 7; //!< 盤面のサイズ
@@ -24,6 +28,7 @@ public class MainGameController : MonoBehaviour
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
     AquiController objAquiController;
     DiceController objDiceController;
+    OnlineGameController objOnlineGameController;
     StatusTextController objStatusText;
     ScreenTextController objScreenText;
 
@@ -215,17 +220,12 @@ public class MainGameController : MonoBehaviour
             }
         }
         // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-        else if (timeElapsed >= (3.5f-(1/18f)*level))
+        else if (timeElapsed >= (2.5f-(1/18f)*level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
         }
 
-        //ゲームステージの設定
-        if (stage != stageBefore)
-        {
-            changeStage(stage);
-        }
     }
 
     // ステージを変える
@@ -279,9 +279,11 @@ public class MainGameController : MonoBehaviour
             if(gameoverFlag == true && isGameovered == false)
             {
                 isGameovered = true;
+                GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendLose();
                 BgmManager.Instance.Stop();
                 objScreenText.setText("Game Over!");
                 objAquiController.deathMotion();
+
                 DontDestroyOnLoad(this);
                 Invoke("Delay", 3f); // 3秒待ってからシーン遷移
             }
@@ -459,7 +461,15 @@ public class MainGameController : MonoBehaviour
 
     void Delay()
     {
-        SceneManager.LoadScene("GameOver");
+        if(gameType == 0)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
+        else if (gameType == 1)
+        {
+            Debug.Log("sendlosed");
+            SceneManager.LoadScene("Youlose");
+        }
     }
     
 
@@ -537,12 +547,12 @@ public class MainGameController : MonoBehaviour
                     vanishingDices[count].GetComponent<DiceController>().isVanishing = true;
                     count++;
                 }
-                score += count; //スコア計算(仮)
+                addScore(count);
                 objStatusText.setText("+" + count + " (ワンゾロバニッシュ!!)");
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
-                    score += count;
+                    addScore(count);
                     objScreenText.setText("ステージボーナス! +" + count*10);
                 }
                 ComputeLevel(); //レベル計算
@@ -560,8 +570,6 @@ public class MainGameController : MonoBehaviour
             //隣接する同じ目のダイス数の計算
             count = CountDice(x, z, count);
 
-            //Debug.Log("隣接するダイス数:" + count);
-
             //消す処理
             if (count >= board_num[x, z])
             {
@@ -570,18 +578,16 @@ public class MainGameController : MonoBehaviour
                 for (int j = 0; j < count; j++)
                 {
                     temp = vanishingDices[j].GetComponent<DiceController>();
-                    // board[temp.X, temp.Z] = -1;
-                    // board_num[temp.X, temp.Z] = -1;
                     StartCoroutine(sinkingDice(vanishingDices[j]));
                     temp.isVanishing = true;
                 }
-                score += count * board_num[x, z]; //スコア計算(仮)
+                addScore(count * board_num[x, z]);
                 objStatusText.setText("+" + count * board_num[x, z]);
 
                 //ステージボーナス
                 if (board_num[x, z] == stage + 1)
                 {
-                    score += board_num[x, z]*count;
+                    addScore(board_num[x, z] * count);
                     objScreenText.setText("ステージボーナス! +" + board_num[x, z]*count);
                 }
                 ComputeLevel(); //レベル計算
@@ -675,7 +681,7 @@ public class MainGameController : MonoBehaviour
             return cnt;
     }
 
-    void ComputeLevel () {
+    public void ComputeLevel () {
         int a = 110; //おおよそ1レベルの上昇に必要なスコア
         int b = a; //前の必要経験値を記録する
         int lv = 1;
@@ -683,9 +689,14 @@ public class MainGameController : MonoBehaviour
         //レベルの変化
         while (true) {
             b = (int)((a * lv + b * 1.08)/ 2);
-            if (score > b) {
+            if (score > b && gameType == 0) {
                 lv++;
-            } else {
+            }
+            else if (sumScore > b && gameType == 1)
+            {
+                lv++;
+            }
+            else {
                 break;
             }
         }
@@ -703,7 +714,30 @@ public class MainGameController : MonoBehaviour
         {
             stage -= 7;
         }
+        if (stageBefore != stage)
+        {
+            changeStage(stage);
+        }
 
+    }
+
+    //スコア計算用
+    void addScore(int num)
+    {
+        score += num;
+        sumScore += num;
+
+        //オンラインモードなら
+        if (gameType == 1)
+        {
+            // ルームプロパティでsumScoreを送信
+			var properties  = new ExitGames.Client.Photon.Hashtable();
+			properties.Add("sumScore", sumScore);
+			PhotonNetwork.room.SetCustomProperties(properties);
+
+            //自分のスコアを相手に送信
+            GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendScore(score);
+        }
     }
 
 

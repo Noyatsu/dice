@@ -20,6 +20,6 @@ public class LevelText : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        text.text = "レベル" + script.level;
+        text.text = "Level " + script.level;
     }
 }
