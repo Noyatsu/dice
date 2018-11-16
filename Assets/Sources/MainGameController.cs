@@ -106,11 +106,16 @@ public class MainGameController : MonoBehaviour
         double xDiff = Input.mousePosition.x - clickstartPos.x;
         double yDiff = Input.mousePosition.y - clickstartPos.y;
 
-        // マウスが移動したときに移動距離が一定を超えたら
+        // マウスが移動したときに移動距離が一定を超えたら(判定は円状)
         if (Input.GetMouseButton(0) && (System.Math.Pow(xDiff, 2) + System.Math.Pow(yDiff, 2)) > (threshold * threshold))
         {
+            // 左
+            if (xDiff < 0 && yDiff > 0)
+            {
+                return 0;
+            }
             // 上
-            if (yDiff > 0 && xDiff > 0)
+            else if (yDiff > 0 && xDiff > 0)
             {
                 return 1;
             }
@@ -123,11 +128,6 @@ public class MainGameController : MonoBehaviour
             else if (xDiff > 0 && yDiff < 0)
             {
                 return 2;
-            }
-            // 左
-            else if (xDiff < 0 && yDiff > 0)
-            {
-                return 0;
             }
         }
         return -1;
