@@ -279,7 +279,10 @@ public class MainGameController : MonoBehaviour
             if(gameoverFlag == true && isGameovered == false)
             {
                 isGameovered = true;
-                GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendLose();
+                if (gameType == 1)
+                {
+                    GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendLose();
+                }
                 BgmManager.Instance.Stop();
                 objScreenText.setText("Game Over!");
                 objAquiController.deathMotion();
