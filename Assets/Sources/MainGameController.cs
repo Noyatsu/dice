@@ -39,15 +39,13 @@ public class MainGameController : MonoBehaviour
     private AudioSource sound_levelup;
     private AudioSource sound_vanish;
 
-    private Vector3 touchStartPos; //フリック入力用
-    private Vector3 touchEndPos;
-
+    private Vector3 clickstartPos;
 
     // Use this for initialization
     void Start()
     {
         score = 0;
-        
+
         //配列の初期化
         for (int i = 0; i < board.GetLength(0); i++)
         {
@@ -61,8 +59,8 @@ public class MainGameController : MonoBehaviour
         //初期用配列設定
         board[0, 0] = maxDiceId;
         board_num[0, 0] = 1;
-        
-        DiceBase =(GameObject)Resources.Load("Dice");
+
+        DiceBase = (GameObject)Resources.Load("Dice");
         Dice = GameObject.Find("Dice");
         dices.Add(Dice);  //リストにオブジェクトを追加
 
@@ -82,7 +80,7 @@ public class MainGameController : MonoBehaviour
             randomDiceGenerate();
         }
 
-        BgmManager.Instance.Play((stage+1).ToString()); //BGM
+        BgmManager.Instance.Play((stage + 1).ToString()); //BGM
 
         //AudioSourceコンポーネントを取得し、変数に格納
         AudioSource[] audioSources = GetComponents<AudioSource>();
@@ -91,66 +89,48 @@ public class MainGameController : MonoBehaviour
         sound_vanish = audioSources[2];
     }
 
-    int Flick() //タッチ位置・離した位置を取得
+    /*
+     * ぷに操作による移動方向を返す
+     * @return 移動方向(int)
+     */
+    int Puni()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        double threshold = 50.0f; //!< 移動判定の閾値
+
+        // マウスが押された瞬間に押された場所を格納する
+        if (Input.GetMouseButtonDown(0))
         {
-            touchStartPos = new Vector3(Input.mousePosition.x,
-                                        Input.mousePosition.y,
-                                        Input.mousePosition.z);
+            clickstartPos = Input.mousePosition;
         }
 
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            touchEndPos = new Vector3(Input.mousePosition.x,
-                                      Input.mousePosition.y,
-                                      Input.mousePosition.z);
-            int flick =GetDirection();
-            return flick;
-        }
-        return -1;
-    }
+        double xDiff = Input.mousePosition.x - clickstartPos.x;
+        double yDiff = Input.mousePosition.y - clickstartPos.y;
 
-    int GetDirection() //フリックされた方向を取得
-    {
-        float directionX = touchEndPos.x - touchStartPos.x;
-        float directionY = touchEndPos.y - touchStartPos.y;
-
-        if (Mathf.Abs(directionY) < Mathf.Abs(directionX))
+        // マウスが移動したときに移動距離が一定を超えたら
+        if (Input.GetMouseButton(0) && (System.Math.Pow(xDiff, 2) + System.Math.Pow(yDiff, 2)) > (threshold * threshold))
         {
-            if (30 < directionX)
+            // 上
+            if (yDiff > 0 && xDiff > 0)
             {
-                //右向きにフリック
+                return 1;
+            }
+            // 下
+            else if (yDiff < 0 && xDiff < 0)
+            {
+                return 3;
+            }
+            // 右
+            else if (xDiff > 0 && yDiff < 0)
+            {
                 return 2;
             }
-            else if (-30 > directionX)
+            // 左
+            else if (xDiff < 0 && yDiff > 0)
             {
-                //左向きにフリック
                 return 0;
             }
         }
-        else if (Mathf.Abs(directionX) < Mathf.Abs(directionY))
-        {
-            if (30 < directionY)
-            {
-                //上向きにフリック
-                return 1;
-            }
-            else if (-30 > directionY)
-            {
-                //下向きのフリック
-                return 3;
-            }
-        }
-        else
-        {
-            //タッチを検出
-            return 4;
-        } 
-
-        return -1; 
-            
-
+        return -1;
     }
 
 
@@ -159,18 +139,19 @@ public class MainGameController : MonoBehaviour
     void Update()
     {
 
-        int flick = Flick(); //フリック検知
+        int flick = Puni(); //ぷに検知
 
         // キー入力一括制御
         if (isRotate_dice == false && isRotate_charactor == false && isGameovered == false)
         {
             if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
             {
-                if(objDiceController.SetTargetPosition(2)) {
+                if (objDiceController.SetTargetPosition(2))
+                {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
                 objAquiController.SetTargetPosition(2);
-                }
+            }
             else if (Input.GetKey(KeyCode.LeftArrow) || flick == 0)
             {
                 if (objDiceController.SetTargetPosition(0))
@@ -211,8 +192,9 @@ public class MainGameController : MonoBehaviour
 
 
         timeElapsed += Time.deltaTime;
-       
-        if(level > 36) { //現状レベル36で速さは打ち止め
+
+        if (level > 36)
+        { //現状レベル36で速さは打ち止め
             if (timeElapsed >= 1.5)
             {
                 randomDiceGenerate();
@@ -220,7 +202,7 @@ public class MainGameController : MonoBehaviour
             }
         }
         // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-        else if (timeElapsed >= (3.5f-(1/18f)*level))
+        else if (timeElapsed >= (3.5f - (1 / 18f) * level))
         {
             randomDiceGenerate();
             timeElapsed = 0.0f;
@@ -233,7 +215,7 @@ public class MainGameController : MonoBehaviour
     {
         this.GetComponent<Renderer>().sharedMaterial = _material[nextStage]; //盤面
         RenderSettings.skybox = _skyboxMaterial[nextStage]; //背景
-        BgmManager.Instance.Play((nextStage+1).ToString()); //BGM
+        BgmManager.Instance.Play((nextStage + 1).ToString()); //BGM
         if (nextStage == 6)
         {
             objStatusText.setText("Stage Changed! (ステージボーナスは無し!)");
@@ -248,18 +230,22 @@ public class MainGameController : MonoBehaviour
     {
         // 配置する座標を決定
         int count = 0;
-        int[,] chusen = new int[boardSize*boardSize,2];
-        for (int j = 0; j < boardSize; j++){
-            for (int k = 0; k < boardSize; k++){
-                if(board[j,k]==-1){
-                    chusen[count,0] = j;
-                    chusen[count,1] = k;
+        int[,] chusen = new int[boardSize * boardSize, 2];
+        for (int j = 0; j < boardSize; j++)
+        {
+            for (int k = 0; k < boardSize; k++)
+            {
+                if (board[j, k] == -1)
+                {
+                    chusen[count, 0] = j;
+                    chusen[count, 1] = k;
                     count++; //空白の座標をchusenに保存
                 }
             }
         }
 
-        if (count == 0 && isGameovered == false) { 
+        if (count == 0 && isGameovered == false)
+        {
             //全てのさいころがisVanishingかチェック
             bool gameoverFlag = true;
 
@@ -267,7 +253,7 @@ public class MainGameController : MonoBehaviour
             {
                 for (int k = 0; k < boardSize; k++)
                 {
-                    if(dices[board[j,k]].GetComponent<DiceController>().isVanishing == true)
+                    if (dices[board[j, k]].GetComponent<DiceController>().isVanishing == true)
                     {
                         gameoverFlag = false;
                         break;
@@ -276,7 +262,7 @@ public class MainGameController : MonoBehaviour
             }
 
             //ゲームオーバーの時
-            if(gameoverFlag == true && isGameovered == false)
+            if (gameoverFlag == true && isGameovered == false)
             {
                 isGameovered = true;
                 GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendLose();
@@ -288,12 +274,12 @@ public class MainGameController : MonoBehaviour
                 Invoke("Delay", 3f); // 3秒待ってからシーン遷移
             }
 
-            return; 
+            return;
         } //全部埋まってた場合
 
         int choose = Random.Range(0, count); //配置する場所をランダムに決定
-        int x = chusen[choose,0];
-        int z = chusen[choose,1];
+        int x = chusen[choose, 0];
+        int z = chusen[choose, 1];
 
 
         // 配置する面を決定
@@ -441,7 +427,7 @@ public class MainGameController : MonoBehaviour
         // その座標が空だったらさいころを追加
         if (board[x, z] == -1)
         {
-            maxDiceId++; 
+            maxDiceId++;
             board[x, z] = maxDiceId;
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
             GameObject objDice = (GameObject)Instantiate(DiceBase, position, Quaternion.Euler(xi, yi, zi));
@@ -461,7 +447,7 @@ public class MainGameController : MonoBehaviour
 
     void Delay()
     {
-        if(gameType == 0)
+        if (gameType == 0)
         {
             SceneManager.LoadScene("GameOver");
         }
@@ -471,11 +457,13 @@ public class MainGameController : MonoBehaviour
             SceneManager.LoadScene("Youlose");
         }
     }
-    
 
-    IEnumerator RisingDice(GameObject dc) {
+
+    IEnumerator RisingDice(GameObject dc)
+    {
         Vector3 position = dc.transform.position;
-        for (int i = 1; i < 21; i++) {
+        for (int i = 1; i < 21; i++)
+        {
             position.y = -0.5f + i * 1f / 20f;
             dc.transform.position = position;
             yield return null;
@@ -490,9 +478,10 @@ public class MainGameController : MonoBehaviour
         {
             bool flag = false;
 
-            if(x < boardSize - 1 && board[x+1,z] != -1){
+            if (x < boardSize - 1 && board[x + 1, z] != -1)
+            {
                 DiceController right = dices[board[x + 1, z]].GetComponent<DiceController>();
-                if(right.isVanishing == true && board_num[x + 1, z] != 1) 
+                if (right.isVanishing == true && board_num[x + 1, z] != 1)
                 {
                     flag = true;
                 }
@@ -517,7 +506,7 @@ public class MainGameController : MonoBehaviour
             }
 
 
-            if (z > 0  && board[x, z - 1] != -1)
+            if (z > 0 && board[x, z - 1] != -1)
             {
                 DiceController down = dices[board[x, z - 1]].GetComponent<DiceController>();
                 if (down.isVanishing == true && board_num[x, z - 1] != 1)
@@ -531,9 +520,12 @@ public class MainGameController : MonoBehaviour
                 Debug.Log("ハッピーワン！");
                 int sum = 0;
                 vanishingDices.Clear(); //カウントしたダイスのリストを初期化
-                for (int i = 0; i < boardSize; i++){ //1のダイスを検索
-                    for (int j = 0; j < boardSize; j++) {
-                        if(board_num[i,j]==1){
+                for (int i = 0; i < boardSize; i++)
+                { //1のダイスを検索
+                    for (int j = 0; j < boardSize; j++)
+                    {
+                        if (board_num[i, j] == 1)
+                        {
                             vanishingDices.Add(dices[board[i, j]]); //削除リストへ追加
                             sum++; //数を記録
                         }
@@ -541,7 +533,7 @@ public class MainGameController : MonoBehaviour
                 }
                 vanishingDices.Remove(dices[board[x, z]]); //足元のダイスのみ削除リストから減らす
                 int count = 0;
-                while (count < sum-1)
+                while (count < sum - 1)
                 {
                     StartCoroutine(sinkingDice(vanishingDices[count]));
                     vanishingDices[count].GetComponent<DiceController>().isVanishing = true;
@@ -553,7 +545,7 @@ public class MainGameController : MonoBehaviour
                 if (board_num[x, z] == stage + 1)
                 {
                     addScore(count);
-                    objScreenText.setText("ステージボーナス! +" + count*10);
+                    objScreenText.setText("ステージボーナス! +" + count * 10);
                 }
                 ComputeLevel(); //レベル計算
                 sound_one.PlayOneShot(sound_one.clip);
@@ -588,7 +580,7 @@ public class MainGameController : MonoBehaviour
                 if (board_num[x, z] == stage + 1)
                 {
                     addScore(board_num[x, z] * count);
-                    objScreenText.setText("ステージボーナス! +" + board_num[x, z]*count);
+                    objScreenText.setText("ステージボーナス! +" + board_num[x, z] * count);
                 }
                 ComputeLevel(); //レベル計算
                 sound_vanish.PlayOneShot(sound_vanish.clip);
@@ -598,17 +590,20 @@ public class MainGameController : MonoBehaviour
     }
 
     // ダイスをしずめるアニメ
-    IEnumerator sinkingDice(GameObject dc) {
-        DiceController temp = dc.GetComponent<DiceController> ();
+    IEnumerator sinkingDice(GameObject dc)
+    {
+        DiceController temp = dc.GetComponent<DiceController>();
         if (temp.isVanishing == true)
         {
             yield break;
         }
-        while (isRotate_dice == true) {
-            yield return new WaitForEndOfFrame ();
+        while (isRotate_dice == true)
+        {
+            yield return new WaitForEndOfFrame();
         }
         Vector3 position = dc.transform.position;
-        for (int i = 1; i < 480; i++) {
+        for (int i = 1; i < 480; i++)
+        {
             position.y = 0.5f - i * 1f / 480f;
             ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 480f));
             dc.transform.position = position;
@@ -641,7 +636,8 @@ public class MainGameController : MonoBehaviour
 
     }
 
-    int CountDice(int x, int z, int cnt) {
+    int CountDice(int x, int z, int cnt)
+    {
         bool flag = false; //脱出用
 
         while (flag == false)
@@ -678,25 +674,29 @@ public class MainGameController : MonoBehaviour
             }
         }
 
-            return cnt;
+        return cnt;
     }
 
-    public void ComputeLevel () {
+    public void ComputeLevel()
+    {
         int a = 110; //おおよそ1レベルの上昇に必要なスコア
         int b = a; //前の必要経験値を記録する
         int lv = 1;
 
         //レベルの変化
-        while (true) {
-            b = (int)((a * lv + b * 1.08)/ 2);
-            if (score > b && gameType == 0) {
+        while (true)
+        {
+            b = (int)((a * lv + b * 1.08) / 2);
+            if (score > b && gameType == 0)
+            {
                 lv++;
             }
             else if (sumScore > b && gameType == 1)
             {
                 lv++;
             }
-            else {
+            else
+            {
                 break;
             }
         }
@@ -731,9 +731,9 @@ public class MainGameController : MonoBehaviour
         if (gameType == 1)
         {
             // ルームプロパティでsumScoreを送信
-			var properties  = new ExitGames.Client.Photon.Hashtable();
-			properties.Add("sumScore", sumScore);
-			PhotonNetwork.room.SetCustomProperties(properties);
+            var properties = new ExitGames.Client.Photon.Hashtable();
+            properties.Add("sumScore", sumScore);
+            PhotonNetwork.room.SetCustomProperties(properties);
 
             //自分のスコアを相手に送信
             GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendScore(score);
