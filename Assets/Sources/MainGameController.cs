@@ -473,13 +473,16 @@ public class MainGameController : MonoBehaviour
     }
     
 
-    IEnumerator RisingDice(GameObject dc) {
-        Vector3 position = dc.transform.position;
+    IEnumerator RisingDice(GameObject dice) {
+        DiceController dc = dice.GetComponent<DiceController>();
+        dc.isGenerate = true;
+        Vector3 position = dice.transform.position;
         for (int i = 1; i < 21; i++) {
             position.y = -0.5f + i * 1f / 20f;
-            dc.transform.position = position;
+            dice.transform.position = position;
             yield return null;
         }
+        dc.isGenerate = false;
         yield break;
     }
 
