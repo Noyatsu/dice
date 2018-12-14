@@ -14,6 +14,8 @@ public class DiceController : MonoBehaviour {
 	float diceSizeHalf;
     public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
 
+    public bool isGenerate = false; // サイコロが出現中かどうか
+
     public bool isVanishing = false; // サイコロが消滅中かどうか
 
 	public int X = 0, Z = 0;
@@ -46,6 +48,10 @@ public class DiceController : MonoBehaviour {
         if (isSelected)
         {
             if (isVanishing == true)
+            {
+                return false;
+            }
+            if (isGenerate == true)
             {
                 return false;
             }
