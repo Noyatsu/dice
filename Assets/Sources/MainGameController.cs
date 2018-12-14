@@ -158,6 +158,10 @@ public class MainGameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Mathf.Approximately(Time.timeScale, 0f))
+        {
+            return;
+        }
 
         int flick = Flick(); //フリック検知
 
@@ -599,6 +603,7 @@ public class MainGameController : MonoBehaviour
 
     // ダイスをしずめるアニメ
     IEnumerator sinkingDice(GameObject dc) {
+
         DiceController temp = dc.GetComponent<DiceController> ();
         if (temp.isVanishing == true)
         {
@@ -609,6 +614,10 @@ public class MainGameController : MonoBehaviour
         }
         Vector3 position = dc.transform.position;
         for (int i = 1; i < 480; i++) {
+            if (Mathf.Approximately(Time.timeScale, 0f))
+            {
+                yield break;
+            }
             position.y = 0.5f - i * 1f / 480f;
             ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 480f));
             dc.transform.position = position;
