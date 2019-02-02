@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameSystem : MonoBehaviour {
+public class GameSystem : MonoBehaviour
+{
 
     public GameObject objNowLoading;
 
-	public void OnePlayerGameStart() {
+    public void OnePlayerGameStart()
+    {
         objNowLoading.SetActive(true);
-		SceneManager.LoadScene ("1PlayerGame");
-	}
+        FadeManager.Instance.LoadScene("1PlayerGame", 0.3f);
+    }
 
     public void OnlineMenuStart()
     {
-        SceneManager.LoadScene("OnlineMenu");
+        FadeManager.Instance.LoadScene("OnlineMenu", 0.3f);
     }
 
-    public void ReturnTitle() {
-		GameObject Board = GameObject.Find ("Board");
-		Destroy(Board);
-		SceneManager.LoadScene ("TopMenu");
-	}
+    public void ReturnTitle()
+    {
+        GameObject Board = GameObject.Find("Board");
+        Destroy(Board);
+        FadeManager.Instance.LoadScene("TopMenu", 0.3f);
+    }
 }

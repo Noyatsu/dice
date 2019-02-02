@@ -41,13 +41,13 @@ MonoBehaviour:
   - m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 114467746960087172}
-    m_Duration: 1.0333333333333334
+    m_Duration: 1.6
     m_TimeScale: 1
     m_ParentTrack: {fileID: 114022917626308274}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 1.0333333333333334
+    m_BlendOutDuration: 1.2666666666666668
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -107,15 +107,15 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: CM vcam1
     m_Version: 1
-  - m_Start: 0
+  - m_Start: 0.3333333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 114573542587424118}
-    m_Duration: 5
+    m_Duration: 5.266666666666666
     m_TimeScale: 1
     m_ParentTrack: {fileID: 114022917626308274}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 1.0333333333333334
+    m_BlendInDuration: 1.2666666666666668
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -174,7 +174,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: CM vcam3
+    m_DisplayName: "\u30D7\u30EC\u30A4\u753B\u9762\u30AB\u30E1\u30E9"
     m_Version: 1
   m_Version: 1
 --- !u!114 &114276024185345564

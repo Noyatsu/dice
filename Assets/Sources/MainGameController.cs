@@ -25,6 +25,8 @@ public class MainGameController : MonoBehaviour
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
     bool isGameovered = false; //ゲームオーバーしたかどうか
 
+    public int initDicesNum = 20; //!< 初期のさいころの数
+
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
     AquiController objAquiController;
     DiceController objDiceController;
@@ -74,8 +76,8 @@ public class MainGameController : MonoBehaviour
         objScreenText = ScreenText.GetComponent<ScreenTextController>();
 
 
-        //さいころをいくつか追加(既定は10)
-        for (int i = 0; i < 47; i++)
+        //さいころをいくつか追加
+        for (int i = 0; i < initDicesNum; i++)
         {
             randomDiceGenerate();
         }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class OnlineSystem : MonoBehaviour {
+public class OnlineSystem : MonoBehaviour
+{
 
     int mode = 0; //1ならフリーマッチ
     public GameObject objLoading;
@@ -37,7 +38,7 @@ public class OnlineSystem : MonoBehaviour {
     {
         Debug.Log("ルームへ入室しました。");
         Debug.Log(PhotonNetwork.room.PlayerCount);
-        if(PhotonNetwork.room.PlayerCount == 2)
+        if (PhotonNetwork.room.PlayerCount == 2)
         {
             GameStart();
         }
@@ -48,7 +49,7 @@ public class OnlineSystem : MonoBehaviour {
     {
         Debug.Log("ルームの入室に失敗しました。");
 
-        if(mode == 1)
+        if (mode == 1)
         {
             // ルームがないと入室に失敗するため、その時は自分で作る
             RoomOptions roomOptions = new RoomOptions()
@@ -78,6 +79,6 @@ public class OnlineSystem : MonoBehaviour {
     {
         //ゲームを開始
         PhotonNetwork.room.IsOpen = false;
-        SceneManager.LoadScene("OnlineGame");
+        FadeManager.Instance.LoadScene("OnlineGame", 0.3f);
     }
 }

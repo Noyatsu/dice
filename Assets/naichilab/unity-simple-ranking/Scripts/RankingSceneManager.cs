@@ -248,7 +248,7 @@ namespace naichilab
             backButton.interactable = false;
             GameObject Board = GameObject.Find("Board");
             Destroy(Board);
-            UnityEngine.SceneManagement.SceneManager.LoadScene("TopMenu");
+            FadeManager.Instance.LoadScene("TopMenu", 0.3f);
         }
 
         private void MaskOffOn()
