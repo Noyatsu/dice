@@ -8,12 +8,12 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
-  defaultScreenOrientation: 2
+  defaultScreenOrientation: 3
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Noyatsu_Engineering
-  productName: dice
+  productName: SSTraveler
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -53,7 +53,7 @@ PlayerSettings:
   m_MTRendering: 1
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: 0
-  androidShowActivityIndicatorOnLoading: -1
+  androidShowActivityIndicatorOnLoading: 2
   iosAppInBackgroundBehavior: 0
   displayResolutionDialog: 1
   iosAllowHTTPDownload: 1
@@ -670,7 +670,18 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 1
   webGLLinkerTarget: 1
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: UNITY_POST_PROCESSING_STACK_V1
+    4: UNITY_POST_PROCESSING_STACK_V1
+    7: UNITY_POST_PROCESSING_STACK_V1
+    13: UNITY_POST_PROCESSING_STACK_V1
+    18: UNITY_POST_PROCESSING_STACK_V1
+    19: UNITY_POST_PROCESSING_STACK_V1
+    21: UNITY_POST_PROCESSING_STACK_V1
+    23: UNITY_POST_PROCESSING_STACK_V1
+    25: UNITY_POST_PROCESSING_STACK_V1
+    26: UNITY_POST_PROCESSING_STACK_V1
+    27: UNITY_POST_PROCESSING_STACK_V1
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}

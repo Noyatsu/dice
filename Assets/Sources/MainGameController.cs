@@ -25,6 +25,8 @@ public class MainGameController : MonoBehaviour
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
     bool isGameovered = false; //ゲームオーバーしたかどうか
 
+    public int initDicesNum = 20; //!< 初期のさいころの数
+
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
     AquiController objAquiController;
     DiceController objDiceController;
@@ -75,7 +77,7 @@ public class MainGameController : MonoBehaviour
 
 
         //さいころをいくつか追加
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < initDicesNum; i++)
         {
             randomDiceGenerate();
         }
@@ -452,7 +454,8 @@ public class MainGameController : MonoBehaviour
     {
         if (gameType == 0)
         {
-            SceneManager.LoadScene("GameOver");
+            naichilab.RankingLoader.Instance.SendScoreAndShowRanking(score);
+            //SceneManager.LoadScene("GameOver");
         }
         else if (gameType == 1)
         {
@@ -461,11 +464,13 @@ public class MainGameController : MonoBehaviour
         }
     }
 
-    IEnumerator RisingDice(GameObject dice) {
+    IEnumerator RisingDice(GameObject dice)
+    {
         DiceController dc = dice.GetComponent<DiceController>();
         dc.isGenerate = true;
         Vector3 position = dice.transform.position;
-        for (int i = 1; i < 21; i++) {
+        for (int i = 1; i < 21; i++)
+        {
             position.y = -0.5f + i * 1f / 20f;
             dice.transform.position = position;
             yield return null;
