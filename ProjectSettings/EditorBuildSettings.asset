@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/naichilab/unity-simple-ranking/Scenes/Ranking.unity
     guid: 152244f5855414ac4a3874f14efa583c
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: b0da4260934596d49aba1dac080aedd4
   m_configObjects: {}

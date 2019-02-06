@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 82898882542662890}
   m_Layer: 0
   m_Name: Dice
-  m_TagString: Untagged
+  m_TagString: dice
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -752,6 +752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSelected: 1
+  isGenerate: 0
   isVanishing: 0
   X: 0
   Z: 0
