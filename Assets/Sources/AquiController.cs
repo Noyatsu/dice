@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AquiController : MonoBehaviour {
+public class AquiController : MonoBehaviour
+{
 
     private Animator anim;
     GameObject Board;
@@ -57,41 +58,53 @@ public class AquiController : MonoBehaviour {
         prevPos = target;
 
         //右
-        if (d == 2 && x < (script.boardSize - 1)) {
+        if (d == 2 && x < (script.boardSize - 1))
+        {
             x++;
             RotateCharactor(2);
         }
         //左
-        if (d == 0 && x > 0) {
+        if (d == 0 && x > 0)
+        {
             x--;
             RotateCharactor(0);
         }
         //上
-        if (d == 1 && z < (script.boardSize - 1)) {
+        if (d == 1 && z < (script.boardSize - 1))
+        {
             z++;
             RotateCharactor(1);
         }
         //下
-        if (d == 3 && z > 0) {
+        if (d == 3 && z > 0)
+        {
             z--;
             RotateCharactor(3);
         }
 
         //キャラクターのy座標の設定
-        if (script.board[x, z] != -1)
+        if (script.dices.Count != 0)
         {
-            //現在位置の下にダイスがあるとき
-            y = script.dices[script.board[x, z]].transform.position.y + 0.5f;
-        }
-        else if (script.isRotate_dice)
-        {
-            y = 1.0f;
+            if (script.board[x, z] != -1)
+            {
+                //現在位置の下にダイスがあるとき
+                y = script.dices[script.board[x, z]].transform.position.y + 0.5f;
+            }
+            else if (script.isRotate_dice)
+            {
+                y = 1.0f;
+            }
+            else
+            {
+                //ダイスがないとき
+                y = 0.0f;
+            }
         }
         else
         {
-            //ダイスがないとき
             y = 0.0f;
         }
+
 
         // ジャンプアニメ
         if (Mathf.Abs(prevPos.y - y) > 0.3f)
@@ -102,25 +115,40 @@ public class AquiController : MonoBehaviour {
         return;
     }
 
+    public void setTarget(int _x, float _y, int _z)
+    {
+        x = _x;
+        y = _y;
+        z = _z;
+        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+        return;
+    }
+
     void RotateCharactor(int d)
     {
         //入力方向と既存の向きが違う場合
-        if (d != direction) {
+        if (d != direction)
+        {
             int diff = direction - d;
             float angle;
-            if (Mathf.Abs(diff) == 1) {
+            if (Mathf.Abs(diff) == 1)
+            {
                 angle = 90.0f;
-                if (diff > 0) {
+                if (diff > 0)
+                {
                     angle *= -1.0f;
                 }
             }
-            else if (Mathf.Abs(diff) == 3) {
+            else if (Mathf.Abs(diff) == 3)
+            {
                 angle = 90.0f;
-                if (diff < 0) {
+                if (diff < 0)
+                {
                     angle *= -1.0f;
                 }
             }
-            else {
+            else
+            {
                 angle = 180.0f;
             }
 

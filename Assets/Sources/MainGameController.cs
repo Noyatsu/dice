@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MainGameController : MonoBehaviour
 {
-    public int gameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン)
+    public int gameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
     public int playerType = 0; //!< 0なら部屋主、1ならそれ以外(オンライン用)
 
     public int level = 1; //!< ゲームのレベル
@@ -75,14 +75,24 @@ public class MainGameController : MonoBehaviour
         ScreenText = GameObject.Find("ScreenText");
         objScreenText = ScreenText.GetComponent<ScreenTextController>();
 
-
-        //さいころをいくつか追加
-        for (int i = 0; i < initDicesNum; i++)
+        if (gameType != 2)
         {
-            randomDiceGenerate();
+            //さいころをいくつか追加
+            for (int i = 0; i < initDicesNum; i++)
+            {
+                randomDiceGenerate();
+            }
         }
 
-        BgmManager.Instance.Play((stage + 1).ToString()); //BGM
+        //BGM
+        if (gameType != 2)
+        {
+            BgmManager.Instance.Play((stage + 1).ToString()); //BGM
+        }
+        else
+        {
+            BgmManager.Instance.Play("tutorial"); //BGM
+        }
 
         //AudioSourceコンポーネントを取得し、変数に格納
         AudioSource[] audioSources = GetComponents<AudioSource>();
@@ -148,7 +158,7 @@ public class MainGameController : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
             {
-                if (objDiceController.SetTargetPosition(2))
+                if (Dice && objDiceController.SetTargetPosition(2))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
@@ -156,7 +166,7 @@ public class MainGameController : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.LeftArrow) || flick == 0)
             {
-                if (objDiceController.SetTargetPosition(0))
+                if (Dice && objDiceController.SetTargetPosition(0))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
@@ -164,7 +174,7 @@ public class MainGameController : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.UpArrow) || flick == 1)
             {
-                if (objDiceController.SetTargetPosition(1))
+                if (Dice && objDiceController.SetTargetPosition(1))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
@@ -172,14 +182,14 @@ public class MainGameController : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.DownArrow) || flick == 3)
             {
-                if (objDiceController.SetTargetPosition(3))
+                if (Dice && objDiceController.SetTargetPosition(3))
                 {
                     VanishDice(objDiceController.X, objDiceController.Z);
                 }
                 objAquiController.SetTargetPosition(3);
             }
 
-            //動いたときにダイスが変わる場合
+
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
                 if (board[objAquiController.x, objAquiController.z] != -1) // 移動先にサイコロが存在するならば
@@ -189,27 +199,35 @@ public class MainGameController : MonoBehaviour
                     objDiceController.isSelected = true; //選択
                 }
             }
-
         }
 
 
         timeElapsed += Time.deltaTime;
 
-        if (level > 36)
-        { //現状レベル36で速さは打ち止め
-            if (timeElapsed >= 1.5)
+        if (gameType != 2)
+        {
+
+            if (level > 36)
+            { //現状レベル36で速さは打ち止め
+                if (timeElapsed >= 1.5)
+                {
+                    randomDiceGenerate();
+                    timeElapsed = 0.0f;
+                }
+            }
+            // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
+            else if (timeElapsed >= (3.5f - (1 / 18f) * level))
             {
                 randomDiceGenerate();
                 timeElapsed = 0.0f;
             }
         }
-        // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-        else if (timeElapsed >= (3.5f - (1 / 18f) * level))
-        {
-            randomDiceGenerate();
-            timeElapsed = 0.0f;
-        }
 
+    }
+
+    public void setAqui(int x, float y, int z)
+    {
+        objAquiController.setTarget(x, y, z);
     }
 
     // ステージを変える
@@ -226,6 +244,193 @@ public class MainGameController : MonoBehaviour
         {
             objStatusText.setText("Stage Changed! (ステージボーナス: " + (nextStage + 1));
         }
+    }
+
+    /**
+     * ダイスを生成
+     * @params x 配置するx座標
+     * @params z 配置するz座標
+     * @params a 上にする面
+     */
+    public void diceGenerate(int x, int z, int a, int b = 0)
+    {
+        // 側面の決定用乱数
+        int i = Random.Range(1, 4);
+
+        //面によって回転角度を決定
+        int xi = 0, yi = 0, zi = 0, ra = 90;
+        switch (a)
+        {
+            case 1:
+                if (b == 0)
+                {
+                    int[] num1 = { 2, 3, 4, 5 };
+                    b = num1[i];
+                }
+                switch (b)
+                {
+                    case 2:
+                        break;
+                    case 3:
+                        yi = ra;
+                        break;
+                    case 4:
+                        yi = ra * 3;
+                        break;
+                    case 5:
+                        yi = ra * 2;
+                        break;
+                }
+                break;
+
+            case 2:
+                if (b == 0)
+                {
+                    int[] num2 = { 1, 3, 4, 6 };
+                    b = num2[i];
+                }
+                switch (b)
+                {
+                    case 1:
+                        xi = ra;
+                        yi = ra * 2;
+                        break;
+                    case 3:
+                        xi = ra;
+                        yi = ra;
+                        break;
+                    case 4:
+                        xi = ra;
+                        yi = ra * 3;
+                        break;
+                    case 6:
+                        xi = ra;
+                        break;
+                }
+                break;
+
+            case 3:
+                if (b == 0)
+                {
+                    int[] num3 = { 1, 2, 5, 6 };
+                    b = num3[i];
+                }
+                switch (b)
+                {
+                    case 1:
+                        zi = ra;
+                        yi = ra * 3;
+                        break;
+                    case 2:
+                        zi = ra;
+                        break;
+                    case 5:
+                        zi = ra;
+                        yi = ra * 2;
+                        break;
+                    case 6:
+                        zi = ra;
+                        yi = ra;
+                        break;
+                }
+                break;
+            case 4:
+                if (b == 0)
+                {
+                    int[] num4 = { 1, 2, 5, 6 };
+                    b = num4[i];
+                }
+                switch (b)
+                {
+                    case 1:
+                        zi = ra * 3;
+                        yi = ra * 1;
+                        break;
+                    case 2:
+                        zi = ra * 3;
+                        break;
+                    case 5:
+                        zi = ra * 3;
+                        yi = ra * 2;
+                        break;
+                    case 6:
+                        zi = ra * 3;
+                        yi = ra * 3;
+                        break;
+                }
+                break;
+
+            case 5:
+                if (b == 0)
+                {
+                    int[] num5 = { 1, 3, 4, 6 };
+                    b = num5[i];
+                }
+                switch (b)
+                {
+                    case 1:
+                        xi = ra * 3;
+                        break;
+                    case 3:
+                        xi = ra * 3;
+                        yi = ra;
+                        break;
+                    case 4:
+                        xi = ra * 3;
+                        yi = ra * 3;
+                        break;
+                    case 6:
+                        xi = ra * 3;
+                        yi = ra * 2;
+                        break;
+                }
+                break;
+            case 6:
+                if (b == 0)
+                {
+                    int[] num6 = { 2, 3, 4, 5 };
+                    b = num6[i];
+                }
+                switch (b)
+                {
+                    case 2:
+                        xi = ra * 2;
+                        yi = ra * 2;
+                        break;
+                    case 3:
+                        xi = ra * 2;
+                        yi = ra;
+                        break;
+                    case 4:
+                        xi = ra * 2;
+                        yi = ra * 3;
+                        break;
+                    case 5:
+                        xi = ra * 2;
+                        break;
+                }
+                break;
+        }
+
+        // その座標が空だったらさいころを追加
+        if (board[x, z] == -1)
+        {
+            maxDiceId++;
+            board[x, z] = maxDiceId;
+            Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
+            GameObject objDice = (GameObject)Instantiate(DiceBase, position, Quaternion.Euler(xi, yi, zi));
+            DiceController objDiceController = objDice.GetComponent<DiceController>();
+            objDiceController.isSelected = false;
+            objDiceController.X = x;
+            objDiceController.Z = z;
+            objDiceController.surfaceA = a;
+            objDiceController.surfaceB = b;
+            objDiceController.diceId = maxDiceId;
+            dices.Add(objDice); //リストにオブジェクトを追加
+            board_num[x, z] = a;
+            StartCoroutine(RisingDice(objDice));
+        }
+
     }
 
     void randomDiceGenerate()
@@ -289,165 +494,9 @@ public class MainGameController : MonoBehaviour
 
         // 配置する面を決定
         int a = Random.Range(1, 6);
-        int b = 0;
-        int i = Random.Range(1, 4);
 
-        //面によって回転角度を決定
-        int xi = 0, yi = 0, zi = 0, ra = 90;
-        switch (a)
-        {
-            case 1:
-                int[] num1 = { 2, 3, 4, 5 };
-                b = num1[i];
-                switch (b)
-                {
-                    case 2:
-                        break;
-                    case 3:
-                        yi = ra;
-                        break;
-                    case 4:
-                        yi = ra * 3;
-                        break;
-                    case 5:
-                        yi = ra * 2;
-                        break;
-                }
-                break;
-
-            case 2:
-                int[] num2 = { 1, 3, 4, 6 };
-                b = num2[i];
-                switch (b)
-                {
-                    case 1:
-                        xi = ra;
-                        yi = ra * 2;
-                        break;
-                    case 3:
-                        xi = ra;
-                        yi = ra;
-                        break;
-                    case 4:
-                        xi = ra;
-                        yi = ra * 3;
-                        break;
-                    case 6:
-                        xi = ra;
-                        break;
-                }
-                break;
-
-            case 3:
-                int[] num3 = { 1, 2, 5, 6 };
-                b = num3[i];
-                switch (b)
-                {
-                    case 1:
-                        zi = ra;
-                        yi = ra * 3;
-                        break;
-                    case 2:
-                        zi = ra;
-                        break;
-                    case 5:
-                        zi = ra;
-                        yi = ra * 2;
-                        break;
-                    case 6:
-                        zi = ra;
-                        yi = ra;
-                        break;
-                }
-                break;
-            case 4:
-                int[] num4 = { 1, 2, 5, 6 };
-                b = num4[i];
-                switch (b)
-                {
-                    case 1:
-                        zi = ra * 3;
-                        yi = ra * 1;
-                        break;
-                    case 2:
-                        zi = ra * 3;
-                        break;
-                    case 5:
-                        zi = ra * 3;
-                        yi = ra * 2;
-                        break;
-                    case 6:
-                        zi = ra * 3;
-                        yi = ra * 3;
-                        break;
-                }
-                break;
-
-            case 5:
-                int[] num5 = { 1, 3, 4, 6 };
-                b = num5[i];
-                switch (b)
-                {
-                    case 1:
-                        xi = ra * 3;
-                        break;
-                    case 3:
-                        xi = ra * 3;
-                        yi = ra;
-                        break;
-                    case 4:
-                        xi = ra * 3;
-                        yi = ra * 3;
-                        break;
-                    case 6:
-                        xi = ra * 3;
-                        yi = ra * 2;
-                        break;
-                }
-                break;
-            case 6:
-                int[] num6 = { 2, 3, 4, 5 };
-                b = num6[i];
-                switch (b)
-                {
-                    case 2:
-                        xi = ra * 2;
-                        yi = ra * 2;
-                        break;
-                    case 3:
-                        xi = ra * 2;
-                        yi = ra;
-                        break;
-                    case 4:
-                        xi = ra * 2;
-                        yi = ra * 3;
-                        break;
-                    case 5:
-                        xi = ra * 2;
-                        break;
-                }
-                break;
-        }
-
-        // その座標が空だったらさいころを追加
-        if (board[x, z] == -1)
-        {
-            maxDiceId++;
-            board[x, z] = maxDiceId;
-            Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
-            GameObject objDice = (GameObject)Instantiate(DiceBase, position, Quaternion.Euler(xi, yi, zi));
-            DiceController objDiceController = objDice.GetComponent<DiceController>();
-            objDiceController.isSelected = false;
-            objDiceController.X = x;
-            objDiceController.Z = z;
-            objDiceController.surfaceA = a;
-            objDiceController.surfaceB = b;
-            objDiceController.diceId = maxDiceId;
-            dices.Add(objDice); //リストにオブジェクトを追加
-            board_num[x, z] = a;
-            StartCoroutine(RisingDice(objDice));
-        }
-
+        // ダイスを生成
+        diceGenerate(x, z, a);
     }
 
     void Delay()
@@ -600,46 +649,58 @@ public class MainGameController : MonoBehaviour
     // ダイスをしずめるアニメ
     IEnumerator sinkingDice(GameObject dc)
     {
-        DiceController temp = dc.GetComponent<DiceController>();
-        if (temp.isVanishing == true)
+        if (dc != null)
         {
-            yield break;
+            DiceController temp = dc.GetComponent<DiceController>();
+            if (temp.isVanishing == true)
+            {
+                yield break;
+            }
+            while (isRotate_dice == true)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            Vector3 position = dc.transform.position;
+            for (int i = 1; i < 480; i++)
+            {
+                position.y = 0.5f - i * 1f / 480f;
+                if (dc != null)
+                {
+                    ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 480f));
+                    dc.transform.position = position;
+                }
+                yield return null;
+            }
+            if (dc != null)
+            {
+                board[temp.X, temp.Z] = -1;
+                board_num[temp.X, temp.Z] = -1;
+                Destroy(dc);
+            }
         }
-        while (isRotate_dice == true)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        Vector3 position = dc.transform.position;
-        for (int i = 1; i < 480; i++)
-        {
-            position.y = 0.5f - i * 1f / 480f;
-            ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 480f));
-            dc.transform.position = position;
-            yield return null;
-        }
-        board[temp.X, temp.Z] = -1;
-        board_num[temp.X, temp.Z] = -1;
-        Destroy(dc);
         yield break;
+
     }
 
     //親オブジェクトを入力すると親と子オブジェクトの色を変更してくれる
     private void ChangeColorOfGameObject(GameObject targetObject, Color color)
     {
-
-        //入力されたオブジェクトのRendererを全て取得し、さらにそのRendererに設定されている全Materialの色を変える
-        foreach (Renderer targetRenderer in targetObject.GetComponents<Renderer>())
+        if (targetObject != null)
         {
-            foreach (Material material in targetRenderer.materials)
+            //入力されたオブジェクトのRendererを全て取得し、さらにそのRendererに設定されている全Materialの色を変える
+            foreach (Renderer targetRenderer in targetObject.GetComponents<Renderer>())
             {
-                material.color = color;
+                foreach (Material material in targetRenderer.materials)
+                {
+                    material.color = color;
+                }
             }
-        }
 
-        //入力されたオブジェクトの子にも同様の処理を行う
-        for (int i = 0; i < targetObject.transform.childCount; i++)
-        {
-            ChangeColorOfGameObject(targetObject.transform.GetChild(i).gameObject, color);
+            //入力されたオブジェクトの子にも同様の処理を行う
+            for (int i = 0; i < targetObject.transform.childCount; i++)
+            {
+                ChangeColorOfGameObject(targetObject.transform.GetChild(i).gameObject, color);
+            }
         }
 
     }
@@ -683,6 +744,35 @@ public class MainGameController : MonoBehaviour
         }
 
         return cnt;
+    }
+
+    public void resetGame()
+    {
+        Destroy(objDiceController);
+        Destroy(Dice);
+
+        var clones = GameObject.FindGameObjectsWithTag("dice");
+        foreach (var clone in clones)
+        {
+            foreach (Transform n in clone.transform)
+            {
+                GameObject.Destroy(n.gameObject);
+            }
+            Destroy(clone);
+            dices.Remove(clone);
+        }
+
+        for (int i = 0; i < boardSize; i++)
+        {
+            for (int j = 0; j < boardSize; j++)
+            {
+                board[i, j] = -1;
+                board_num[i, j] = -1;
+            }
+        }
+        dices.Clear();
+        maxDiceId = -1;
+        score = 0;
     }
 
     public void ComputeLevel()

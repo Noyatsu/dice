@@ -17,6 +17,13 @@ public class GameSystem : MonoBehaviour
     public void OnlineMenuStart()
     {
         FadeManager.Instance.LoadScene("OnlineMenu", 0.3f);
+        BgmManager.Instance.Play("online"); //BGM
+    }
+
+    public void TutorialStart()
+    {
+        objNowLoading.SetActive(true);
+        FadeManager.Instance.LoadScene("Tutorial", 0.3f);
     }
 
     public void ReturnTitle()
@@ -24,5 +31,6 @@ public class GameSystem : MonoBehaviour
         GameObject Board = GameObject.Find("Board");
         Destroy(Board);
         FadeManager.Instance.LoadScene("TopMenu", 0.3f);
+        BgmManager.Instance.Play("opening"); //BGM
     }
 }
