@@ -18,6 +18,7 @@ public class DiceController : MonoBehaviour
     public bool isGenerate = true; // サイコロが出現中かどうか
 
     public bool isVanishing = false; // サイコロが消滅中かどうか
+    public bool isRotating = false; // さいころが回転中かどうか
 
     public int X = 0, Z = 0;
     public int diceId = 0; //!サイコロのID
@@ -78,6 +79,7 @@ public class DiceController : MonoBehaviour
                     rotatePoint = transform.position + new Vector3(diceSizeHalf, -diceSizeHalf, 0f);
                     rotateAxis = new Vector3(0, 0, -1);
                     StartCoroutine(MoveDice());
+
 
                     //過去の位置に-1を代入
                     script.board[X - 1, Z] = -1;
@@ -167,6 +169,7 @@ public class DiceController : MonoBehaviour
     }
 
 
+
     IEnumerator MoveDice()
     {
         script.isRotate_dice = true;
@@ -174,7 +177,7 @@ public class DiceController : MonoBehaviour
         float sumAngle = 0f;
         while (sumAngle < 90f)
         {
-            diceAngle = 6f;
+            diceAngle = 6f * Time.deltaTime * 50f;
             sumAngle += diceAngle;
 
             if (sumAngle > 90f)
@@ -501,7 +504,6 @@ public class DiceController : MonoBehaviour
         }
         return nextA * 10 + nextB;
     }
-
 
     public void risingDice()
     {
