@@ -426,9 +426,9 @@ public class MainGameController : MonoBehaviour
             objDiceController.surfaceA = a;
             objDiceController.surfaceB = b;
             objDiceController.diceId = maxDiceId;
+            objDiceController.isGenerate = true;
             dices.Add(objDice); //リストにオブジェクトを追加
             board_num[x, z] = a;
-            StartCoroutine(RisingDice(objDice));
         }
 
     }
@@ -513,21 +513,6 @@ public class MainGameController : MonoBehaviour
         }
     }
 
-    IEnumerator RisingDice(GameObject dice)
-    {
-        DiceController dc = dice.GetComponent<DiceController>();
-        dc.isGenerate = true;
-        Vector3 position = dice.transform.position;
-        for (int i = 1; i < 21; i++)
-        {
-            position.y = -0.5f + i * 1f / 20f;
-            dice.transform.position = position;
-            yield return null;
-        }
-        dc.isGenerate = false;
-        yield break;
-    }
-
     //サイコロ消える
     void VanishDice(int x, int z)
     {
@@ -592,7 +577,6 @@ public class MainGameController : MonoBehaviour
                 int count = 0;
                 while (count < sum - 1)
                 {
-                    StartCoroutine(sinkingDice(vanishingDices[count]));
                     vanishingDices[count].GetComponent<DiceController>().isVanishing = true;
                     count++;
                 }

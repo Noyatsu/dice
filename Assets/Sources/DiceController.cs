@@ -15,7 +15,7 @@ public class DiceController : MonoBehaviour
     float diceSizeHalf;
     public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
 
-    public bool isGenerate = false; // サイコロが出現中かどうか
+    public bool isGenerate = true; // サイコロが出現中かどうか
 
     public bool isVanishing = false; // サイコロが消滅中かどうか
 
@@ -42,6 +42,7 @@ public class DiceController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        risingDice();
         sinkingDice();
     }
 
@@ -501,6 +502,22 @@ public class DiceController : MonoBehaviour
         return nextA * 10 + nextB;
     }
 
+
+    public void risingDice()
+    {
+        if (isGenerate)
+        {
+            Vector3 position = transform.position;
+            position.y += Time.deltaTime * 2.0f;
+            ChangeColorOfGameObject(this.gameObject, new Color(1.0f, 1.0f, 1.0f, 0.5f + position.y));
+            if (position.y >= 0.5f)
+            {
+                position.y = 0.5f;
+                isGenerate = false;
+            }
+            transform.position = position;
+        }
+    }
     public void sinkingDice()
     {
         if (isVanishing)
