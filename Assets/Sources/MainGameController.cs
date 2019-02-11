@@ -17,6 +17,7 @@ public class MainGameController : MonoBehaviour
     public int boardSize = 7; //!< 盤面のサイズ
     public int[,] board = new int[7, 7]; //!< さいころのIDを格納
     public int[,] board_num = new int[7, 7]; //!< さいころの面を格納
+    public float[,] board_y = new float[7, 7]; //!< さいころのY座標を格納
     public List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     List<GameObject> vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
     double timeElapsed = 0.0; //!< イベント用フレームカウント
