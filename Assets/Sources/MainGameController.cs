@@ -426,9 +426,9 @@ public class MainGameController : MonoBehaviour
             objDiceController.surfaceA = a;
             objDiceController.surfaceB = b;
             objDiceController.diceId = maxDiceId;
+            objDiceController.isGenerate = true;
             dices.Add(objDice); //リストにオブジェクトを追加
             board_num[x, z] = a;
-            StartCoroutine(RisingDice(objDice));
         }
 
     }
@@ -513,21 +513,6 @@ public class MainGameController : MonoBehaviour
         }
     }
 
-    IEnumerator RisingDice(GameObject dice)
-    {
-        DiceController dc = dice.GetComponent<DiceController>();
-        dc.isGenerate = true;
-        Vector3 position = dice.transform.position;
-        for (int i = 1; i < 21; i++)
-        {
-            position.y = -0.5f + i * 1f / 20f;
-            dice.transform.position = position;
-            yield return null;
-        }
-        dc.isGenerate = false;
-        yield break;
-    }
-
     //サイコロ消える
     void VanishDice(int x, int z)
     {
@@ -592,7 +577,6 @@ public class MainGameController : MonoBehaviour
                 int count = 0;
                 while (count < sum - 1)
                 {
-                    StartCoroutine(sinkingDice(vanishingDices[count]));
                     vanishingDices[count].GetComponent<DiceController>().isVanishing = true;
                     count++;
                 }
@@ -627,7 +611,6 @@ public class MainGameController : MonoBehaviour
                 for (int j = 0; j < count; j++)
                 {
                     temp = vanishingDices[j].GetComponent<DiceController>();
-                    StartCoroutine(sinkingDice(vanishingDices[j]));
                     temp.isVanishing = true;
                 }
                 addScore(count * board_num[x, z]);
@@ -643,42 +626,6 @@ public class MainGameController : MonoBehaviour
                 sound_vanish.PlayOneShot(sound_vanish.clip);
             }
         }
-
-    }
-
-    // ダイスをしずめるアニメ
-    IEnumerator sinkingDice(GameObject dc)
-    {
-        if (dc != null)
-        {
-            DiceController temp = dc.GetComponent<DiceController>();
-            if (temp.isVanishing == true)
-            {
-                yield break;
-            }
-            while (isRotate_dice == true)
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            Vector3 position = dc.transform.position;
-            for (int i = 1; i < 480; i++)
-            {
-                position.y = 0.5f - i * 1f / 480f;
-                if (dc != null)
-                {
-                    ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 480f));
-                    dc.transform.position = position;
-                }
-                yield return null;
-            }
-            if (dc != null)
-            {
-                board[temp.X, temp.Z] = -1;
-                board_num[temp.X, temp.Z] = -1;
-                Destroy(dc);
-            }
-        }
-        yield break;
 
     }
 
