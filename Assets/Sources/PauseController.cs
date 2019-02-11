@@ -3,12 +3,15 @@ using System.Collections;
 
 public class PauseController : MonoBehaviour
 {
-
-    [SerializeField]
-    //　ポーズした時に表示するUIのプレハブ
-    private GameObject pauseUIPrefab;
     //　ポーズUIのインスタンス
     private GameObject pauseUIInstance;
+    private bool isPause = false;
+
+    void Start()
+    {
+        pauseUIInstance = GameObject.Find("PauseUI");
+        pauseUIInstance.SetActive(isPause);
+    }
 
     // Update is called once per frame
     void Update()
@@ -21,16 +24,24 @@ public class PauseController : MonoBehaviour
 
     public void pause()
     {
-        if (pauseUIInstance == null)
+        if (!isPause)
         {
-            pauseUIInstance = GameObject.Instantiate(pauseUIPrefab) as GameObject;
-            //Time.timeScale = 0f;
+            pauseUIInstance.SetActive(true);
+            isPause = true;
+            Time.timeScale = 0f;
 
         }
         else
         {
-            Destroy(pauseUIInstance);
-            //Time.timeScale = 1f;
+            pauseUIInstance.SetActive(false);
+            isPause = false;
+            Time.timeScale = 1f;
         }
+    }
+
+    public void returnTitle()
+    {
+        Time.timeScale = 1f;
+        FadeManager.Instance.LoadScene("TopMenu", 0.3f);
     }
 }
