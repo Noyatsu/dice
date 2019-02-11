@@ -2,45 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiceController : MonoBehaviour {
+public class DiceController : MonoBehaviour
+{
 
-	GameObject Board;
-	MainGameController script;
+    GameObject Board;
+    MainGameController script;
 
-	Vector3 rotatePoint = Vector3.zero;
-	Vector3 rotateAxis = Vector3.zero;
-	float diceAngle = 0f;
+    Vector3 rotatePoint = Vector3.zero;
+    Vector3 rotateAxis = Vector3.zero;
+    float diceAngle = 0f;
 
-	float diceSizeHalf;
+    float diceSizeHalf;
     public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
 
     public bool isGenerate = false; // サイコロが出現中かどうか
 
     public bool isVanishing = false; // サイコロが消滅中かどうか
 
-	public int X = 0, Z = 0;
-	public int diceId = 0; //!サイコロのID
-	public int surfaceA = 1;
-	public int surfaceB = 2;
-	float step = 2f;
+    public int X = 0, Z = 0;
+    public int diceId = 0; //!サイコロのID
+    public int surfaceA = 1;
+    public int surfaceB = 2;
+    float step = 2f;
 
     //音
     private AudioSource sound_roll;
 
 
     // Use this for initialization
-    void Start () {
-		Board = GameObject.Find ("Board");
-		script = Board.GetComponent<MainGameController>();
+    void Start()
+    {
+        Board = GameObject.Find("Board");
+        script = Board.GetComponent<MainGameController>();
         diceSizeHalf = transform.localScale.x / 2f;
 
         sound_roll = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-    void Update () {
-
-	}
+    void Update()
+    {
+        sinkingDice();
+    }
 
     public bool SetTargetPosition(int d)
     {
@@ -65,7 +68,7 @@ public class DiceController : MonoBehaviour {
                     //さいころの面を計算
                     int result = ComputeNextDice(surfaceA, surfaceB, "right");
                     surfaceA = result / 10;
-                    surfaceB = result - surfaceA*10;
+                    surfaceB = result - surfaceA * 10;
 
                     //新たなる位置に代入
                     script.board[X, Z] = diceId;
@@ -76,8 +79,8 @@ public class DiceController : MonoBehaviour {
                     StartCoroutine(MoveDice());
 
                     //過去の位置に-1を代入
-                    script.board[X-1, Z] = -1;
-                    script.board_num[X-1, Z] = -1;
+                    script.board[X - 1, Z] = -1;
+                    script.board_num[X - 1, Z] = -1;
                     sound_roll.PlayOneShot(sound_roll.clip);
 
                     return true;
@@ -92,7 +95,7 @@ public class DiceController : MonoBehaviour {
                     //さいころの面を計算
                     int result = ComputeNextDice(surfaceA, surfaceB, "left");
                     surfaceA = result / 10;
-                    surfaceB = result - surfaceA*10;
+                    surfaceB = result - surfaceA * 10;
 
                     script.board[X, Z] = diceId;
                     script.board_num[X, Z] = surfaceA;
@@ -100,8 +103,8 @@ public class DiceController : MonoBehaviour {
                     rotateAxis = new Vector3(0, 0, 1);
                     StartCoroutine(MoveDice());
 
-                    script.board[X+1, Z] = -1;
-                    script.board_num[X+1, Z] = -1;
+                    script.board[X + 1, Z] = -1;
+                    script.board_num[X + 1, Z] = -1;
                     sound_roll.PlayOneShot(sound_roll.clip);
 
                     return true;
@@ -117,7 +120,7 @@ public class DiceController : MonoBehaviour {
                     //さいころの面を計算
                     int result = ComputeNextDice(surfaceA, surfaceB, "up");
                     surfaceA = result / 10;
-                    surfaceB = result - surfaceA*10;
+                    surfaceB = result - surfaceA * 10;
 
                     script.board[X, Z] = diceId;
                     script.board_num[X, Z] = surfaceA;
@@ -125,8 +128,8 @@ public class DiceController : MonoBehaviour {
                     rotateAxis = new Vector3(1, 0, 0);
                     StartCoroutine(MoveDice());
 
-                    script.board[X, Z-1] = -1;
-                    script.board_num[X, Z-1] = -1;
+                    script.board[X, Z - 1] = -1;
+                    script.board_num[X, Z - 1] = -1;
                     sound_roll.PlayOneShot(sound_roll.clip);
 
                     return true;
@@ -150,8 +153,8 @@ public class DiceController : MonoBehaviour {
                     rotateAxis = new Vector3(-1, 0, 0);
                     StartCoroutine(MoveDice());
 
-                    script.board[X, Z+1] = -1;
-                    script.board_num[X, Z+1] = -1;
+                    script.board[X, Z + 1] = -1;
+                    script.board_num[X, Z + 1] = -1;
                     sound_roll.PlayOneShot(sound_roll.clip);
 
                     return true;
@@ -161,29 +164,31 @@ public class DiceController : MonoBehaviour {
         }
         return false;
     }
-	
 
-	IEnumerator MoveDice(){
+
+    IEnumerator MoveDice()
+    {
         script.isRotate_dice = true;
 
-		float sumAngle = 0f;
-		while (sumAngle < 90f) {
-			diceAngle = 6f;
-			sumAngle += diceAngle;
+        float sumAngle = 0f;
+        while (sumAngle < 90f)
+        {
+            diceAngle = 6f;
+            sumAngle += diceAngle;
 
-			if (sumAngle > 90f)
-			{
-				diceAngle -= sumAngle - 90f;
-			}
-			transform.RotateAround (rotatePoint, rotateAxis, diceAngle);
+            if (sumAngle > 90f)
+            {
+                diceAngle -= sumAngle - 90f;
+            }
+            transform.RotateAround(rotatePoint, rotateAxis, diceAngle);
 
-			yield return null;
-		}
+            yield return null;
+        }
 
         script.isRotate_dice = false;
 
         yield break;
-	}
+    }
 
     /**
      * さいころの各状態と入力からさいころの次の状態を求める
@@ -192,7 +197,7 @@ public class DiceController : MonoBehaviour {
      * @param string direction 入力方向(up/down/left/right)
      * @return int 2桁の数字(56なら面Aが5, 面Bが6)
      */
-     int ComputeNextDice(int a, int b, string direction)
+    int ComputeNextDice(int a, int b, string direction)
     {
         int nextA = 0, nextB = 0;
         switch (a)
@@ -202,10 +207,10 @@ public class DiceController : MonoBehaviour {
                 {
                     case "up":
                         nextA = b;
-                        nextB = 7-a;
+                        nextB = 7 - a;
                         break;
                     case "down":
-                        nextA = 7-b;
+                        nextA = 7 - b;
                         nextB = a;
                         break;
                     case "left":
@@ -243,7 +248,7 @@ public class DiceController : MonoBehaviour {
                                 break;
                         }
                         nextB = b;
-                        break; 
+                        break;
                 }
                 break;
             case 2:
@@ -496,5 +501,44 @@ public class DiceController : MonoBehaviour {
         return nextA * 10 + nextB;
     }
 
+    public void sinkingDice()
+    {
+        if (isVanishing)
+        {
+            Vector3 position = transform.position;
+            position.y -= Time.deltaTime * 0.125f;
+            transform.position = position;
+            ChangeColorOfGameObject(this.gameObject, new Color(1.0f, 1.0f, 1.0f, 0.5f + position.y));
+            if (position.y <= -0.5f)
+            {
+                isVanishing = false;
+                script.board[X, Z] = -1;
+                script.board_num[X, Z] = -1;
+                Destroy(this.gameObject);
+            }
+        }
+    }
+
+    private void ChangeColorOfGameObject(GameObject targetObject, Color color)
+    {
+        if (targetObject != null)
+        {
+            //入力されたオブジェクトのRendererを全て取得し、さらにそのRendererに設定されている全Materialの色を変える
+            foreach (Renderer targetRenderer in targetObject.GetComponents<Renderer>())
+            {
+                foreach (Material material in targetRenderer.materials)
+                {
+                    material.color = color;
+                }
+            }
+
+            //入力されたオブジェクトの子にも同様の処理を行う
+            for (int i = 0; i < targetObject.transform.childCount; i++)
+            {
+                ChangeColorOfGameObject(targetObject.transform.GetChild(i).gameObject, color);
+            }
+        }
+
+    }
 }
 

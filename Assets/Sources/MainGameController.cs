@@ -627,7 +627,6 @@ public class MainGameController : MonoBehaviour
                 for (int j = 0; j < count; j++)
                 {
                     temp = vanishingDices[j].GetComponent<DiceController>();
-                    StartCoroutine(sinkingDice(vanishingDices[j]));
                     temp.isVanishing = true;
                 }
                 addScore(count * board_num[x, z]);
@@ -643,42 +642,6 @@ public class MainGameController : MonoBehaviour
                 sound_vanish.PlayOneShot(sound_vanish.clip);
             }
         }
-
-    }
-
-    // ダイスをしずめるアニメ
-    IEnumerator sinkingDice(GameObject dc)
-    {
-        if (dc != null)
-        {
-            DiceController temp = dc.GetComponent<DiceController>();
-            if (temp.isVanishing == true)
-            {
-                yield break;
-            }
-            while (isRotate_dice == true)
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            Vector3 position = dc.transform.position;
-            for (int i = 1; i < 480; i++)
-            {
-                position.y = 0.5f - i * 1f / 480f;
-                if (dc != null)
-                {
-                    ChangeColorOfGameObject(dc, new Color(1.0f, 1.0f, 1.0f, 1.0f - i / 480f));
-                    dc.transform.position = position;
-                }
-                yield return null;
-            }
-            if (dc != null)
-            {
-                board[temp.X, temp.Z] = -1;
-                board_num[temp.X, temp.Z] = -1;
-                Destroy(dc);
-            }
-        }
-        yield break;
 
     }
 
