@@ -4,12 +4,11 @@ using System.Collections;
 public class PauseController : MonoBehaviour
 {
     //　ポーズUIのインスタンス
-    private GameObject pauseUIInstance;
+    [SerializeField] private GameObject pauseUIInstance;
     private bool isPause = false;
 
     void Start()
     {
-        pauseUIInstance = GameObject.Find("PauseUI");
         pauseUIInstance.SetActive(isPause);
     }
 
