@@ -44,4 +44,8 @@ MonoBehaviour:
   - TaggedPlayer
   - setEnemyScore
   - youWin
+  - setEnemyBoard
+  - setEnemyDiceSinking
+  - setEnemyDiceRoll
+  - setEnemyDiceVanish
   DisableAutoOpenWizard: 1

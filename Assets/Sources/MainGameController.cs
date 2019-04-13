@@ -25,13 +25,13 @@ public class MainGameController : MonoBehaviour
     public bool isRotate_dice = false; //!< さいころが回転中かどうか
     public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
     bool isGameovered = false; //ゲームオーバーしたかどうか
+    public bool isStarting = true; // スタート処理が行われているか
 
     public int initDicesNum = 20; //!< 初期のさいころの数
 
-    GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
+    GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText, gobjOGController;
     AquiController objAquiController;
     DiceController objDiceController;
-    OnlineGameController objOnlineGameController;
     StatusTextController objStatusText;
     ScreenTextController objScreenText;
 
@@ -76,14 +76,9 @@ public class MainGameController : MonoBehaviour
         ScreenText = GameObject.Find("ScreenText");
         objScreenText = ScreenText.GetComponent<ScreenTextController>();
 
-        if (gameType != 2)
-        {
-            //さいころをいくつか追加
-            for (int i = 0; i < initDicesNum; i++)
-            {
-                randomDiceGenerate();
-            }
-        }
+        gobjOGController = GameObject.Find("OnlineGameController");
+
+
 
         //BGM
         if (gameType != 2)
@@ -151,6 +146,27 @@ public class MainGameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // スタート処理
+        if (isStarting)
+        {
+            if (gameType != 2)
+            {
+                //さいころをいくつか追加
+                for (int i = 0; i < initDicesNum; i++)
+                {
+                    randomDiceGenerate();
+                }
+            }
+            isStarting = false;
+
+            if (gameType == 1)
+            {
+                Time.timeScale = 0f;
+            }
+
+        }
+
+
 
         int flick = Puni(); //ぷに検知
 
@@ -416,6 +432,12 @@ public class MainGameController : MonoBehaviour
         // その座標が空だったらさいころを追加
         if (board[x, z] == -1)
         {
+            // オンラインの場合通信相手にも通達
+            if (gameType == 1)
+            {
+                gobjOGController.GetComponent<OnlineGameController>().sendPoint(x, z, a, b);
+            }
+
             maxDiceId++;
             board[x, z] = maxDiceId;
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
@@ -475,7 +497,7 @@ public class MainGameController : MonoBehaviour
                 isGameovered = true;
                 if (gameType == 1)
                 {
-                    GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendLose();
+                    gobjOGController.GetComponent<OnlineGameController>().sendLose();
                 }
                 BgmManager.Instance.Stop();
                 objScreenText.setText("Game Over!");
@@ -517,7 +539,7 @@ public class MainGameController : MonoBehaviour
     //サイコロ消える
     void VanishDice(int x, int z)
     {
-        if (board_num[x, z] == 1)
+        if (board_num[x, z] == 1) // ワンゾロバニッシュ発生
         {
             bool flag = false;
 
@@ -560,7 +582,7 @@ public class MainGameController : MonoBehaviour
 
             if (flag)
             {
-                Debug.Log("ハッピーワン！");
+                Debug.Log("ワンゾロバニッシュ!!");
                 int sum = 0;
                 vanishingDices.Clear(); //カウントしたダイスのリストを初期化
                 for (int i = 0; i < boardSize; i++)
@@ -571,6 +593,12 @@ public class MainGameController : MonoBehaviour
                         {
                             vanishingDices.Add(dices[board[i, j]]); //削除リストへ追加
                             sum++; //数を記録
+
+                            // オンラインゲームなら沈み始めたことを相手に通達
+                            if (gameType == 1)
+                            {
+                                gobjOGController.GetComponent<OnlineGameController>().sendSink(i, j);
+                            }
                         }
                     }
                 }
@@ -605,14 +633,21 @@ public class MainGameController : MonoBehaviour
             count = CountDice(x, z, count);
 
             //消す処理
-            if (count >= board_num[x, z])
+            if (count >= board_num[x, z]) //隣接するさいころの数がそのさいころの目以上だったら
             {
                 vanishingDices.Add(dices[board[x, z]]);
+
                 DiceController temp;
                 for (int j = 0; j < count; j++)
                 {
                     temp = vanishingDices[j].GetComponent<DiceController>();
                     temp.isVanishing = true;
+
+                    // オンラインゲームなら沈み始めたことを相手に通達
+                    if (gameType == 1)
+                    {
+                        gobjOGController.GetComponent<OnlineGameController>().sendSink(temp.X, temp.Z);
+                    }
                 }
                 addScore(count * board_num[x, z]);
                 objStatusText.setText("+" + count * board_num[x, z]);
@@ -631,7 +666,7 @@ public class MainGameController : MonoBehaviour
     }
 
     //親オブジェクトを入力すると親と子オブジェクトの色を変更してくれる
-    private void ChangeColorOfGameObject(GameObject targetObject, Color color)
+    public void ChangeColorOfGameObject(GameObject targetObject, Color color)
     {
         if (targetObject != null)
         {
@@ -664,6 +699,7 @@ public class MainGameController : MonoBehaviour
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x + 1, z]]);
+
                 flag = false;
                 cnt = CountDice(x + 1, z, cnt);
             }
@@ -672,6 +708,7 @@ public class MainGameController : MonoBehaviour
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x - 1, z]]);
+
                 flag = false;
                 cnt = CountDice(x - 1, z, cnt);
             }
@@ -679,6 +716,7 @@ public class MainGameController : MonoBehaviour
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x, z + 1]]);
+
                 flag = false;
                 cnt = CountDice(x, z + 1, cnt);
             }
@@ -686,6 +724,7 @@ public class MainGameController : MonoBehaviour
             {
                 cnt++;
                 vanishingDices.Add(dices[board[x, z - 1]]);
+
                 flag = false;
                 cnt = CountDice(x, z - 1, cnt);
             }
@@ -782,7 +821,7 @@ public class MainGameController : MonoBehaviour
             PhotonNetwork.room.SetCustomProperties(properties);
 
             //自分のスコアを相手に送信
-            GameObject.Find("OnlineGameController").GetComponent<OnlineGameController>().sendScore(score);
+            gobjOGController.GetComponent<OnlineGameController>().sendScore(score);
         }
     }
 

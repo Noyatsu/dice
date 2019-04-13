@@ -5,7 +5,7 @@ using UnityEngine;
 public class DiceController : MonoBehaviour
 {
 
-    GameObject Board;
+    GameObject Board, gobjOGController;
     MainGameController script;
 
     Vector3 rotatePoint = Vector3.zero;
@@ -35,6 +35,7 @@ public class DiceController : MonoBehaviour
     {
         Board = GameObject.Find("Board");
         script = Board.GetComponent<MainGameController>();
+        gobjOGController = GameObject.Find("OnlineGameController");
         diceSizeHalf = transform.localScale.x / 2f;
 
         sound_roll = GetComponent<AudioSource>();
@@ -65,6 +66,10 @@ public class DiceController : MonoBehaviour
             {
                 if (X + 1 < script.board.GetLength(0) && script.board[X + 1, Z] == -1)
                 {
+                    if (script.gameType == 1)
+                    {
+                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                    }
                     X += 1; //インクリメント
 
                     //さいころの面を計算
@@ -93,6 +98,10 @@ public class DiceController : MonoBehaviour
             {
                 if (0 <= X - 1 && script.board[X - 1, Z] == -1)
                 {
+                    if (script.gameType == 1)
+                    {
+                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                    }
                     X -= 1;
 
                     //さいころの面を計算
@@ -118,6 +127,10 @@ public class DiceController : MonoBehaviour
             {
                 if (Z + 1 < script.board.GetLength(1) && script.board[X, Z + 1] == -1)
                 {
+                    if (script.gameType == 1)
+                    {
+                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                    }
                     Z += 1;
 
                     //さいころの面を計算
@@ -143,6 +156,10 @@ public class DiceController : MonoBehaviour
             {
                 if (0 <= Z - 1 && script.board[X, Z - 1] == -1)
                 {
+                    if (script.gameType == 1)
+                    {
+                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                    }
                     Z -= 1;
 
                     //さいころの面を計算
@@ -534,6 +551,10 @@ public class DiceController : MonoBehaviour
                 script.board[X, Z] = -1;
                 script.board_num[X, Z] = -1;
                 Destroy(this.gameObject);
+                if (script.gameType == 1)
+                {
+                    gobjOGController.GetComponent<OnlineGameController>().sendVanish(X, Z);
+                }
             }
         }
     }
