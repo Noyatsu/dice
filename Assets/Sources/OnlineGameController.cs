@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class OnlineGameController : MonoBehaviour
 {
     MainGameController script;
@@ -15,6 +16,7 @@ public class OnlineGameController : MonoBehaviour
     public int[,] board_num = new int[7, 7]; //!< さいころの面を格納
     public List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     int maxDiceId = 0; //!< 現在のさいころIDの最大値
+    int DamageDice = 0; //相手のスコアによって生成されたダイス数
 
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
     public GameObject waitingPanel;
@@ -104,9 +106,17 @@ public class OnlineGameController : MonoBehaviour
     {
         enemyScore = eScore;
         sound_enemy.PlayOneShot(sound_enemy.clip);
+        if((enemyScore / 50) > DamageDice) { //スコアが一定値を超えたら
+            int i = (enemyScore / 50) - DamageDice;
+            DamageDice += i;
+            for ( ; i>0 ; i--){
+            script.randomDiceGenerate(1); //超えた分だけダイスを送る
+            Debug.Log("相手のスコアによってサイコロが増えました");
+            }
+        }
     }
 
-    [PunRPC]
+    [PunRPC] 
     private void youWin(int data)
     {
         SceneManager.LoadScene("YouWin");
