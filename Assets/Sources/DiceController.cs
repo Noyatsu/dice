@@ -64,8 +64,19 @@ public class DiceController : MonoBehaviour
 
             if (d == 2)
             {
-                if (X + 1 < script.board.GetLength(0) && script.board[X + 1, Z] == -1)
+                if (X + 1 < script.board.GetLength(0) && (script.board[X + 1, Z] == -1
+                    || (script.dices[script.board[X + 1, Z]].transform.position.y < 0f && script.dices[script.board[X + 1, Z]].GetComponent<DiceController>().isVanishing == true)))
                 {
+                    // 隣のさいころが沈み途中の時
+                    if (script.board[X + 1, Z] != -1)
+                    {
+                        if (script.dices[script.board[X + 1, Z]].GetComponent<DiceController>().isVanishing == true)
+                        {
+                            Debug.Log(script.dices[script.board[X + 1, Z]]);
+                            //そのさいころを削除
+                            script.dices[script.board[X + 1, Z]].GetComponent<DiceController>().destroyDice();
+                        }
+                    }
                     if (script.gameType == 1)
                     {
                         gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
@@ -96,8 +107,19 @@ public class DiceController : MonoBehaviour
             }
             if (d == 0)
             {
-                if (0 <= X - 1 && script.board[X - 1, Z] == -1)
+                if (0 <= X - 1 && (script.board[X - 1, Z] == -1
+                || (script.dices[script.board[X - 1, Z]].transform.position.y < 0f && script.dices[script.board[X - 1, Z]].GetComponent<DiceController>().isVanishing == true)))
                 {
+                    // 隣のさいころが沈み途中の時
+                    if (script.board[X - 1, Z] != -1)
+                    {
+
+                        if (script.dices[script.board[X - 1, Z]].GetComponent<DiceController>().isVanishing == true)
+                        {
+                            //そのさいころを削除
+                            script.dices[script.board[X - 1, Z]].GetComponent<DiceController>().destroyDice();
+                        }
+                    }
                     if (script.gameType == 1)
                     {
                         gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
@@ -125,8 +147,19 @@ public class DiceController : MonoBehaviour
             }
             if (d == 1)
             {
-                if (Z + 1 < script.board.GetLength(1) && script.board[X, Z + 1] == -1)
+                if (Z + 1 < script.board.GetLength(1) && (script.board[X, Z + 1] == -1
+                || (script.dices[script.board[X, Z + 1]].transform.position.y < 0f && script.dices[script.board[X, Z + 1]].GetComponent<DiceController>().isVanishing == true)))
                 {
+                    // 隣のさいころが沈み途中の時
+                    if (script.board[X, Z + 1] != -1)
+                    {
+
+                        if (script.dices[script.board[X, Z + 1]].GetComponent<DiceController>().isVanishing == true)
+                        {
+                            //そのさいころを削除
+                            script.dices[script.board[X, Z + 1]].GetComponent<DiceController>().destroyDice();
+                        }
+                    }
                     if (script.gameType == 1)
                     {
                         gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
@@ -154,8 +187,19 @@ public class DiceController : MonoBehaviour
             }
             if (d == 3)
             {
-                if (0 <= Z - 1 && script.board[X, Z - 1] == -1)
+                if (0 <= Z - 1 && (script.board[X, Z - 1] == -1
+                || (script.dices[script.board[X, Z - 1]].transform.position.y < 0f && script.dices[script.board[X, Z - 1]].GetComponent<DiceController>().isVanishing == true)))
                 {
+                    // 隣のさいころが沈み途中の時
+                    if (script.board[X, Z - 1] != -1)
+                    {
+
+                        if (script.dices[script.board[X, Z - 1]].GetComponent<DiceController>().isVanishing == true)
+                        {
+                            //そのさいころを削除
+                            script.dices[script.board[X, Z - 1]].GetComponent<DiceController>().destroyDice();
+                        }
+                    }
                     if (script.gameType == 1)
                     {
                         gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
@@ -544,18 +588,30 @@ public class DiceController : MonoBehaviour
             Vector3 position = transform.position;
             position.y -= Time.deltaTime * 0.125f;
             transform.position = position;
-            ChangeColorOfGameObject(this.gameObject, new Color(1.0f, 1.0f, 1.0f, 0.5f + position.y));
+            if (position.y > 0f)
+            {
+                ChangeColorOfGameObject(this.gameObject, new Color(0.75f + position.y / 2f, 0.75f + position.y / 2f, 0.75f + position.y / 2f, 0.75f + position.y / 2f));
+            }
+            else
+            {
+                ChangeColorOfGameObject(this.gameObject, new Color(0.5f + position.y, 0.5f + position.y, 1.0f + position.y, 0.5f + position.y));
+            }
             if (position.y <= -0.5f)
             {
-                isVanishing = false;
-                script.board[X, Z] = -1;
-                script.board_num[X, Z] = -1;
-                Destroy(this.gameObject);
-                if (script.gameType == 1)
-                {
-                    gobjOGController.GetComponent<OnlineGameController>().sendVanish(X, Z);
-                }
+                destroyDice();
             }
+        }
+    }
+
+    public void destroyDice()
+    {
+        isVanishing = false;
+        script.board[X, Z] = -1;
+        script.board_num[X, Z] = -1;
+        Destroy(this.gameObject);
+        if (script.gameType == 1)
+        {
+            gobjOGController.GetComponent<OnlineGameController>().sendVanish(X, Z);
         }
     }
 
