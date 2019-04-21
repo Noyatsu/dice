@@ -528,7 +528,7 @@ public class DiceController : MonoBehaviour
         {
             Vector3 position = transform.position;
             position.y += Time.deltaTime * 2.0f;
-            ChangeColorOfGameObject(this.gameObject, new Color(1.0f, 1.0f, 1.0f, 0.5f + position.y));
+            //ChangeColorOfGameObject(this.gameObject, new Color(1.0f, 1.0f, 1.0f, 0.5f + position.y));
             if (position.y >= 0.5f)
             {
                 position.y = 0.5f;

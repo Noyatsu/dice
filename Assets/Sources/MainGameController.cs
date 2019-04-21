@@ -223,20 +223,37 @@ public class MainGameController : MonoBehaviour
 
         if (gameType != 2)
         {
-
-            if (level > 36)
-            { //現状レベル36で速さは打ち止め
-                if (timeElapsed >= 1.5)
+            if(gameType == 0) { //ソロモードの速さ
+                if (level > 21)
+                { //現状レベル21で速さは打ち止め
+                    if (timeElapsed >= 1.5)
+                    {
+                        randomDiceGenerate();
+                        timeElapsed = 0.0f;
+                    }
+                }
+                // さいころ追加 スタートは3秒ごと、ゴールは1.25秒ごと
+                else if (timeElapsed >= (3f - (1 / 12f) * level)) //1/12は(初速-最高速)/レベルで求められた
                 {
                     randomDiceGenerate();
                     timeElapsed = 0.0f;
                 }
             }
-            // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-            else if (timeElapsed >= (3.5f - (1 / 18f) * level))
-            {
-                randomDiceGenerate();
-                timeElapsed = 0.0f;
+            if(gameType == 1) { //対戦モードの速さ
+                if (level > 21)
+                { //現状レベル21で速さは打ち止め
+                    if (timeElapsed >= 1.5)
+                    {
+                        randomDiceGenerate();
+                        timeElapsed = 0.0f;
+                    }
+                }
+                // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
+                else if (timeElapsed >= (3.5f - (2 / 21f) * level))
+                {
+                    randomDiceGenerate();
+                    timeElapsed = 0.0f;
+                }
             }
         }
 
@@ -269,7 +286,7 @@ public class MainGameController : MonoBehaviour
      * @params z 配置するz座標
      * @params a 上にする面
      */
-    public void diceGenerate(int x, int z, int a, int b = 0)
+    public void diceGenerate(int x, int z, int a, int b = 0, int type=0)
     {
         // 側面の決定用乱数
         int i = Random.Range(1, 4);
@@ -451,12 +468,19 @@ public class MainGameController : MonoBehaviour
             objDiceController.diceId = maxDiceId;
             objDiceController.isGenerate = true;
             dices.Add(objDice); //リストにオブジェクトを追加
+            Debug.Log(type);
+
+            if(type==1)  {
+                ChangeColorOfGameObject(dices[board[x, z]], new Color(1.0f, 0.5f, 0.8f, 1.0f));
+                Debug.Log("ダメージダイスがきたよ〜〜〜〜");
+                objScreenText.setText("Garbage Block!");
+            }
             board_num[x, z] = a;
         }
 
     }
 
-    void randomDiceGenerate()
+    public void randomDiceGenerate(int type=0)
     {
         // 配置する座標を決定
         int count = 0;
@@ -519,7 +543,7 @@ public class MainGameController : MonoBehaviour
         int a = Random.Range(1, 6);
 
         // ダイスを生成
-        diceGenerate(x, z, a);
+        diceGenerate(x, z, a, 0, type);
     }
 
     void Delay()
@@ -764,7 +788,7 @@ public class MainGameController : MonoBehaviour
 
     public void ComputeLevel()
     {
-        int a = 110; //おおよそ1レベルの上昇に必要なスコア
+        int a = 150; //おおよそ1レベルの上昇に必要なスコア
         int b = a; //前の必要経験値を記録する
         int lv = 1;
 
