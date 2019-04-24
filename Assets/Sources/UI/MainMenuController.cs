@@ -19,4 +19,9 @@ public class MainMenuController : MonoBehaviour
     {
         bgImage.transform.Rotate(0f, 0f, Time.deltaTime * 2.0f);
     }
+
+    public void showRanking()
+    {
+        naichilab.RankingLoader.Instance.SendScoreAndShowRanking(0);
+    }
 }
