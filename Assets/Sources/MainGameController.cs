@@ -30,6 +30,7 @@ public class MainGameController : MonoBehaviour
     public int initDicesNum = 20; //!< 初期のさいころの数
 
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText, gobjOGController;
+    [SerializeField] GameObject gobjSendDice, gobjSendedDice;
     AquiController objAquiController;
     DiceController objDiceController;
     StatusTextController objStatusText;
@@ -268,6 +269,10 @@ public class MainGameController : MonoBehaviour
     void changeStage(int nextStage)
     {
         this.GetComponent<Renderer>().sharedMaterial = _material[nextStage]; //盤面
+        if (gameType == 1)
+        {
+            GameObject.Find("EnemyBoard").GetComponent<Renderer>().sharedMaterial = _material[nextStage];
+        }
         RenderSettings.skybox = _skyboxMaterial[nextStage]; //背景
         BgmManager.Instance.Play((nextStage + 1).ToString()); //BGM
         if (nextStage == 6)
@@ -473,7 +478,9 @@ public class MainGameController : MonoBehaviour
             if(type==1)  {
                 ChangeColorOfGameObject(dices[board[x, z]], new Color(1.0f, 0.5f, 0.8f, 1.0f));
                 Debug.Log("ダメージダイスがきたよ〜〜〜〜");
-                objScreenText.setText("Garbage Block!");
+                //objScreenText.setText("Garbage Block!");
+                gobjSendedDice.GetComponent<Animator>().SetTrigger("sendedDice");
+
             }
             board_num[x, z] = a;
         }
@@ -639,7 +646,7 @@ public class MainGameController : MonoBehaviour
                 if (board_num[x, z] == stage + 1)
                 {
                     addScore(count);
-                    objScreenText.setText("ステージボーナス! +" + count * 10);
+                    objScreenText.setText("Stage Bonus! +" + count * 10);
                 }
                 ComputeLevel(); //レベル計算
                 sound_one.PlayOneShot(sound_one.clip);
@@ -680,7 +687,7 @@ public class MainGameController : MonoBehaviour
                 if (board_num[x, z] == stage + 1)
                 {
                     addScore(board_num[x, z] * count);
-                    objScreenText.setText("ステージボーナス! +" + board_num[x, z] * count);
+                    objScreenText.setText("Stage Bonus! +" + board_num[x, z] * count);
                 }
                 ComputeLevel(); //レベル計算
                 sound_vanish.PlayOneShot(sound_vanish.clip);
@@ -833,6 +840,7 @@ public class MainGameController : MonoBehaviour
     //スコア計算用
     void addScore(int num)
     {
+        int prevScoreDiv = score / 50;
         score += num;
         sumScore += num;
 
@@ -846,6 +854,11 @@ public class MainGameController : MonoBehaviour
 
             //自分のスコアを相手に送信
             gobjOGController.GetComponent<OnlineGameController>().sendScore(score);
+
+            // 相手にお邪魔ダイスを送るアニメーション
+            if(prevScoreDiv != score / 50) { //スコアが一定値を超えたら
+                gobjSendDice.GetComponent<Animator>().SetTrigger("sendDice");
+            }
         }
     }
 
