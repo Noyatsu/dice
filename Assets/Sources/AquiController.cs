@@ -44,6 +44,32 @@ public class AquiController : MonoBehaviour
         Move();
     }
 
+    void LateUpdate()
+    {
+        if (script.dices.Count != 0)
+        {
+            if (script.board[x, z] != -1)
+            {
+                //現在位置の下にダイスがあるとき
+                y = script.dices[script.board[x, z]].transform.position.y + 0.5f;
+            }
+            else if (script.isRotate_dice)
+            {
+                y = 1.0f;
+            }
+            else
+            {
+                //ダイスがないとき
+                y = 0.0f;
+            }
+        }
+        else
+        {
+            y = 0.0f;
+        }
+        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+    }
+
     public void deathMotion()
     {
         //anim.SetTrigger("Dead");
