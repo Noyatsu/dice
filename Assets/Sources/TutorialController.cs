@@ -5,7 +5,7 @@ using UnityEngine;
 public class TutorialController : MonoBehaviour
 {
     string[,] ttData = {
-        {"", "", "Six sided travelerへようこそ！"},
+        {"", "", "Six sided travelerへようこそ！ "},
         {"", "", "これは、砂漠にすんでいた女の子\"Zoro\"が六面世界を旅する物語です。"},
         {"", "", "早速、旅の仕方をマスターしましょう。"},
         {"", "", "画面をタップして進みたい方向にスライドするとその方向に移動できます。"},
@@ -61,6 +61,8 @@ public class TutorialController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        ttData[0, 2] += PlayerPrefs.GetString("userName") + "さん。";
+
         objBoard = GameObject.Find("Board");
         objMGController = objBoard.GetComponent<MainGameController>();
 
