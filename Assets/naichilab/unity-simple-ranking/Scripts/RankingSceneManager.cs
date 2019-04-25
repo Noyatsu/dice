@@ -60,7 +60,7 @@ namespace naichilab
             {
                 if (string.IsNullOrEmpty(nameInputField.text))
                 {
-                    return "名無しさん";
+                    return PlayerPrefs.GetString("userName");
                 }
 
                 return nameInputField.text;
@@ -73,6 +73,8 @@ namespace naichilab
             _board = RankingLoader.Instance.CurrentRanking;
             _lastScore = RankingLoader.Instance.LastScore;
 
+            nameInputField.text = PlayerPrefs.GetString("userName");
+
             Debug.Log(BoardIdPlayerPrefsKey + "=" + PlayerPrefs.GetString(BoardIdPlayerPrefsKey, null));
 
             StartCoroutine(GetHighScoreAndRankingBoard());
@@ -81,7 +83,7 @@ namespace naichilab
         IEnumerator GetHighScoreAndRankingBoard()
         {
             scoreLabel.text = _lastScore.TextForDisplay;
-            captionLabel.text = string.Format("{0}Game over", _board.BoardName);
+            captionLabel.text = string.Format("{0}Ranking", _board.BoardName);
 
             //ハイスコア取得
             {
