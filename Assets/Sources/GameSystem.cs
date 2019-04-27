@@ -26,6 +26,13 @@ public class GameSystem : MonoBehaviour
         FadeManager.Instance.LoadScene("Tutorial", 0.3f);
     }
 
+    public void PuzzleStart()
+    {
+        GameObject.Find("StageDice").SetActive(false);
+        objNowLoading.SetActive(true);
+        FadeManager.Instance.LoadScene("stage1", 0.3f);
+    }
+
     public void ReturnTitle()
     {
         GameObject Board = GameObject.Find("Board");

@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class MainMenuController : MonoBehaviour
 {
     GameObject bgImage;
-
+    [SerializeField] GameObject StageDice, Up, Down, Left, Right;
+    int StageNum = 1;
     private int frame = 0;
     // Use this for initialization
     void Start()
@@ -14,11 +15,13 @@ public class MainMenuController : MonoBehaviour
         bgImage = GameObject.Find("bgImage");
 
         // 初回起動時はチュートリアルへ
-        if(!PlayerPrefs.HasKey("userName")) {
+        if (!PlayerPrefs.HasKey("userName"))
+        {
             BgmManager.Instance.Play("online");
             SceneManager.LoadScene("Init");
-        }       　
-        else {
+        }
+        else
+        {
             BgmManager.Instance.Play("opening");
 
         }

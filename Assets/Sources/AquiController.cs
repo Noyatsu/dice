@@ -138,6 +138,12 @@ public class AquiController : MonoBehaviour
             anim.Play("Jump");
         }
         target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+
+        // Puzzle用
+        if (script.gameType == 3)
+        {
+            GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().decrementRemainTurnNum();
+        }
         return;
     }
 
