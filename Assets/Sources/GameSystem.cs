@@ -31,6 +31,8 @@ public class GameSystem : MonoBehaviour
         GameObject.Find("StageDice").SetActive(false);
         objNowLoading.SetActive(true);
         FadeManager.Instance.LoadScene("stage1", 0.3f);
+        BgmManager.Instance.Play("puzzle"); //BGM
+
     }
 
     public void ReturnTitle()

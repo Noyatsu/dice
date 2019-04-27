@@ -135,6 +135,7 @@ public class PuzzleGameController : MonoBehaviour
 
     public void gotoTopmenu()
     {
+        BgmManager.Instance.Play("puzzle"); //BGM
         FadeManager.Instance.LoadScene("stage1", 0.3f);
     }
 
