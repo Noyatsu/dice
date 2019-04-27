@@ -35,6 +35,6 @@ public class MainMenuController : MonoBehaviour
 
     public void showRanking()
     {
-        naichilab.RankingLoader.Instance.SendScoreAndShowRanking(1);
+        naichilab.RankingLoader.Instance.ShowRanking();
     }
 }

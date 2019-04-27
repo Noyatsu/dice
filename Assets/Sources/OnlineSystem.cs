@@ -7,6 +7,7 @@ public class OnlineSystem : MonoBehaviour
 {
 
     int mode = 0; //1ならフリーマッチ
+    string version = "v0.5";
     public GameObject objLoading;
 
     void Start()
@@ -18,7 +19,7 @@ public class OnlineSystem : MonoBehaviour
     {
         objLoading.SetActive(true);
         mode = 1;
-        PhotonNetwork.ConnectUsingSettings("v0.5");
+        PhotonNetwork.ConnectUsingSettings(version);
     }
 
     // ロビーに入ると呼ばれる
