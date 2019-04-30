@@ -27,9 +27,18 @@ EditorBuildSettings:
     path: Assets/naichilab/unity-simple-ranking/Scenes/Ranking.unity
     guid: 152244f5855414ac4a3874f14efa583c
   - enabled: 1
+    path: Assets/naichilab/unity-simple-ranking/Scenes/RankingOnly.unity
+    guid: 97225a1ea60e2254ba2813f3a01327d9
+  - enabled: 1
     path: Assets/Scenes/Tutorial.unity
     guid: b0da4260934596d49aba1dac080aedd4
   - enabled: 1
     path: Assets/Scenes/Init.unity
     guid: 19e6c360c49701442990f7518c852400
+  - enabled: 1
+    path: Assets/Scenes/PuzzleGame.unity
+    guid: 0df9479c5c2382446a7d7e24832a3b01
+  - enabled: 1
+    path: Assets/Scenes/PuzzleStage/stage1.unity
+    guid: aaead1b6763d40f429e5b481a1b0bf65
   m_configObjects: {}

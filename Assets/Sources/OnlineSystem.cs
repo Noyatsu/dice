@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class OnlineSystem : MonoBehaviour
 {
 
     int mode = 0; //1ならフリーマッチ
-    public GameObject objLoading;
+    string version = "v0.5", key = "";
+    public GameObject objLoading, objkeyBox, objKey;
 
     void Start()
     {
@@ -18,7 +20,21 @@ public class OnlineSystem : MonoBehaviour
     {
         objLoading.SetActive(true);
         mode = 1;
-        PhotonNetwork.ConnectUsingSettings("v0.5");
+        PhotonNetwork.ConnectUsingSettings(version);
+    }
+
+    public void displayKeyWindow()
+    {
+        objkeyBox.SetActive(true);
+    }
+    public void startKeyMatch()
+    {
+        key = objKey.GetComponent<InputField>().text;
+        Debug.Log(key);
+        objkeyBox.SetActive(false);
+        objLoading.SetActive(true);
+        mode = 3;
+        PhotonNetwork.ConnectUsingSettings(version);
     }
 
     // ロビーに入ると呼ばれる
@@ -29,7 +45,14 @@ public class OnlineSystem : MonoBehaviour
         if (mode == 1)
         {
             // ランダムにルームに入室する
-            PhotonNetwork.JoinRandomRoom();
+            ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 1 } };
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 2);
+        }
+        else if (mode == 3)
+        {
+            // ルームに入室する
+            ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 3 }, {"key", key} };
+            PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 2);
         }
     }
 
@@ -49,15 +72,23 @@ public class OnlineSystem : MonoBehaviour
     {
         Debug.Log("ルームの入室に失敗しました。");
 
+        RoomOptions roomOptions = new RoomOptions();
+
         if (mode == 1)
         {
             // ルームがないと入室に失敗するため、その時は自分で作る
-            RoomOptions roomOptions = new RoomOptions()
-            {
-                maxPlayers = 2
-            };
-            PhotonNetwork.CreateRoom(null, roomOptions, null);
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 1 } };
+            roomOptions.CustomRoomPropertiesForLobby = new string[] { "mode" };
+            roomOptions.MaxPlayers = 2;
         }
+        else if (mode == 3)
+        {
+            // ルームがないと入室に失敗するため、その時は自分で作る
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 3 }, { "key", key } };
+            roomOptions.CustomRoomPropertiesForLobby = new string[] { "mode", "key" };
+            roomOptions.MaxPlayers = 2;
+        }
+        PhotonNetwork.CreateRoom(null, roomOptions, null);
     }
 
     // ほかのプレイヤーが入室してきた際に呼ばれる

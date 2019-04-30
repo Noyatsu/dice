@@ -56,6 +56,20 @@ namespace naichilab
             RankingBoards.CheckDuplicateClassName();
         }
 
+        /// <summary>
+        /// ランキング表示を行います
+        /// </summary>
+        public void ShowRanking(int boardId = 0)
+        {
+            var board = RankingBoards.GetRankingInfo(boardId);
+            var score = new NumberScore(0, board.CustomFormat);
+
+            CurrentRanking = board;
+            LastScore = score;
+            SceneManager.LoadScene("RankingOnly", LoadSceneMode.Additive);
+
+        }
+
 
         /// <summary>
         /// 時間型スコアの送信とランキング表示を行います

@@ -46,7 +46,7 @@ public class MainGameController : MonoBehaviour
     private Vector3 clickstartPos;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         score = 0;
 
@@ -67,10 +67,18 @@ public class MainGameController : MonoBehaviour
         DiceBase = (GameObject)Resources.Load("Dice");
         Dice = GameObject.Find("Dice");
         dices.Add(Dice);  //リストにオブジェクトを追加
-
         Aqui = GameObject.Find("Aqui");
         objAquiController = Aqui.GetComponent<AquiController>();
         objDiceController = Dice.GetComponent<DiceController>();
+
+        if (gameType == 3)
+        {
+            board[0, 0] = -1;
+            board_num[0, 0] = -1;
+            maxDiceId = 0;
+            dices.Clear();
+            Destroy(Dice);
+        }
 
         StatusText = GameObject.Find("StatusText");
         objStatusText = StatusText.GetComponent<StatusTextController>();
@@ -150,7 +158,7 @@ public class MainGameController : MonoBehaviour
         // スタート処理
         if (isStarting)
         {
-            if (gameType != 2)
+            if (gameType < 2)
             {
                 //さいころをいくつか追加
                 for (int i = 0; i < initDicesNum; i++)
@@ -224,7 +232,8 @@ public class MainGameController : MonoBehaviour
 
         if (gameType != 2)
         {
-            if(gameType == 0) { //ソロモードの速さ
+            if (gameType == 0)
+            { //ソロモードの速さ
                 if (level > 21)
                 { //現状レベル21で速さは打ち止め
                     if (timeElapsed >= 1.5)
@@ -240,7 +249,8 @@ public class MainGameController : MonoBehaviour
                     timeElapsed = 0.0f;
                 }
             }
-            if(gameType == 1) { //対戦モードの速さ
+            if (gameType == 1)
+            { //対戦モードの速さ
                 if (level > 21)
                 { //現状レベル21で速さは打ち止め
                     if (timeElapsed >= 1.5)
@@ -266,7 +276,7 @@ public class MainGameController : MonoBehaviour
     }
 
     // ステージを変える
-    void changeStage(int nextStage)
+    public void changeStage(int nextStage)
     {
         this.GetComponent<Renderer>().sharedMaterial = _material[nextStage]; //盤面
         if (gameType == 1)
@@ -291,7 +301,7 @@ public class MainGameController : MonoBehaviour
      * @params z 配置するz座標
      * @params a 上にする面
      */
-    public void diceGenerate(int x, int z, int a, int b = 0, int type=0)
+    public void diceGenerate(int x, int z, int a, int b = 0, int type = 0)
     {
         // 側面の決定用乱数
         int i = Random.Range(1, 4);
@@ -464,18 +474,23 @@ public class MainGameController : MonoBehaviour
             board[x, z] = maxDiceId;
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
             GameObject objDice = (GameObject)Instantiate(DiceBase, position, Quaternion.Euler(xi, yi, zi));
-            DiceController objDiceController = objDice.GetComponent<DiceController>();
-            objDiceController.isSelected = false;
-            objDiceController.X = x;
-            objDiceController.Z = z;
-            objDiceController.surfaceA = a;
-            objDiceController.surfaceB = b;
-            objDiceController.diceId = maxDiceId;
-            objDiceController.isGenerate = true;
+            DiceController mobjDiceController = objDice.GetComponent<DiceController>();
+            mobjDiceController.isSelected = false;
+            mobjDiceController.X = x;
+            mobjDiceController.Z = z;
+            mobjDiceController.surfaceA = a;
+            mobjDiceController.surfaceB = b;
+            mobjDiceController.diceId = maxDiceId;
+            mobjDiceController.isGenerate = true;
+            if (gameType >= 2)
+            {
+                objDiceController = mobjDiceController;
+            }
             dices.Add(objDice); //リストにオブジェクトを追加
             Debug.Log(type);
 
-            if(type==1)  {
+            if (type == 1)
+            {
                 ChangeColorOfGameObject(dices[board[x, z]], new Color(1.0f, 0.5f, 0.8f, 1.0f));
                 Debug.Log("ダメージダイスがきたよ〜〜〜〜");
                 //objScreenText.setText("Garbage Block!");
@@ -487,7 +502,7 @@ public class MainGameController : MonoBehaviour
 
     }
 
-    public void randomDiceGenerate(int type=0)
+    public void randomDiceGenerate(int type = 0)
     {
         // 配置する座標を決定
         int count = 0;
@@ -503,6 +518,11 @@ public class MainGameController : MonoBehaviour
                     count++; //空白の座標をchusenに保存
                 }
             }
+        }
+
+        if (gameType == 3 && count == 49)
+        {
+            GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().youWin();
         }
 
         if (count == 0 && isGameovered == false)
@@ -856,7 +876,8 @@ public class MainGameController : MonoBehaviour
             gobjOGController.GetComponent<OnlineGameController>().sendScore(score);
 
             // 相手にお邪魔ダイスを送るアニメーション
-            if(prevScoreDiv != score / 50) { //スコアが一定値を超えたら
+            if (prevScoreDiv != score / 50)
+            { //スコアが一定値を超えたら
                 gobjSendDice.GetComponent<Animator>().SetTrigger("sendDice");
             }
         }

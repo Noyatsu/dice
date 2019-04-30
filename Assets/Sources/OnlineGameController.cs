@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class OnlineGameController : MonoBehaviour
@@ -19,7 +20,7 @@ public class OnlineGameController : MonoBehaviour
     int DamageDice = 0; //相手のスコアによって生成されたダイス数
 
     GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
-    public GameObject waitingPanel;
+    public GameObject waitingPanel, myName, enemyName;
 
     void Start()
     {
@@ -47,16 +48,12 @@ public class OnlineGameController : MonoBehaviour
         Dice = GameObject.Find("DiceE");
         dices.Add(Dice);  //リストにオブジェクトを追加
 
+        //名前の設定
+        myName.GetComponent<Text>().text = PlayerPrefs.GetString("userName");
+        objPhotonViewControl.RPC("setEnemyName", PhotonTargets.Others, PlayerPrefs.GetString("userName"));
+
         //Aqui = GameObject.Find("AquiE");
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-
-    }
-
 
     public void OnPhotonCustomRoomPropertiesChanged(ExitGames.Client.Photon.Hashtable changedProperties)
     {
@@ -73,6 +70,12 @@ public class OnlineGameController : MonoBehaviour
     public void sendScore(int score)
     {
         objPhotonViewControl.RPC("setEnemyScore", PhotonTargets.Others, score);
+    }
+
+    public void pause()
+    {
+        sendLose();
+        FadeManager.Instance.LoadScene("YouLose", 0.3f);
     }
 
     public void sendLose()
@@ -99,6 +102,12 @@ public class OnlineGameController : MonoBehaviour
     public void sendRoll(int x, int z, int d)
     {
         objPhotonViewControl.RPC("setEnemyDiceRoll", PhotonTargets.Others, x, z, d);
+    }
+
+    [PunRPC]
+    private void setEnemyName(string eName)
+    {
+        enemyName.GetComponent<Text>().text = eName;
     }
 
     [PunRPC]
