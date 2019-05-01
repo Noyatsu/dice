@@ -18,11 +18,11 @@ EditorBuildSettings:
     path: Assets/Scenes/OnlineGame.unity
     guid: 39db76a534a38ec4aa4a926b2fd140db
   - enabled: 1
-    path: Assets/Scenes/YouLose.unity
-    guid: 5d1146fc667a1674da14743c3a0f690a
-  - enabled: 1
     path: Assets/Scenes/YouWin.unity
     guid: 61292cf6259595d4586eaf23a8cc80d0
+  - enabled: 1
+    path: Assets/Scenes/YouLose.unity
+    guid: d7796eaa8babb2645be5230ea5ac6a52
   - enabled: 1
     path: Assets/naichilab/unity-simple-ranking/Scenes/Ranking.unity
     guid: 152244f5855414ac4a3874f14efa583c
