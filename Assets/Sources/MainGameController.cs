@@ -206,7 +206,10 @@ public class MainGameController : MonoBehaviour
                 }
                 objAquiController.SetTargetPosition(3);
             }
-
+            else if (Input.GetKey(KeyCode.K))
+            {
+                score += 1000;
+            }
 
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
@@ -227,7 +230,7 @@ public class MainGameController : MonoBehaviour
             if(gameType == 0) { //ソロモードの速さ
                 if (level > 21)
                 { //現状レベル21で速さは打ち止め
-                    if (timeElapsed >= 1.5)
+                    if (timeElapsed >= (1.2 + (0.3 * Mathf.Sin(Mathf.PI * level / 4))))
                     {
                         randomDiceGenerate();
                         timeElapsed = 0.0f;
