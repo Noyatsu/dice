@@ -23,6 +23,12 @@ public class RankManager : MonoBehaviour
         {
             changeRank(initType);
             showRank();
+            if (initType == 1) {
+                BgmManager.Instance.Play("win");
+            }
+            else {
+                BgmManager.Instance.Play("lose");
+            }
         }
     }
 

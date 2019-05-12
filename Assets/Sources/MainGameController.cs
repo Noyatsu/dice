@@ -278,6 +278,11 @@ public class MainGameController : MonoBehaviour
         objAquiController.setTarget(x, y, z);
     }
 
+    public void setAquiDiscrete(int x, float y, int z)
+    {
+        objAquiController.setTargetDiscrete(x, y, z);
+    }
+
     // ステージを変える
     public void changeStage(int nextStage)
     {

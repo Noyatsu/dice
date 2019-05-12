@@ -156,6 +156,16 @@ public class AquiController : MonoBehaviour
         return;
     }
 
+    public void setTargetDiscrete(int _x, float _y, int _z)
+    {
+        x = _x;
+        y = _y;
+        z = _z;
+        transform.position = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+        return;
+    }
+
     void RotateCharactor(int d)
     {
         //入力方向と既存の向きが違う場合
@@ -194,4 +204,6 @@ public class AquiController : MonoBehaviour
     {
         transform.position = Vector3.MoveTowards(transform.position, target, step * Time.deltaTime);
     }
+
+
 }
