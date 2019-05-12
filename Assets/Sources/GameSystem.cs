@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Advertisements;
 
 public class GameSystem : MonoBehaviour
 {
 
     public GameObject objNowLoading;
+
+    void Start()
+    {
+        //Advertisement.Initialize ("41f00082-510f-4b97-829f-89280c5074ad", true);
+    }
 
     public void OnePlayerGameStart()
     {
@@ -39,7 +45,37 @@ public class GameSystem : MonoBehaviour
     {
         GameObject Board = GameObject.Find("Board");
         Destroy(Board);
-        FadeManager.Instance.LoadScene("TopMenu", 0.3f);
-        BgmManager.Instance.Play("opening"); //BGM
+        BgmManager.Instance.Stop();
+        ShowRewardedAd();
     }
+
+    public void ShowRewardedAd()
+    {
+        if (Advertisement.IsReady("rewardedVideo"))
+        {
+            var options = new ShowOptions { resultCallback = HandleShowResult };
+            Advertisement.Show("rewardedVideo", options);
+        }
+    }
+
+    private void HandleShowResult(ShowResult result)
+    {
+        switch (result)
+        {
+            case ShowResult.Finished:
+                Debug.Log("The ad was successfully shown.");
+                FadeManager.Instance.LoadScene("TopMenu", 0.3f);
+                BgmManager.Instance.Play("opening"); //BGM
+                break;
+            case ShowResult.Skipped:
+                Debug.Log("The ad was skipped before reaching the end.");
+                FadeManager.Instance.LoadScene("TopMenu", 0.3f);
+                BgmManager.Instance.Play("opening"); //BGM
+                break;
+            case ShowResult.Failed:
+                Debug.LogError("The ad failed to be shown.");
+                break;
+        }
+    }
+
 }

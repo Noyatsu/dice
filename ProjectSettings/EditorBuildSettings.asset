@@ -41,7 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PuzzleStage/stage1.unity
     guid: aaead1b6763d40f429e5b481a1b0bf65
-  - enabled: 1
-    path: Assets/Scenes/Ad.unity
-    guid: e69cdc9d1b587124799c4d894bedbf86
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}
