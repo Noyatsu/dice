@@ -32,11 +32,10 @@ public class GameSystem : MonoBehaviour
         FadeManager.Instance.LoadScene("Tutorial", 0.3f);
     }
 
-    public void PuzzleStart()
+    public void PuzzleStart(int stage)
     {
-        GameObject.Find("StageDice").SetActive(false);
         objNowLoading.SetActive(true);
-        FadeManager.Instance.LoadScene("stage1", 0.3f);
+        FadeManager.Instance.LoadScene("stage"+stage.ToString(), 0.3f);
         BgmManager.Instance.Play("puzzle"); //BGM
 
     }

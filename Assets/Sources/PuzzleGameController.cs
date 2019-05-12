@@ -5,11 +5,15 @@ using UnityEngine.UI;
 
 public class PuzzleGameController : MonoBehaviour
 {
+    // 現在用意できている最後のステージ
+    int maxStageIdx = 7; // (worldnum-1)*8 + (stageNum-1) で計算, 例えば2-3なら(2-1)*8 + (3-1) = 10
+
     /**
      * {指定ターン数, プレイヤーの初期xyz, サイコロの(x,z,A面の数字,B面の数字(0にするとランダム))xサイコロの数だけ書く}
      * 全てstring型
      */
     string[,] ttData = {
+        // stage1
         {"1", "3,1.0,2", "3,2,2,1,2,3,4,1,3,3,4,2,4,3,4,5"},
         {"3", "4,1.0,2", "4,2,5,1,2,2,6,3,3,3,3,5"},
         {"5", "3,1.0,1", "2,1,6,4,3,2,4,1,3,1,1,2,4,2,4,6"},
@@ -18,6 +22,10 @@ public class PuzzleGameController : MonoBehaviour
         {"3", "2,1.0,2", "2,2,2,6,4,2,2,4"},
         {"5", "5,1.0,1", "5,1,1,2,1,3,2,6"},
         {"5", "4,1.0,3", "4,3,2,1,2,3,4,1,3,3,4,2,2,2,5,4"},
+
+        // stage2
+
+
       　/*{"4", "2,0.0,1", "2,2,2,0,4,2,2,3"},
         {"4", "3,0.0,1", "3,2,5,3,4,3,2,3,2,4,3,0,3,4,3,0"},
         {"2", "3,0.0,1", "2,3,5,0,3,2,1,5,4,3,5,0,5,3,5,0,6,3,5,0"},*/
@@ -25,10 +33,12 @@ public class PuzzleGameController : MonoBehaviour
 
 
 
+
     [SerializeField] GameObject objBoard, gobjStageText, gobjRemainText, gobjYouWin, gobjYouLose;
     MainGameController objMGController;
     int stageIdx, ttsize, remainTurnNum;
     bool winFlag = false, loseFlag = false;
+    string strStage = ""; //1-1みたいな
 
     // Use this for initialization
     void Start()
@@ -51,7 +61,8 @@ public class PuzzleGameController : MonoBehaviour
             stageIdx = ttsize - 1;
         }
         // テキスト設定
-        gobjStageText.GetComponent<Text>().text = (1 + stageIdx / 8).ToString() + " - " + (stageIdx % 8 + 1).ToString();
+        strStage = (1 + stageIdx / 8).ToString() + " - " + (stageIdx % 8 + 1).ToString();
+        gobjStageText.GetComponent<Text>().text = strStage;
 
         // BGM再生/背景設定
         objMGController.changeStage(stageIdx / 8);
@@ -64,7 +75,7 @@ public class PuzzleGameController : MonoBehaviour
         if (ttData[stageIdx, 1] != "")
         {
             string[] aquiPos = ttData[stageIdx, 1].Split(',');
-            objMGController.setAqui(int.Parse(aquiPos[0]), float.Parse(aquiPos[1]), int.Parse(aquiPos[2]));
+            objMGController.setAquiDiscrete(int.Parse(aquiPos[0]), float.Parse(aquiPos[1]), int.Parse(aquiPos[2]));
         }
 
         // サイコロを生やす
@@ -134,18 +145,30 @@ public class PuzzleGameController : MonoBehaviour
     {
         gobjYouWin.SetActive(true);
         winFlag = true;
+
+        // セーブ puzzle1-1 = 1 みたいな
+        if(stageIdx != maxStageIdx) {
+            PlayerPrefs.SetInt("puzzle" + strStage.Replace(" ", ""), 1);
+            Debug.Log(strStage);
+        }
+        else {
+            GameObject.Find("NextButton").GetComponent<Button>().interactable = false;
+        }
     }
 
     public void youLose()
     {
         gobjYouLose.SetActive(true);
         loseFlag = true;
+
+        // セーブ
+        //PlayerPrefs.SetInt("puzzle" + strStage.Replace(" ", ""), 0);
     }
 
     public void gotoTopmenu()
     {
         BgmManager.Instance.Play("puzzle"); //BGM
-        FadeManager.Instance.LoadScene("stage1", 0.3f);
+        FadeManager.Instance.LoadScene("stage" + (1 + stageIdx / 8).ToString(), 0.3f);
     }
 
     public void nextStage()
@@ -154,7 +177,6 @@ public class PuzzleGameController : MonoBehaviour
         stageIdx++;
         setStage();
     }
-
 
     // Update is called once per frame
     void Update()
