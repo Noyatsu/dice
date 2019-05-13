@@ -1265,7 +1265,7 @@ PrefabInstance:
     - target: {fileID: 5755040596760288220, guid: a61d2bf5d60bf984db63231c3065eaa1,
         type: 3}
       propertyPath: _cameraEvent
-      value: 20
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 5755040596760288220, guid: a61d2bf5d60bf984db63231c3065eaa1,
         type: 3}
