@@ -218,6 +218,8 @@ public class MainGameController : MonoBehaviour
             {
                 score += 1000;
             }
+            Debug.Log("board["+objAquiController.x.ToString()+","+objAquiController.z.ToString()+"]="+board[objAquiController.x, objAquiController.z].ToString());
+
 
             if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
             {
@@ -490,22 +492,17 @@ public class MainGameController : MonoBehaviour
             mobjDiceController.surfaceB = b;
             mobjDiceController.diceId = maxDiceId;
             mobjDiceController.isGenerate = true;
-            if (gameType >= 2)
-            {
-                objDiceController = mobjDiceController;
-            }
+     
             dices.Add(objDice); //リストにオブジェクトを追加
-            Debug.Log(type);
 
             if (type == 1)
             {
                 ChangeColorOfGameObject(dices[board[x, z]], new Color(1.0f, 0.5f, 0.8f, 1.0f));
-                Debug.Log("ダメージダイスがきたよ〜〜〜〜");
-                //objScreenText.setText("Garbage Block!");
                 gobjSendedDice.GetComponent<Animator>().SetTrigger("sendedDice");
-
             }
             board_num[x, z] = a;
+
+            showArraylog();
         }
 
     }
@@ -819,6 +816,9 @@ public class MainGameController : MonoBehaviour
         dices.Clear();
         maxDiceId = -1;
         score = 0;
+        isRotate_dice = false;
+        isRotate_charactor = false;
+        isGameovered = false;
     }
 
     public void ComputeLevel()
@@ -891,6 +891,20 @@ public class MainGameController : MonoBehaviour
         }
     }
 
+   void showArraylog()
+    {
+        string str = "";
+        for (int i = 0; i < 7; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                str += board[i, j].ToString() + ",";
+            }
+            str += "\n";
+        }
+        Debug.Log(str);
+
+    }
 
 }
 

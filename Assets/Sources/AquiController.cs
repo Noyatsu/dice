@@ -144,6 +144,9 @@ public class AquiController : MonoBehaviour
         {
             GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().decrementRemainTurnNum();
         }
+
+        Debug.Log("charactor=" + x.ToString() + ", " + z.ToString());
+
         return;
     }
 
