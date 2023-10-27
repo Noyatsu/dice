@@ -10,7 +10,7 @@ public class LowResolutionCamera : MonoBehaviour
     /// <summary>
     /// デフォルト解像度
     /// </summary>
-    private readonly Vector2 RESOLUTION = new Vector2(750, 1334);
+    private readonly Vector2 _resolution = new Vector2(750, 1334);
 
     /// <summary>
     /// 解像度係数
@@ -39,8 +39,8 @@ public class LowResolutionCamera : MonoBehaviour
 
         // 指定解像度に合わせたレンダーテクスチャーを作成
         _renderTexture = new RenderTexture(
-            width: (int)(RESOLUTION.x * _currentResolutionWeight),
-            height: (int)(RESOLUTION.y * _currentResolutionWeight),
+            width: (int)(_resolution.x * _currentResolutionWeight),
+            height: (int)(_resolution.y * _currentResolutionWeight),
             depth: 24
         );
         _renderTexture.useMipMap = false;

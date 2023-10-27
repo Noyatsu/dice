@@ -2,97 +2,100 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class MainGameController : MonoBehaviour
 {
-    public int gameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
-    public int playerType = 0; //!< 0なら部屋主、1ならそれ以外(オンライン用)
+    [FormerlySerializedAs("gameType")] public int GameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
+    [FormerlySerializedAs("playerType")] public int PlayerType = 0; //!< 0なら部屋主、1ならそれ以外(オンライン用)
 
-    public int level = 1; //!< ゲームのレベル
-    public static int score = 0; //!< ゲームのスコア
-    public int sumScore = 0; //!< 対戦用合計スコア
-    public int stage = 1; //!< ゲームのステージ(0-6)
-    private int stageBefore = 1; //!< 前フレームのゲームのステージ
+    [FormerlySerializedAs("level")] public int Level = 1; //!< ゲームのレベル
+    public static int Score = 0; //!< ゲームのスコア
+    [FormerlySerializedAs("sumScore")] public int SumScore = 0; //!< 対戦用合計スコア
+    [FormerlySerializedAs("stage")] public int Stage = 1; //!< ゲームのステージ(0-6)
+    private int _stageBefore = 1; //!< 前フレームのゲームのステージ
 
-    public int boardSize = 7; //!< 盤面のサイズ
-    public int[,] board = new int[7, 7]; //!< さいころのIDを格納
-    public int[,] board_num = new int[7, 7]; //!< さいころの面を格納
-    public float[,] board_y = new float[7, 7]; //!< さいころのY座標を格納
-    public List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
-    List<GameObject> vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
-    double timeElapsed = 0.0; //!< イベント用フレームカウント
-    int maxDiceId = 0; //!< 現在のさいころIDの最大値
-    public bool isRotate_dice = false; //!< さいころが回転中かどうか
-    public bool isRotate_charactor = false; //!< キャラクターが移動中かどうか
-    bool isGameovered = false; //ゲームオーバーしたかどうか
-    public bool isStarting = true; // スタート処理が行われているか
+    [FormerlySerializedAs("boardSize")] public int BoardSize = 7; //!< 盤面のサイズ
+    public int[,] Board = new int[7, 7]; //!< さいころのIDを格納
+    public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
+    public float[,] BoardY = new float[7, 7]; //!< さいころのY座標を格納
+    [FormerlySerializedAs("dices")] public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
+    List<GameObject> _vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
+    double _timeElapsed = 0.0; //!< イベント用フレームカウント
+    int _maxDiceId = 0; //!< 現在のさいころIDの最大値
+    [FormerlySerializedAs("isRotate_dice")] public bool IsRotateDice = false; //!< さいころが回転中かどうか
+    [FormerlySerializedAs("isRotate_charactor")] public bool IsRotateCharactor = false; //!< キャラクターが移動中かどうか
+    bool _isGameovered = false; //ゲームオーバーしたかどうか
+    [FormerlySerializedAs("isStarting")] public bool IsStarting = true; // スタート処理が行われているか
 
-    public int initDicesNum = 20; //!< 初期のさいころの数
+    [FormerlySerializedAs("initDicesNum")] public int InitDicesNum = 20; //!< 初期のさいころの数
 
-    GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText, gobjOGController;
-    [SerializeField] GameObject gobjSendDice, gobjSendedDice;
-    AquiController objAquiController;
-    DiceController objDiceController;
-    StatusTextController objStatusText;
-    ScreenTextController objScreenText;
+    [SerializeField] private GameObject _dicePrefab;
+    
+    GameObject _dice, _aqui, _vanishingDice, _statusText, _screenText, _gobjOgController;
+    [FormerlySerializedAs("gobjSendDice")] [SerializeField] GameObject _gobjSendDice;
+    [FormerlySerializedAs("gobjSendedDice")] [SerializeField] GameObject _gobjSendedDice;
+    AquiController _objAquiController;
+    DiceController _objDiceController;
+    StatusTextController _objStatusText;
+    ScreenTextController _objScreenText;
 
-    public Material[] _material;
-    public Material[] _skyboxMaterial;
+    [FormerlySerializedAs("_material")] public Material[] Material;
+    [FormerlySerializedAs("_skyboxMaterial")] public Material[] SkyboxMaterial;
 
-    private AudioSource sound_one;
-    private AudioSource sound_levelup;
-    private AudioSource sound_vanish;
+    private AudioSource _soundOne;
+    private AudioSource _soundLevelup;
+    private AudioSource _soundVanish;
 
-    private Vector3 clickstartPos;
+    private Vector3 _clickstartPos;
 
     // Use this for initialization
     void Awake()
     {
-        score = 0;
+        Score = 0;
 
         //配列の初期化
-        for (int i = 0; i < board.GetLength(0); i++)
+        for (int i = 0; i < Board.GetLength(0); i++)
         {
-            for (int j = 0; j < board.GetLength(1); j++)
+            for (int j = 0; j < Board.GetLength(1); j++)
             {
-                board[i, j] = -1;
-                board_num[i, j] = -1;
+                Board[i, j] = -1;
+                BoardNum[i, j] = -1;
             }
         }
 
         //初期用配列設定
-        board[0, 0] = maxDiceId;
-        board_num[0, 0] = 1;
+        Board[0, 0] = _maxDiceId;
+        BoardNum[0, 0] = 1;
+        
+        _dice = GameObject.Find("Dice");
+        Dices.Add(_dice);  //リストにオブジェクトを追加
+        _aqui = GameObject.Find("Aqui");
+        _objAquiController = _aqui.GetComponent<AquiController>();
+        _objDiceController = _dice.GetComponent<DiceController>();
 
-        DiceBase = (GameObject)Resources.Load("Dice");
-        Dice = GameObject.Find("Dice");
-        dices.Add(Dice);  //リストにオブジェクトを追加
-        Aqui = GameObject.Find("Aqui");
-        objAquiController = Aqui.GetComponent<AquiController>();
-        objDiceController = Dice.GetComponent<DiceController>();
-
-        if (gameType == 3)
+        if (GameType == 3)
         {
-            board[0, 0] = -1;
-            board_num[0, 0] = -1;
-            maxDiceId = 0;
-            dices.Clear();
-            Destroy(Dice);
+            Board[0, 0] = -1;
+            BoardNum[0, 0] = -1;
+            _maxDiceId = 0;
+            Dices.Clear();
+            Destroy(_dice);
         }
 
-        StatusText = GameObject.Find("StatusText");
-        objStatusText = StatusText.GetComponent<StatusTextController>();
-        ScreenText = GameObject.Find("ScreenText");
-        objScreenText = ScreenText.GetComponent<ScreenTextController>();
+        _statusText = GameObject.Find("StatusText");
+        _objStatusText = _statusText.GetComponent<StatusTextController>();
+        _screenText = GameObject.Find("ScreenText");
+        _objScreenText = _screenText.GetComponent<ScreenTextController>();
 
-        gobjOGController = GameObject.Find("OnlineGameController");
+        _gobjOgController = GameObject.Find("OnlineGameController");
 
 
 
         //BGM
-        if (gameType != 2)
+        if (GameType != 2)
         {
-            BgmManager.Instance.Play((stage + 1).ToString()); //BGM
+            BgmManager.Instance.Play((Stage + 1).ToString()); //BGM
         }
         else
         {
@@ -101,9 +104,9 @@ public class MainGameController : MonoBehaviour
 
         //AudioSourceコンポーネントを取得し、変数に格納
         AudioSource[] audioSources = GetComponents<AudioSource>();
-        sound_one = audioSources[0];
-        sound_levelup = audioSources[1];
-        sound_vanish = audioSources[2];
+        _soundOne = audioSources[0];
+        _soundLevelup = audioSources[1];
+        _soundVanish = audioSources[2];
     }
 
     /*
@@ -117,11 +120,11 @@ public class MainGameController : MonoBehaviour
         // マウスが押された瞬間に押された場所を格納する
         if (Input.GetMouseButtonDown(0))
         {
-            clickstartPos = Input.mousePosition;
+            _clickstartPos = Input.mousePosition;
         }
 
-        double xDiff = Input.mousePosition.x - clickstartPos.x;
-        double yDiff = Input.mousePosition.y - clickstartPos.y;
+        double xDiff = Input.mousePosition.x - _clickstartPos.x;
+        double yDiff = Input.mousePosition.y - _clickstartPos.y;
 
         // マウスが移動したときに移動距離が一定を超えたら(判定は円状)
         if (Input.GetMouseButton(0) && (System.Math.Pow(xDiff, 2) + System.Math.Pow(yDiff, 2)) > (threshold * threshold))
@@ -156,19 +159,19 @@ public class MainGameController : MonoBehaviour
     void Update()
     {
         // スタート処理
-        if (isStarting)
+        if (IsStarting)
         {
-            if (gameType < 2)
+            if (GameType < 2)
             {
                 //さいころをいくつか追加
-                for (int i = 0; i < initDicesNum; i++)
+                for (int i = 0; i < InitDicesNum; i++)
                 {
-                    randomDiceGenerate();
+                    RandomDiceGenerate();
                 }
             }
-            isStarting = false;
+            IsStarting = false;
 
-            if (gameType == 1)
+            if (GameType == 1)
             {
                 Time.timeScale = 0f;
             }
@@ -180,128 +183,126 @@ public class MainGameController : MonoBehaviour
         int flick = Puni(); //ぷに検知
 
         // キー入力一括制御
-        if (isRotate_dice == false && isRotate_charactor == false && isGameovered == false)
+        if (IsRotateDice == false && IsRotateCharactor == false && _isGameovered == false)
         {
             if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
             {
-                if (Dice && objDiceController.SetTargetPosition(2))
+                if (_dice && _objDiceController.SetTargetPosition(2))
                 {
-                    VanishDice(objDiceController.X, objDiceController.Z);
+                    VanishDice(_objDiceController.X, _objDiceController.Z);
                 }
-                objAquiController.SetTargetPosition(2);
+                _objAquiController.SetTargetPosition(2);
             }
             else if (Input.GetKey(KeyCode.LeftArrow) || flick == 0)
             {
-                if (Dice && objDiceController.SetTargetPosition(0))
+                if (_dice && _objDiceController.SetTargetPosition(0))
                 {
-                    VanishDice(objDiceController.X, objDiceController.Z);
+                    VanishDice(_objDiceController.X, _objDiceController.Z);
                 }
-                objAquiController.SetTargetPosition(0);
+                _objAquiController.SetTargetPosition(0);
             }
             else if (Input.GetKey(KeyCode.UpArrow) || flick == 1)
             {
-                if (Dice && objDiceController.SetTargetPosition(1))
+                if (_dice && _objDiceController.SetTargetPosition(1))
                 {
-                    VanishDice(objDiceController.X, objDiceController.Z);
+                    VanishDice(_objDiceController.X, _objDiceController.Z);
                 }
-                objAquiController.SetTargetPosition(1);
+                _objAquiController.SetTargetPosition(1);
             }
             else if (Input.GetKey(KeyCode.DownArrow) || flick == 3)
             {
-                if (Dice && objDiceController.SetTargetPosition(3))
+                if (_dice && _objDiceController.SetTargetPosition(3))
                 {
-                    VanishDice(objDiceController.X, objDiceController.Z);
+                    VanishDice(_objDiceController.X, _objDiceController.Z);
                 }
-                objAquiController.SetTargetPosition(3);
+                _objAquiController.SetTargetPosition(3);
             }
             else if (Input.GetKey(KeyCode.K))
             {
-                score += 1000;
+                Score += 1000;
             }
-            Debug.Log("board["+objAquiController.x.ToString()+","+objAquiController.z.ToString()+"]="+board[objAquiController.x, objAquiController.z].ToString());
 
-
-            if (objAquiController.x != objDiceController.X || objAquiController.z != objDiceController.Z)
+            if (_objAquiController.X != _objDiceController.X || _objAquiController.Z != _objDiceController.Z)
             {
-                if (board[objAquiController.x, objAquiController.z] != -1) // 移動先にサイコロが存在するならば
+                if (Board[_objAquiController.X, _objAquiController.Z] != -1) // 移動先にサイコロが存在するならば
                 {
-                    Dice = dices[board[objAquiController.x, objAquiController.z]];
-                    objDiceController = Dice.GetComponent<DiceController>();
-                    objDiceController.isSelected = true; //選択
+                    _dice = Dices[Board[_objAquiController.X, _objAquiController.Z]];
+                    _objDiceController = _dice.GetComponent<DiceController>();
+                    _objDiceController.IsSelected = true; //選択
                 }
             }
         }
 
 
-        timeElapsed += Time.deltaTime;
+        _timeElapsed += Time.deltaTime;
 
-        if (gameType != 2)
+        if (GameType != 2)
         {
-            if (gameType == 0)
+            if (GameType == 0)
             { //ソロモードの速さ
-                if (level > 21)
+                if (Level > 21)
                 { //現状レベル21で速さは打ち止め
-                    if (timeElapsed >= (1.2 + (0.3 * Mathf.Sin(Mathf.PI * level / 4))))
+                    if (_timeElapsed >= (1.2 + (0.3 * Mathf.Sin(Mathf.PI * Level / 4))))
                     {
-                        randomDiceGenerate();
-                        timeElapsed = 0.0f;
+                        RandomDiceGenerate();
+                        _timeElapsed = 0.0f;
                     }
                 }
                 // さいころ追加 スタートは3秒ごと、ゴールは1.25秒ごと
-                else if (timeElapsed >= (3f - (1 / 12f) * level)) //1/12は(初速-最高速)/レベルで求められた
+                else if (_timeElapsed >= (3f - (1 / 12f) * Level)) //1/12は(初速-最高速)/レベルで求められた
                 {
-                    randomDiceGenerate();
-                    timeElapsed = 0.0f;
+                    RandomDiceGenerate();
+                    _timeElapsed = 0.0f;
                 }
             }
-            if (gameType == 1)
+            if (GameType == 1)
             { //対戦モードの速さ
-                if (level > 21)
+                if (Level > 21)
                 { //現状レベル21で速さは打ち止め
-                    if (timeElapsed >= 1.5)
+                    if (_timeElapsed >= 1.5)
                     {
-                        randomDiceGenerate();
-                        timeElapsed = 0.0f;
+                        RandomDiceGenerate();
+                        _timeElapsed = 0.0f;
                     }
                 }
                 // さいころ追加 スタートは3.5秒ごと、ゴールは1.5秒ごと
-                else if (timeElapsed >= (3.5f - (2 / 21f) * level))
+                else if (_timeElapsed >= (3.5f - (2 / 21f) * Level))
                 {
-                    randomDiceGenerate();
-                    timeElapsed = 0.0f;
+                    RandomDiceGenerate();
+                    _timeElapsed = 0.0f;
                 }
             }
         }
 
     }
 
-    public void setAqui(int x, float y, int z)
+    public void SetAqui(int x, float y, int z)
     {
-        objAquiController.setTarget(x, y, z);
+        _objAquiController.SetTarget(x, y, z);
     }
 
-    public void setAquiDiscrete(int x, float y, int z)
+    public void SetAquiDiscrete(int x, float y, int z)
     {
-        objAquiController.setTargetDiscrete(x, y, z);
+        _objAquiController.SetTargetDiscrete(x, y, z);
     }
 
     // ステージを変える
-    public void changeStage(int nextStage)
+    public void ChangeStage(int nextStage)
     {
-        this.GetComponent<Renderer>().sharedMaterial = _material[nextStage]; //盤面
-        if (gameType == 1)
+        this.GetComponent<Renderer>().sharedMaterial = Material[nextStage]; //盤面
+        if (GameType == 1)
         {
-            GameObject.Find("EnemyBoard").GetComponent<Renderer>().sharedMaterial = _material[nextStage];
+            GameObject.Find("EnemyBoard").GetComponent<Renderer>().sharedMaterial = Material[nextStage];
         }
-        RenderSettings.skybox = _skyboxMaterial[nextStage]; //背景
+        RenderSettings.skybox = SkyboxMaterial[nextStage]; //背景
         BgmManager.Instance.Play((nextStage + 1).ToString()); //BGM
         if (nextStage == 6)
         {
-            objStatusText.setText("Stage Changed! (ステージボーナスは無し!)");
+            _objStatusText.SetText("Stage Changed! (ステージボーナスは無し!)");
         }
         else
         {
-            objStatusText.setText("Stage Changed! (ステージボーナス: " + (nextStage + 1));
+            _objStatusText.SetText("Stage Changed! (ステージボーナス: " + (nextStage + 1));
         }
     }
 
@@ -311,7 +312,7 @@ public class MainGameController : MonoBehaviour
      * @params z 配置するz座標
      * @params a 上にする面
      */
-    public void diceGenerate(int x, int z, int a, int b = 0, int type = 0)
+    public void DiceGenerate(int x, int z, int a, int b = 0, int type = 0)
     {
         // 側面の決定用乱数
         int i = Random.Range(1, 4);
@@ -472,51 +473,49 @@ public class MainGameController : MonoBehaviour
         }
 
         // その座標が空だったらさいころを追加
-        if (board[x, z] == -1)
+        if (Board[x, z] == -1)
         {
             // オンラインの場合通信相手にも通達
-            if (gameType == 1)
+            if (GameType == 1)
             {
-                gobjOGController.GetComponent<OnlineGameController>().sendPoint(x, z, a, b);
+                _gobjOgController.GetComponent<OnlineGameController>().SendPoint(x, z, a, b);
             }
 
-            maxDiceId++;
-            board[x, z] = maxDiceId;
+            _maxDiceId++;
+            Board[x, z] = _maxDiceId;
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
-            GameObject objDice = (GameObject)Instantiate(DiceBase, position, Quaternion.Euler(xi, yi, zi));
+            GameObject objDice = Instantiate(_dicePrefab, position, Quaternion.Euler(xi, yi, zi));
             DiceController mobjDiceController = objDice.GetComponent<DiceController>();
-            mobjDiceController.isSelected = false;
+            mobjDiceController.IsSelected = false;
             mobjDiceController.X = x;
             mobjDiceController.Z = z;
-            mobjDiceController.surfaceA = a;
-            mobjDiceController.surfaceB = b;
-            mobjDiceController.diceId = maxDiceId;
-            mobjDiceController.isGenerate = true;
+            mobjDiceController.SurfaceA = a;
+            mobjDiceController.SurfaceB = b;
+            mobjDiceController.DiceId = _maxDiceId;
+            mobjDiceController.IsGenerate = true;
      
-            dices.Add(objDice); //リストにオブジェクトを追加
+            Dices.Add(objDice); //リストにオブジェクトを追加
 
             if (type == 1)
             {
-                ChangeColorOfGameObject(dices[board[x, z]], new Color(1.0f, 0.5f, 0.8f, 1.0f));
-                gobjSendedDice.GetComponent<Animator>().SetTrigger("sendedDice");
+                ChangeColorOfGameObject(Dices[Board[x, z]], new Color(1.0f, 0.5f, 0.8f, 1.0f));
+                _gobjSendedDice.GetComponent<Animator>().SetTrigger("sendedDice");
             }
-            board_num[x, z] = a;
-
-            showArraylog();
+            BoardNum[x, z] = a;
         }
 
     }
 
-    public void randomDiceGenerate(int type = 0)
+    public void RandomDiceGenerate(int type = 0)
     {
         // 配置する座標を決定
         int count = 0;
-        int[,] chusen = new int[boardSize * boardSize, 2];
-        for (int j = 0; j < boardSize; j++)
+        int[,] chusen = new int[BoardSize * BoardSize, 2];
+        for (int j = 0; j < BoardSize; j++)
         {
-            for (int k = 0; k < boardSize; k++)
+            for (int k = 0; k < BoardSize; k++)
             {
-                if (board[j, k] == -1)
+                if (Board[j, k] == -1)
                 {
                     chusen[count, 0] = j;
                     chusen[count, 1] = k;
@@ -525,21 +524,21 @@ public class MainGameController : MonoBehaviour
             }
         }
 
-        if (gameType == 3 && count == 49)
+        if (GameType == 3 && count == 49)
         {
-            GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().youWin();
+            GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().YouWin();
         }
 
-        if (count == 0 && isGameovered == false)
+        if (count == 0 && _isGameovered == false)
         {
             //全てのさいころがisVanishingかチェック
             bool gameoverFlag = true;
 
-            for (int j = 0; j < boardSize; j++)
+            for (int j = 0; j < BoardSize; j++)
             {
-                for (int k = 0; k < boardSize; k++)
+                for (int k = 0; k < BoardSize; k++)
                 {
-                    if (dices[board[j, k]].GetComponent<DiceController>().isVanishing == true)
+                    if (Dices[Board[j, k]].GetComponent<DiceController>().IsVanishing == true)
                     {
                         gameoverFlag = false;
                         break;
@@ -548,16 +547,16 @@ public class MainGameController : MonoBehaviour
             }
 
             //ゲームオーバーの時
-            if (gameoverFlag == true && isGameovered == false)
+            if (gameoverFlag == true && _isGameovered == false)
             {
-                isGameovered = true;
-                if (gameType == 1)
+                _isGameovered = true;
+                if (GameType == 1)
                 {
-                    gobjOGController.GetComponent<OnlineGameController>().sendLose();
+                    _gobjOgController.GetComponent<OnlineGameController>().SendLose();
                 }
                 BgmManager.Instance.Stop();
-                objScreenText.setText("Game Over!");
-                objAquiController.deathMotion();
+                _objScreenText.SetText("Game Over!");
+                _objAquiController.DeathMotion();
 
                 DontDestroyOnLoad(this);
                 Invoke("Delay", 3f); // 3秒待ってからシーン遷移
@@ -575,17 +574,17 @@ public class MainGameController : MonoBehaviour
         int a = Random.Range(1, 6);
 
         // ダイスを生成
-        diceGenerate(x, z, a, 0, type);
+        DiceGenerate(x, z, a, 0, type);
     }
 
     void Delay()
     {
-        if (gameType == 0)
+        if (GameType == 0)
         {
-            naichilab.RankingLoader.Instance.SendScoreAndShowRanking(score);
+            naichilab.RankingLoader.Instance.SendScoreAndShowRanking(Score);
             //SceneManager.LoadScene("GameOver");
         }
-        else if (gameType == 1)
+        else if (GameType == 1)
         {
             Debug.Log("sendlosed");
             SceneManager.LoadScene("Youlose");
@@ -595,42 +594,42 @@ public class MainGameController : MonoBehaviour
     //サイコロ消える
     void VanishDice(int x, int z)
     {
-        if (board_num[x, z] == 1) // ワンゾロバニッシュ発生
+        if (BoardNum[x, z] == 1) // ワンゾロバニッシュ発生
         {
             bool flag = false;
 
-            if (x < boardSize - 1 && board[x + 1, z] != -1)
+            if (x < BoardSize - 1 && Board[x + 1, z] != -1)
             {
-                DiceController right = dices[board[x + 1, z]].GetComponent<DiceController>();
-                if (right.isVanishing == true && board_num[x + 1, z] != 1)
+                DiceController right = Dices[Board[x + 1, z]].GetComponent<DiceController>();
+                if (right.IsVanishing == true && BoardNum[x + 1, z] != 1)
                 {
                     flag = true;
                 }
             }
 
-            if (x > 0 && board[x - 1, z] != -1)
+            if (x > 0 && Board[x - 1, z] != -1)
             {
-                DiceController left = dices[board[x - 1, z]].GetComponent<DiceController>();
-                if (left.isVanishing == true && board_num[x - 1, z] != 1)
+                DiceController left = Dices[Board[x - 1, z]].GetComponent<DiceController>();
+                if (left.IsVanishing == true && BoardNum[x - 1, z] != 1)
                 {
                     flag = true;
                 }
             }
 
-            if (z < boardSize - 1 && board[x, z + 1] != -1)
+            if (z < BoardSize - 1 && Board[x, z + 1] != -1)
             {
-                DiceController up = dices[board[x, z + 1]].GetComponent<DiceController>();
-                if (up.isVanishing == true && board_num[x, z + 1] != 1)
+                DiceController up = Dices[Board[x, z + 1]].GetComponent<DiceController>();
+                if (up.IsVanishing == true && BoardNum[x, z + 1] != 1)
                 {
                     flag = true;
                 }
             }
 
 
-            if (z > 0 && board[x, z - 1] != -1)
+            if (z > 0 && Board[x, z - 1] != -1)
             {
-                DiceController down = dices[board[x, z - 1]].GetComponent<DiceController>();
-                if (down.isVanishing == true && board_num[x, z - 1] != 1)
+                DiceController down = Dices[Board[x, z - 1]].GetComponent<DiceController>();
+                if (down.IsVanishing == true && BoardNum[x, z - 1] != 1)
                 {
                     flag = true;
                 }
@@ -640,41 +639,41 @@ public class MainGameController : MonoBehaviour
             {
                 Debug.Log("ワンゾロバニッシュ!!");
                 int sum = 0;
-                vanishingDices.Clear(); //カウントしたダイスのリストを初期化
-                for (int i = 0; i < boardSize; i++)
+                _vanishingDices.Clear(); //カウントしたダイスのリストを初期化
+                for (int i = 0; i < BoardSize; i++)
                 { //1のダイスを検索
-                    for (int j = 0; j < boardSize; j++)
+                    for (int j = 0; j < BoardSize; j++)
                     {
-                        if (board_num[i, j] == 1)
+                        if (BoardNum[i, j] == 1)
                         {
-                            vanishingDices.Add(dices[board[i, j]]); //削除リストへ追加
+                            _vanishingDices.Add(Dices[Board[i, j]]); //削除リストへ追加
                             sum++; //数を記録
 
                             // オンラインゲームなら沈み始めたことを相手に通達
-                            if (gameType == 1)
+                            if (GameType == 1)
                             {
-                                gobjOGController.GetComponent<OnlineGameController>().sendSink(i, j);
+                                _gobjOgController.GetComponent<OnlineGameController>().SendSink(i, j);
                             }
                         }
                     }
                 }
-                vanishingDices.Remove(dices[board[x, z]]); //足元のダイスのみ削除リストから減らす
+                _vanishingDices.Remove(Dices[Board[x, z]]); //足元のダイスのみ削除リストから減らす
                 int count = 0;
                 while (count < sum - 1)
                 {
-                    vanishingDices[count].GetComponent<DiceController>().isVanishing = true;
+                    _vanishingDices[count].GetComponent<DiceController>().IsVanishing = true;
                     count++;
                 }
-                addScore(count);
-                objStatusText.setText("+" + count + " (ワンゾロバニッシュ!!)");
+                AddScore(count);
+                _objStatusText.SetText("+" + count + " (ワンゾロバニッシュ!!)");
                 //ステージボーナス
-                if (board_num[x, z] == stage + 1)
+                if (BoardNum[x, z] == Stage + 1)
                 {
-                    addScore(count);
-                    objScreenText.setText("Stage Bonus! +" + count * 10);
+                    AddScore(count);
+                    _objScreenText.SetText("Stage Bonus! +" + count * 10);
                 }
                 ComputeLevel(); //レベル計算
-                sound_one.PlayOneShot(sound_one.clip);
+                _soundOne.PlayOneShot(_soundOne.clip);
             }
         }
         else
@@ -682,40 +681,40 @@ public class MainGameController : MonoBehaviour
             int count = 1; //隣接サイコロ数
 
             //カウントしたダイスのリストを初期化
-            vanishingDices.Clear();
-            vanishingDices.Add(dices[board[x, z]]);
+            _vanishingDices.Clear();
+            _vanishingDices.Add(Dices[Board[x, z]]);
 
             //隣接する同じ目のダイス数の計算
             count = CountDice(x, z, count);
 
             //消す処理
-            if (count >= board_num[x, z]) //隣接するさいころの数がそのさいころの目以上だったら
+            if (count >= BoardNum[x, z]) //隣接するさいころの数がそのさいころの目以上だったら
             {
-                vanishingDices.Add(dices[board[x, z]]);
+                _vanishingDices.Add(Dices[Board[x, z]]);
 
                 DiceController temp;
                 for (int j = 0; j < count; j++)
                 {
-                    temp = vanishingDices[j].GetComponent<DiceController>();
-                    temp.isVanishing = true;
+                    temp = _vanishingDices[j].GetComponent<DiceController>();
+                    temp.IsVanishing = true;
 
                     // オンラインゲームなら沈み始めたことを相手に通達
-                    if (gameType == 1)
+                    if (GameType == 1)
                     {
-                        gobjOGController.GetComponent<OnlineGameController>().sendSink(temp.X, temp.Z);
+                        _gobjOgController.GetComponent<OnlineGameController>().SendSink(temp.X, temp.Z);
                     }
                 }
-                addScore(count * board_num[x, z]);
-                objStatusText.setText("+" + count * board_num[x, z]);
+                AddScore(count * BoardNum[x, z]);
+                _objStatusText.SetText("+" + count * BoardNum[x, z]);
 
                 //ステージボーナス
-                if (board_num[x, z] == stage + 1)
+                if (BoardNum[x, z] == Stage + 1)
                 {
-                    addScore(board_num[x, z] * count);
-                    objScreenText.setText("Stage Bonus! +" + board_num[x, z] * count);
+                    AddScore(BoardNum[x, z] * count);
+                    _objScreenText.SetText("Stage Bonus! +" + BoardNum[x, z] * count);
                 }
                 ComputeLevel(); //レベル計算
-                sound_vanish.PlayOneShot(sound_vanish.clip);
+                _soundVanish.PlayOneShot(_soundVanish.clip);
             }
         }
 
@@ -751,35 +750,35 @@ public class MainGameController : MonoBehaviour
         while (flag == false)
         {
             flag = true;
-            if (x < boardSize - 1 && board_num[x + 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x + 1, z]]))
+            if (x < BoardSize - 1 && BoardNum[x + 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x + 1, z]]))
             {
                 cnt++;
-                vanishingDices.Add(dices[board[x + 1, z]]);
+                _vanishingDices.Add(Dices[Board[x + 1, z]]);
 
                 flag = false;
                 cnt = CountDice(x + 1, z, cnt);
             }
 
-            if (x > 0 && board_num[x - 1, z] == board_num[x, z] && !vanishingDices.Contains(dices[board[x - 1, z]]))
+            if (x > 0 && BoardNum[x - 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x - 1, z]]))
             {
                 cnt++;
-                vanishingDices.Add(dices[board[x - 1, z]]);
+                _vanishingDices.Add(Dices[Board[x - 1, z]]);
 
                 flag = false;
                 cnt = CountDice(x - 1, z, cnt);
             }
-            if (z < boardSize - 1 && board_num[x, z + 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z + 1]]))
+            if (z < BoardSize - 1 && BoardNum[x, z + 1] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x, z + 1]]))
             {
                 cnt++;
-                vanishingDices.Add(dices[board[x, z + 1]]);
+                _vanishingDices.Add(Dices[Board[x, z + 1]]);
 
                 flag = false;
                 cnt = CountDice(x, z + 1, cnt);
             }
-            if (z > 0 && board_num[x, z - 1] == board_num[x, z] && !vanishingDices.Contains(dices[board[x, z - 1]]))
+            if (z > 0 && BoardNum[x, z - 1] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x, z - 1]]))
             {
                 cnt++;
-                vanishingDices.Add(dices[board[x, z - 1]]);
+                _vanishingDices.Add(Dices[Board[x, z - 1]]);
 
                 flag = false;
                 cnt = CountDice(x, z - 1, cnt);
@@ -789,10 +788,10 @@ public class MainGameController : MonoBehaviour
         return cnt;
     }
 
-    public void resetGame()
+    public void ResetGame()
     {
-        Destroy(objDiceController);
-        Destroy(Dice);
+        Destroy(_objDiceController);
+        Destroy(_dice);
 
         var clones = GameObject.FindGameObjectsWithTag("dice");
         foreach (var clone in clones)
@@ -802,23 +801,23 @@ public class MainGameController : MonoBehaviour
                 GameObject.Destroy(n.gameObject);
             }
             Destroy(clone);
-            dices.Remove(clone);
+            Dices.Remove(clone);
         }
 
-        for (int i = 0; i < boardSize; i++)
+        for (int i = 0; i < BoardSize; i++)
         {
-            for (int j = 0; j < boardSize; j++)
+            for (int j = 0; j < BoardSize; j++)
             {
-                board[i, j] = -1;
-                board_num[i, j] = -1;
+                Board[i, j] = -1;
+                BoardNum[i, j] = -1;
             }
         }
-        dices.Clear();
-        maxDiceId = -1;
-        score = 0;
-        isRotate_dice = false;
-        isRotate_charactor = false;
-        isGameovered = false;
+        Dices.Clear();
+        _maxDiceId = -1;
+        Score = 0;
+        IsRotateDice = false;
+        IsRotateCharactor = false;
+        _isGameovered = false;
     }
 
     public void ComputeLevel()
@@ -831,11 +830,11 @@ public class MainGameController : MonoBehaviour
         while (true)
         {
             b = (int)((a * lv + b * 1.08) / 2);
-            if (score > b && gameType == 0)
+            if (Score > b && GameType == 0)
             {
                 lv++;
             }
-            else if (sumScore > b && gameType == 1)
+            else if (SumScore > b && GameType == 1)
             {
                 lv++;
             }
@@ -845,60 +844,60 @@ public class MainGameController : MonoBehaviour
             }
         }
 
-        if (level != lv)
+        if (Level != lv)
         {
-            sound_levelup.PlayOneShot(sound_levelup.clip);
+            _soundLevelup.PlayOneShot(_soundLevelup.clip);
         }
 
         // ステージの計算
-        level = lv;
-        stageBefore = stage;
-        stage = level % 21 / 3 + 1;
-        if (stage == 7)
+        Level = lv;
+        _stageBefore = Stage;
+        Stage = Level % 21 / 3 + 1;
+        if (Stage == 7)
         {
-            stage -= 7;
+            Stage -= 7;
         }
-        if (stageBefore != stage)
+        if (_stageBefore != Stage)
         {
-            changeStage(stage);
+            ChangeStage(Stage);
         }
 
     }
 
     //スコア計算用
-    void addScore(int num)
+    void AddScore(int num)
     {
-        int prevScoreDiv = score / 50;
-        score += num;
-        sumScore += num;
+        int prevScoreDiv = Score / 50;
+        Score += num;
+        SumScore += num;
 
         //オンラインモードなら
-        if (gameType == 1)
+        if (GameType == 1)
         {
             // ルームプロパティでsumScoreを送信
             var properties = new ExitGames.Client.Photon.Hashtable();
-            properties.Add("sumScore", sumScore);
+            properties.Add("sumScore", SumScore);
             PhotonNetwork.room.SetCustomProperties(properties);
 
             //自分のスコアを相手に送信
-            gobjOGController.GetComponent<OnlineGameController>().sendScore(score);
+            _gobjOgController.GetComponent<OnlineGameController>().SendScore(Score);
 
             // 相手にお邪魔ダイスを送るアニメーション
-            if (prevScoreDiv != score / 50)
+            if (prevScoreDiv != Score / 50)
             { //スコアが一定値を超えたら
-                gobjSendDice.GetComponent<Animator>().SetTrigger("sendDice");
+                _gobjSendDice.GetComponent<Animator>().SetTrigger("sendDice");
             }
         }
     }
 
-   void showArraylog()
+   void ShowArraylog()
     {
         string str = "";
         for (int i = 0; i < 7; i++)
         {
             for (int j = 0; j < 7; j++)
             {
-                str += board[i, j].ToString() + ",";
+                str += Board[i, j].ToString() + ",";
             }
             str += "\n";
         }

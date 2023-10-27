@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Serialization;
 
 public class PauseController : MonoBehaviour
 {
     //　ポーズUIのインスタンス
-    [SerializeField] private GameObject pauseUIInstance;
-    private bool isPause = false;
+    [FormerlySerializedAs("pauseUIInstance")] [SerializeField] private GameObject _pauseUIInstance;
+    private bool _isPause = false;
 
     void Start()
     {
-        pauseUIInstance.SetActive(isPause);
+        _pauseUIInstance.SetActive(_isPause);
     }
 
     // Update is called once per frame
@@ -17,28 +18,28 @@ public class PauseController : MonoBehaviour
     {
         if (Input.GetKeyDown("q"))
         {
-            pause();
+            Pause();
         }
     }
 
-    public void pause()
+    public void Pause()
     {
-        if (!isPause)
+        if (!_isPause)
         {
-            pauseUIInstance.SetActive(true);
-            isPause = true;
+            _pauseUIInstance.SetActive(true);
+            _isPause = true;
             Time.timeScale = 0f;
 
         }
         else
         {
-            pauseUIInstance.SetActive(false);
-            isPause = false;
+            _pauseUIInstance.SetActive(false);
+            _isPause = false;
             Time.timeScale = 1f;
         }
     }
 
-    public void returnTitle()
+    public void ReturnTitle()
     {
         Time.timeScale = 1f;
         FadeManager.Instance.LoadScene("TopMenu", 0.3f);

@@ -1,22 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
 public class TutorialTextController : MonoBehaviour
 {
-    GameObject Board;
-    MainGameController script;
+    GameObject _board;
+    MainGameController _script;
 
-    public Text text;
+    [FormerlySerializedAs("text")] public Text Text;
 
 
     // Use this for initialization
     void Start()
     {
-        Board = GameObject.Find("Board");
-        script = Board.GetComponent<MainGameController>();
+        _board = GameObject.Find("Board");
+        _script = _board.GetComponent<MainGameController>();
 
     }
 
@@ -26,8 +27,8 @@ public class TutorialTextController : MonoBehaviour
 
     }
 
-    public void setText(string msg)
+    public void SetText(string msg)
     {
-        text.text = msg;
+        Text.text = msg;
     }
 }

@@ -6,34 +6,34 @@ using UnityEngine.UI;
 public class PuzzleMenuController : MonoBehaviour
 {
     [SerializeField] int _worldNum;
-    public static int worldNum, stageNum;
+    public static int WorldNum, StageNum;
 
-    public static int getStageIdx()
+    public static int GetStageIdx()
     {
-        return 8 * (worldNum - 1) + stageNum - 1;
+        return 8 * (WorldNum - 1) + StageNum - 1;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        worldNum = _worldNum;
+        WorldNum = _worldNum;
 
         GameObject button;
-        if (worldNum > 1) {
-            if (PlayerPrefs.GetInt("puzzle"+(worldNum-1).ToString()+"-8", 0) == 0) {
+        if (WorldNum > 1) {
+            if (PlayerPrefs.GetInt("puzzle"+(WorldNum-1).ToString()+"-8", 0) == 0) {
                 button = GameObject.Find("1");
                 button.GetComponent<Button>().interactable = false;
             }
         }
         for (int i = 1; i < 8; i++) {
             button = GameObject.Find((i+1).ToString());
-            if (PlayerPrefs.GetInt("puzzle"+worldNum.ToString()+"-"+i.ToString(), 0) == 0) {
+            if (PlayerPrefs.GetInt("puzzle"+WorldNum.ToString()+"-"+i.ToString(), 0) == 0) {
                 button.GetComponent<Button>().interactable = false;
             }
             else {
                 button.GetComponent<Button>().interactable = true;
             }
-            Debug.Log(worldNum.ToString()+"-"+i.ToString());
+            Debug.Log(WorldNum.ToString()+"-"+i.ToString());
         }
 
     }
@@ -52,7 +52,7 @@ public class PuzzleMenuController : MonoBehaviour
 
     public void StageSelect(int stage)
     {
-        stageNum = stage;
+        StageNum = stage;
         FadeManager.Instance.LoadScene("PuzzleGame", 0.3f);
     }
 }

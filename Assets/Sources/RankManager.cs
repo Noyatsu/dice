@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /**
@@ -9,21 +10,22 @@ using UnityEngine.UI;
 
 public class RankManager : MonoBehaviour
 {
-    [SerializeField] int initType = 2; // 勝利->1, 敗北->0
-    [SerializeField] GameObject rankText, rankImg;
+    [FormerlySerializedAs("initType")] [SerializeField] int _initType = 2; // 勝利->1, 敗北->0
+    [FormerlySerializedAs("rankText")] [SerializeField] GameObject _rankText;
+    [FormerlySerializedAs("rankImg")] [SerializeField] GameObject _rankImg;
 
-    int nowRank = 0;
+    int _nowRank = 0;
     // Start is called before the first frame update
     void Start()
     {
-        nowRank = PlayerPrefs.GetInt("rank", 0);
+        _nowRank = PlayerPrefs.GetInt("rank", 0);
 
         //起動時処理タイプが設定されていれば実行
-        if (initType == 0 || initType == 1)
+        if (_initType == 0 || _initType == 1)
         {
-            changeRank(initType);
-            showRank();
-            if (initType == 1) {
+            ChangeRank(_initType);
+            ShowRank();
+            if (_initType == 1) {
                 BgmManager.Instance.Play("win");
             }
             else {
@@ -38,18 +40,18 @@ public class RankManager : MonoBehaviour
 
     }
 
-    void showRank()
+    void ShowRank()
     {
-        rankText.GetComponent<Text>().text = (nowRank % 100).ToString() + "/100";
-        Texture2D texture = Resources.Load("ranks/" + getString()) as Texture2D;
-        rankImg.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        _rankText.GetComponent<Text>().text = (_nowRank % 100).ToString() + "/100";
+        Texture2D texture = Resources.Load("ranks/" + GetString()) as Texture2D;
+        _rankImg.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
     }
 
     // 勝利->1, 敗北->0
-    int changeRank(int type)
+    int ChangeRank(int type)
     {
         int point = 0;
-        int i = nowRank / 100;
+        int i = _nowRank / 100;
 
         if (i < 1) point = 20; //C-
         else if (i < 2) point = 12; //C+
@@ -62,36 +64,36 @@ public class RankManager : MonoBehaviour
         if (type == 1)
         {
             //勝利
-            nowRank += point;
+            _nowRank += point;
         }
         else if (type == 0)
         {
             //敗北
-            nowRank -= (int)(point * 0.8);
+            _nowRank -= (int)(point * 0.8);
         }
         else
         {
-            return nowRank;
+            return _nowRank;
         }
 
         // ゼロ以下ならゼロに丸める
-        if (nowRank < 0) nowRank = 0;
+        if (_nowRank < 0) _nowRank = 0;
 
         // 900以上なら900に丸める
-        if (nowRank > 900) nowRank = 900;
+        if (_nowRank > 900) _nowRank = 900;
 
         // 記録
-        PlayerPrefs.SetInt("rank", nowRank);
+        PlayerPrefs.SetInt("rank", _nowRank);
         PlayerPrefs.Save();
 
-        Debug.Log(nowRank);
+        Debug.Log(_nowRank);
 
-        return nowRank;
+        return _nowRank;
     }
 
-    string getString()
+    string GetString()
     {
-        int i = nowRank / 100;
+        int i = _nowRank / 100;
 
         if (i < 1) return "C-";
         else if (i < 2) return "C+";

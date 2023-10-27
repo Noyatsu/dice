@@ -1,44 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class AquiController : MonoBehaviour
 {
 
-    private Animator anim;
-    GameObject Board;
-    MainGameController script;
+    private Animator _anim;
+    GameObject _board;
+    MainGameController _script;
 
-    public int x = 0; //< キャラクターのX座標
-    public float y = 1.1f; //キャラクターのY座標
-    public int z = 0; //< キャラクターのZ座標
+    [FormerlySerializedAs("x")] public int X = 0; //< キャラクターのX座標
+    [FormerlySerializedAs("y")] public float Y = 1.1f; //キャラクターのY座標
+    [FormerlySerializedAs("z")] public int Z = 0; //< キャラクターのZ座標
 
-    float step = 5f;     //!< 移動速度
-    int direction = 2; //!< キャラクターの向き
-    Vector3 target;      //!< 入力受付時、移動後の位置を算出して保存
-    Vector3 prevPos;     //!< 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
+    float _step = 5f;     //!< 移動速度
+    int _direction = 2; //!< キャラクターの向き
+    Vector3 _target;      //!< 入力受付時、移動後の位置を算出して保存
+    Vector3 _prevPos;     //!< 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
 
     void Start()
     {
-        Board = GameObject.Find("Board");
-        script = Board.GetComponent<MainGameController>();
-        target = transform.position;
-        anim = GetComponent<Animator>();
+        _board = GameObject.Find("Board");
+        _script = _board.GetComponent<MainGameController>();
+        _target = transform.position;
+        _anim = GetComponent<Animator>();
     }
 
     void Update()
     {
         if (Input.GetKey("up") || Input.GetKey("down") || Input.GetKey("right") || Input.GetKey("left"))
         {
-            anim.SetBool("isWalking", true);
+            _anim.SetBool("isWalking", true);
         }
         else
         {
-            anim.SetBool("isWalking", false);
+            _anim.SetBool("isWalking", false);
         }
-        if (target.x == transform.position.x && target.z == transform.position.z)
+        if (_target.x == transform.position.x && _target.z == transform.position.z)
         {
-            script.isRotate_charactor = false;
+            _script.IsRotateCharactor = false;
         }
 
         Move();
@@ -46,135 +47,135 @@ public class AquiController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (script.dices.Count != 0)
+        if (_script.Dices.Count != 0)
         {
-            if (script.board[x, z] != -1)
+            if (_script.Board[X, Z] != -1)
             {
                 //現在位置の下にダイスがあるとき
-                y = script.dices[script.board[x, z]].transform.position.y + 0.5f;
+                Y = _script.Dices[_script.Board[X, Z]].transform.position.y + 0.5f;
             }
-            else if (script.isRotate_dice)
+            else if (_script.IsRotateDice)
             {
-                y = 1.0f;
+                Y = 1.0f;
             }
             else
             {
                 //ダイスがないとき
-                y = 0.0f;
+                Y = 0.0f;
             }
         }
         else
         {
-            y = 0.0f;
+            Y = 0.0f;
         }
-        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+        _target = new Vector3(-4.5f + X * 1.0f, Y, -4.5f + Z * 1.0f);
     }
 
-    public void deathMotion()
+    public void DeathMotion()
     {
         //anim.SetTrigger("Dead");
-        anim.Play("Dead");
+        _anim.Play("Dead");
     }
 
     // 入力に応じて移動後の位置を算出
     public void SetTargetPosition(int d)
     {
 
-        script.isRotate_charactor = true;
-        prevPos = target;
+        _script.IsRotateCharactor = true;
+        _prevPos = _target;
 
         //右
-        if (d == 2 && x < (script.boardSize - 1))
+        if (d == 2 && X < (_script.BoardSize - 1))
         {
-            x++;
+            X++;
             RotateCharactor(2);
         }
         //左
-        if (d == 0 && x > 0)
+        if (d == 0 && X > 0)
         {
-            x--;
+            X--;
             RotateCharactor(0);
         }
         //上
-        if (d == 1 && z < (script.boardSize - 1))
+        if (d == 1 && Z < (_script.BoardSize - 1))
         {
-            z++;
+            Z++;
             RotateCharactor(1);
         }
         //下
-        if (d == 3 && z > 0)
+        if (d == 3 && Z > 0)
         {
-            z--;
+            Z--;
             RotateCharactor(3);
         }
 
         //キャラクターのy座標の設定
-        if (script.dices.Count != 0)
+        if (_script.Dices.Count != 0)
         {
-            if (script.board[x, z] != -1)
+            if (_script.Board[X, Z] != -1)
             {
                 //現在位置の下にダイスがあるとき
-                y = script.dices[script.board[x, z]].transform.position.y + 0.5f;
+                Y = _script.Dices[_script.Board[X, Z]].transform.position.y + 0.5f;
             }
-            else if (script.isRotate_dice)
+            else if (_script.IsRotateDice)
             {
-                y = 1.0f;
+                Y = 1.0f;
             }
             else
             {
                 //ダイスがないとき
-                y = 0.0f;
+                Y = 0.0f;
             }
         }
         else
         {
-            y = 0.0f;
+            Y = 0.0f;
         }
 
 
         // ジャンプアニメ
-        if (Mathf.Abs(prevPos.y - y) > 0.3f)
+        if (Mathf.Abs(_prevPos.y - Y) > 0.3f)
         {
-            anim.Play("Jump");
+            _anim.Play("Jump");
         }
-        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+        _target = new Vector3(-4.5f + X * 1.0f, Y, -4.5f + Z * 1.0f);
 
         // Puzzle用
-        if (script.gameType == 3)
+        if (_script.GameType == 3)
         {
-            GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().decrementRemainTurnNum();
+            GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().DecrementRemainTurnNum();
         }
 
-        Debug.Log("charactor=" + x.ToString() + ", " + z.ToString());
+        Debug.Log("charactor=" + X.ToString() + ", " + Z.ToString());
 
         return;
     }
 
-    public void setTarget(int _x, float _y, int _z)
+    public void SetTarget(int x, float y, int z)
     {
-        x = _x;
-        y = _y;
-        z = _z;
-        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+        X = x;
+        Y = y;
+        Z = z;
+        _target = new Vector3(-4.5f + X * 1.0f, Y, -4.5f + Z * 1.0f);
         return;
     }
 
-    public void setTargetDiscrete(int _x, float _y, int _z)
+    public void SetTargetDiscrete(int x, float y, int z)
     {
-        x = _x;
-        y = _y;
-        z = _z;
-        transform.position = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
-        target = new Vector3(-4.5f + x * 1.0f, y, -4.5f + z * 1.0f);
+        X = x;
+        Y = y;
+        Z = z;
+        transform.position = new Vector3(-4.5f + X * 1.0f, Y, -4.5f + Z * 1.0f);
+        _target = new Vector3(-4.5f + X * 1.0f, Y, -4.5f + Z * 1.0f);
         return;
     }
 
     void RotateCharactor(int d)
     {
         //入力方向と既存の向きが違う場合
-        if (d != direction)
+        if (d != _direction)
         {
-            int diff = direction - d;
+            int diff = _direction - d;
             float angle;
             if (Mathf.Abs(diff) == 1)
             {
@@ -198,14 +199,14 @@ public class AquiController : MonoBehaviour
             }
 
             transform.Rotate(new Vector3(0.0f, angle, 0.0f));
-            direction = d;
+            _direction = d;
         }
     }
 
     // 目的地へ移動する
     void Move()
     {
-        transform.position = Vector3.MoveTowards(transform.position, target, step * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _target, _step * Time.deltaTime);
     }
 
 

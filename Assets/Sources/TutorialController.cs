@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TutorialController : MonoBehaviour
 {
-    string[,] ttData = {
+    string[,] _ttData = {
         {"", "", "Six sided travelerへようこそ！ "},
         {"", "", "これは、砂漠にすんでいた女の子\"Zoro\"が六面世界を旅する物語です。"},
         {"", "", "早速、旅の仕方をマスターしましょう。"},
@@ -52,61 +52,61 @@ public class TutorialController : MonoBehaviour
 
 
 
-    GameObject objTT, objBoard;
-    TutorialTextController objTTController;
-    MainGameController objMGController;
-    int nowDataIdx = 0;
-    int maxDataIdx;
+    GameObject _objTt, _objBoard;
+    TutorialTextController _objTtController;
+    MainGameController _objMgController;
+    int _nowDataIdx = 0;
+    int _maxDataIdx;
 
     // Use this for initialization
     void Start()
     {
-        ttData[0, 2] += PlayerPrefs.GetString("userName") + "さん。";
+        _ttData[0, 2] += PlayerPrefs.GetString("userName") + "さん。";
 
-        objBoard = GameObject.Find("Board");
-        objMGController = objBoard.GetComponent<MainGameController>();
+        _objBoard = GameObject.Find("Board");
+        _objMgController = _objBoard.GetComponent<MainGameController>();
 
-        objTT = GameObject.Find("TutorialText");
-        objTTController = objTT.GetComponent<TutorialTextController>();
+        _objTt = GameObject.Find("TutorialText");
+        _objTtController = _objTt.GetComponent<TutorialTextController>();
 
-        maxDataIdx = ttData.GetLength(0);
-        setNext();
+        _maxDataIdx = _ttData.GetLength(0);
+        SetNext();
     }
 
-    public void setNext()
+    public void SetNext()
     {
-        if (nowDataIdx < maxDataIdx)
+        if (_nowDataIdx < _maxDataIdx)
         {
-            objTTController.setText(ttData[nowDataIdx, 2]);
+            _objTtController.SetText(_ttData[_nowDataIdx, 2]);
 
             // キャラを移動
-            if (ttData[nowDataIdx, 0] != "")
+            if (_ttData[_nowDataIdx, 0] != "")
             {
-                string[] aquiPos = ttData[nowDataIdx, 0].Split(',');
-                objMGController.setAqui(int.Parse(aquiPos[0]), float.Parse(aquiPos[1]), int.Parse(aquiPos[2]));
+                string[] aquiPos = _ttData[_nowDataIdx, 0].Split(',');
+                _objMgController.SetAqui(int.Parse(aquiPos[0]), float.Parse(aquiPos[1]), int.Parse(aquiPos[2]));
             }
 
-            if (ttData[nowDataIdx, 1] != "")
+            if (_ttData[_nowDataIdx, 1] != "")
             {
-                objMGController.resetGame();
-                if (ttData[nowDataIdx, 1] != "-1")
+                _objMgController.ResetGame();
+                if (_ttData[_nowDataIdx, 1] != "-1")
                 {
-                    string[] dicePos = ttData[nowDataIdx, 1].Split(',');
+                    string[] dicePos = _ttData[_nowDataIdx, 1].Split(',');
                     for (int i = 0; i < dicePos.Length / 4; i++)
                     {
-                        objMGController.diceGenerate(int.Parse(dicePos[4 * i]), int.Parse(dicePos[4 * i + 1]), int.Parse(dicePos[4 * i + 2]), int.Parse(dicePos[4 * i + 3]));
+                        _objMgController.DiceGenerate(int.Parse(dicePos[4 * i]), int.Parse(dicePos[4 * i + 1]), int.Parse(dicePos[4 * i + 2]), int.Parse(dicePos[4 * i + 3]));
                     }
                 }
             }
-            nowDataIdx++;
+            _nowDataIdx++;
         }
-        else if (nowDataIdx == maxDataIdx)
+        else if (_nowDataIdx == _maxDataIdx)
         {
-            gotoTopmenu();
+            GotoTopmenu();
         }
     }
 
-    public void gotoTopmenu()
+    public void GotoTopmenu()
     {
         FadeManager.Instance.LoadScene("TopMenu", 0.3f);
     }

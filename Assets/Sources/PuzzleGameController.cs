@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PuzzleGameController : MonoBehaviour
 {
     // 現在用意できている最後のステージ
-    int maxStageIdx = 7; // (worldnum-1)*8 + (stageNum-1) で計算, 例えば2-3なら(2-1)*8 + (3-1) = 10
+    int _maxStageIdx = 7; // (worldnum-1)*8 + (stageNum-1) で計算, 例えば2-3なら(2-1)*8 + (3-1) = 10
 
     /**
      * {指定ターン数, プレイヤーの初期xyz, サイコロの(x,z,A面の数字,B面の数字(0にするとランダム))xサイコロの数だけ書く}
      * 全てstring型
      */
-    string[,] ttData = {
+    string[,] _ttData = {
         // stage1
         {"1", "3,1.0,2", "3,2,2,1,2,3,4,1,3,3,4,2,4,3,4,5"},
         {"3", "4,1.0,2", "4,2,5,1,2,2,6,3,3,3,3,5"},
@@ -34,105 +35,109 @@ public class PuzzleGameController : MonoBehaviour
 
 
 
-    [SerializeField] GameObject objBoard, gobjStageText, gobjRemainText, gobjYouWin, gobjYouLose;
-    MainGameController objMGController;
-    int stageIdx, ttsize, remainTurnNum;
-    bool winFlag = false, loseFlag = false;
-    string strStage = ""; //1-1みたいな
+    [FormerlySerializedAs("objBoard")] [SerializeField] GameObject _objBoard;
+    [FormerlySerializedAs("gobjStageText")] [SerializeField] GameObject _gobjStageText;
+    [FormerlySerializedAs("gobjRemainText")] [SerializeField] GameObject _gobjRemainText;
+    [FormerlySerializedAs("gobjYouWin")] [SerializeField] GameObject _gobjYouWin;
+    [FormerlySerializedAs("gobjYouLose")] [SerializeField] GameObject _gobjYouLose;
+    MainGameController _objMgController;
+    int _stageIdx, _ttsize, _remainTurnNum;
+    bool _winFlag = false, _loseFlag = false;
+    string _strStage = ""; //1-1みたいな
 
     // Use this for initialization
     void Start()
     {
-        objMGController = objBoard.GetComponent<MainGameController>();
+        _objMgController = _objBoard.GetComponent<MainGameController>();
 
-        ttsize = ttData.GetLength(0);
-        stageIdx = PuzzleMenuController.getStageIdx(); // ステージIDを取得
-        setStage();
+        _ttsize = _ttData.GetLength(0);
+        _stageIdx = PuzzleMenuController.GetStageIdx(); // ステージIDを取得
+        SetStage();
     }
 
-    public void setStage()
+    public void SetStage()
     {
-        gobjYouLose.SetActive(false);
-        winFlag = false;
-        loseFlag = false;
+        _gobjYouLose.SetActive(false);
+        _winFlag = false;
+        _loseFlag = false;
 
-        if (stageIdx >= ttsize)
+        if (_stageIdx >= _ttsize)
         {
-            stageIdx = ttsize - 1;
+            _stageIdx = _ttsize - 1;
         }
         // テキスト設定
-        strStage = (1 + stageIdx / 8).ToString() + " - " + (stageIdx % 8 + 1).ToString();
-        gobjStageText.GetComponent<Text>().text = strStage;
+        _strStage = (1 + _stageIdx / 8).ToString() + " - " + (_stageIdx % 8 + 1).ToString();
+        _gobjStageText.GetComponent<Text>().text = _strStage;
 
         // BGM再生/背景設定
-        objMGController.changeStage(stageIdx / 8);
+        _objMgController.ChangeStage(_stageIdx / 8);
 
         // 指定ターン数
-        remainTurnNum = int.Parse(ttData[stageIdx, 0]);
-        gobjRemainText.GetComponent<Text>().text = remainTurnNum.ToString();
+        _remainTurnNum = int.Parse(_ttData[_stageIdx, 0]);
+        _gobjRemainText.GetComponent<Text>().text = _remainTurnNum.ToString();
 
         // キャラを移動
-        if (ttData[stageIdx, 1] != "")
+        if (_ttData[_stageIdx, 1] != "")
         {
-            string[] aquiPos = ttData[stageIdx, 1].Split(',');
-            objMGController.setAquiDiscrete(int.Parse(aquiPos[0]), float.Parse(aquiPos[1]), int.Parse(aquiPos[2]));
+            string[] aquiPos = _ttData[_stageIdx, 1].Split(',');
+            _objMgController.SetAquiDiscrete(int.Parse(aquiPos[0]), float.Parse(aquiPos[1]), int.Parse(aquiPos[2]));
         }
 
         // サイコロを生やす
-        if (ttData[stageIdx, 2] != "")
+        if (_ttData[_stageIdx, 2] != "")
         {
-            objMGController.resetGame();
-            if (ttData[stageIdx, 2] != "-1")
+            _objMgController.ResetGame();
+            if (_ttData[_stageIdx, 2] != "-1")
             {
-                string[] dicePos = ttData[stageIdx, 2].Split(',');
+                string[] dicePos = _ttData[_stageIdx, 2].Split(',');
                 for (int i = 0; i < dicePos.Length / 4; i++)
                 {
-                    objMGController.diceGenerate(int.Parse(dicePos[4 * i]), int.Parse(dicePos[4 * i + 1]), int.Parse(dicePos[4 * i + 2]), int.Parse(dicePos[4 * i + 3]));
+                    _objMgController.DiceGenerate(int.Parse(dicePos[4 * i]), int.Parse(dicePos[4 * i + 1]), int.Parse(dicePos[4 * i + 2]), int.Parse(dicePos[4 * i + 3]));
                 }
             }
         }
 
     }
 
-    public void decrementRemainTurnNum()
+    public void DecrementRemainTurnNum()
     {
-        if (remainTurnNum > 0)
+        if (_remainTurnNum > 0)
         {
-            remainTurnNum--;
-            gobjRemainText.GetComponent<Text>().text = remainTurnNum.ToString();
+            _remainTurnNum--;
+            _gobjRemainText.GetComponent<Text>().text = _remainTurnNum.ToString();
 
             int flag = 0;
-            foreach (GameObject gobj in objMGController.dices)
+            foreach (GameObject gobj in _objMgController.Dices)
             {
-                if (!gobj.GetComponent<DiceController>().isVanishing)
+                if (!gobj.GetComponent<DiceController>().IsVanishing)
                 {
                     flag++;
                 }
             }
 
-            if (!loseFlag && flag == 0)
+            if (!_loseFlag && flag == 0)
             {
-                youWin();
+                YouWin();
             }
 
-            if (!winFlag && remainTurnNum <= 0)
+            if (!_winFlag && _remainTurnNum <= 0)
             {
-                youLose();
+                YouLose();
             }
         }
-        showArraylog();
+        ShowArraylog();
 
     }
 
 
-    void showArraylog()
+    void ShowArraylog()
     {
         string str = "";
         for (int i = 0; i < 7; i++)
         {
             for (int j = 0; j < 7; j++)
             {
-                str += objMGController.board[i, j].ToString() + ",";
+                str += _objMgController.Board[i, j].ToString() + ",";
             }
             str += "\n";
         }
@@ -141,41 +146,41 @@ public class PuzzleGameController : MonoBehaviour
     }
 
 
-    public void youWin()
+    public void YouWin()
     {
-        gobjYouWin.SetActive(true);
-        winFlag = true;
+        _gobjYouWin.SetActive(true);
+        _winFlag = true;
 
         // セーブ puzzle1-1 = 1 みたいな
-        if(stageIdx != maxStageIdx) {
-            PlayerPrefs.SetInt("puzzle" + strStage.Replace(" ", ""), 1);
-            Debug.Log(strStage);
+        if(_stageIdx != _maxStageIdx) {
+            PlayerPrefs.SetInt("puzzle" + _strStage.Replace(" ", ""), 1);
+            Debug.Log(_strStage);
         }
         else {
             GameObject.Find("NextButton").GetComponent<Button>().interactable = false;
         }
     }
 
-    public void youLose()
+    public void YouLose()
     {
-        gobjYouLose.SetActive(true);
-        loseFlag = true;
+        _gobjYouLose.SetActive(true);
+        _loseFlag = true;
 
         // セーブ
         //PlayerPrefs.SetInt("puzzle" + strStage.Replace(" ", ""), 0);
     }
 
-    public void gotoTopmenu()
+    public void GotoTopmenu()
     {
         BgmManager.Instance.Play("puzzle"); //BGM
-        FadeManager.Instance.LoadScene("stage" + (1 + stageIdx / 8).ToString(), 0.3f);
+        FadeManager.Instance.LoadScene("stage" + (1 + _stageIdx / 8).ToString(), 0.3f);
     }
 
-    public void nextStage()
+    public void NextStage()
     {
-        gobjYouWin.SetActive(false);
-        stageIdx++;
-        setStage();
+        _gobjYouWin.SetActive(false);
+        _stageIdx++;
+        SetStage();
     }
 
     // Update is called once per frame

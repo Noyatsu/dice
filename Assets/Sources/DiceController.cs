@@ -1,145 +1,146 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DiceController : MonoBehaviour
 {
 
-    GameObject Board, gobjOGController;
-    MainGameController script;
+    GameObject _board, _gobjOgController;
+    MainGameController _script;
 
-    Vector3 rotatePoint = Vector3.zero;
-    Vector3 rotateAxis = Vector3.zero;
-    float diceAngle = 0f;
+    Vector3 _rotatePoint = Vector3.zero;
+    Vector3 _rotateAxis = Vector3.zero;
+    float _diceAngle = 0f;
 
-    float diceSizeHalf;
-    public bool isSelected = true; //!< 上にキャラクターが乗っているかどうか
+    float _diceSizeHalf;
+    [FormerlySerializedAs("isSelected")] public bool IsSelected = true; //!< 上にキャラクターが乗っているかどうか
 
-    public bool isGenerate = true; // サイコロが出現中かどうか
+    [FormerlySerializedAs("isGenerate")] public bool IsGenerate = true; // サイコロが出現中かどうか
 
-    public bool isVanishing = false; // サイコロが消滅中かどうか
-    public bool isRotating = false; // さいころが回転中かどうか
+    [FormerlySerializedAs("isVanishing")] public bool IsVanishing = false; // サイコロが消滅中かどうか
+    [FormerlySerializedAs("isRotating")] public bool IsRotating = false; // さいころが回転中かどうか
 
     public int X = 0, Z = 0;
-    public int diceId = 0; //!サイコロのID
-    public int surfaceA = 1;
-    public int surfaceB = 2;
-    float step = 2f;
+    [FormerlySerializedAs("diceId")] public int DiceId = 0; //!サイコロのID
+    [FormerlySerializedAs("surfaceA")] public int SurfaceA = 1;
+    [FormerlySerializedAs("surfaceB")] public int SurfaceB = 2;
+    float _step = 2f;
 
     //音
-    private AudioSource sound_roll;
+    private AudioSource _soundRoll;
 
 
     // Use this for initialization
     void Start()
     {
-        Board = GameObject.Find("Board");
-        script = Board.GetComponent<MainGameController>();
-        gobjOGController = GameObject.Find("OnlineGameController");
-        diceSizeHalf = transform.localScale.x / 2f;
+        _board = GameObject.Find("Board");
+        _script = _board.GetComponent<MainGameController>();
+        _gobjOgController = GameObject.Find("OnlineGameController");
+        _diceSizeHalf = transform.localScale.x / 2f;
 
-        sound_roll = GetComponent<AudioSource>();
+        _soundRoll = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        risingDice();
-        sinkingDice();
+        RisingDice();
+        SinkingDice();
     }
 
     public bool SetTargetPosition(int d)
     {
         //もし上にキャラクターが乗っていたら
-        if (isSelected)
+        if (IsSelected)
         {
-            if (isVanishing == true)
+            if (IsVanishing == true)
             {
                 return false;
             }
-            if (isGenerate == true)
+            if (IsGenerate == true)
             {
                 return false;
             }
 
             if (d == 2)
             {
-                if (X + 1 < script.board.GetLength(0) && (script.board[X + 1, Z] == -1
-                    || (script.dices[script.board[X + 1, Z]].transform.position.y < 0f && script.dices[script.board[X + 1, Z]].GetComponent<DiceController>().isVanishing == true)))
+                if (X + 1 < _script.Board.GetLength(0) && (_script.Board[X + 1, Z] == -1
+                    || (_script.Dices[_script.Board[X + 1, Z]].transform.position.y < 0f && _script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().IsVanishing == true)))
                 {
                     // 隣のさいころが沈み途中の時
-                    if (script.board[X + 1, Z] != -1)
+                    if (_script.Board[X + 1, Z] != -1)
                     {
-                        if (script.dices[script.board[X + 1, Z]].GetComponent<DiceController>().isVanishing == true)
+                        if (_script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().IsVanishing == true)
                         {
-                            Debug.Log(script.dices[script.board[X + 1, Z]]);
+                            Debug.Log(_script.Dices[_script.Board[X + 1, Z]]);
                             //そのさいころを削除
-                            script.dices[script.board[X + 1, Z]].GetComponent<DiceController>().destroyDice();
+                            _script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().DestroyDice();
                         }
                     }
-                    if (script.gameType == 1)
+                    if (_script.GameType == 1)
                     {
-                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
                     }
                     X += 1; //インクリメント
 
                     //さいころの面を計算
-                    int result = ComputeNextDice(surfaceA, surfaceB, "right");
-                    surfaceA = result / 10;
-                    surfaceB = result - surfaceA * 10;
+                    int result = ComputeNextDice(SurfaceA, SurfaceB, "right");
+                    SurfaceA = result / 10;
+                    SurfaceB = result - SurfaceA * 10;
 
                     //新たなる位置に代入
-                    script.board[X, Z] = diceId;
-                    script.board_num[X, Z] = surfaceA;
+                    _script.Board[X, Z] = DiceId;
+                    _script.BoardNum[X, Z] = SurfaceA;
 
-                    rotatePoint = transform.position + new Vector3(diceSizeHalf, -diceSizeHalf, 0f);
-                    rotateAxis = new Vector3(0, 0, -1);
+                    _rotatePoint = transform.position + new Vector3(_diceSizeHalf, -_diceSizeHalf, 0f);
+                    _rotateAxis = new Vector3(0, 0, -1);
                     StartCoroutine(MoveDice());
 
 
                     //過去の位置に-1を代入
-                    script.board[X - 1, Z] = -1;
-                    script.board_num[X - 1, Z] = -1;
-                    sound_roll.PlayOneShot(sound_roll.clip);
+                    _script.Board[X - 1, Z] = -1;
+                    _script.BoardNum[X - 1, Z] = -1;
+                    _soundRoll.PlayOneShot(_soundRoll.clip);
 
                     return true;
                 }
             }
             if (d == 0)
             {
-                if (0 <= X - 1 && (script.board[X - 1, Z] == -1
-                || (script.dices[script.board[X - 1, Z]].transform.position.y < 0f && script.dices[script.board[X - 1, Z]].GetComponent<DiceController>().isVanishing == true)))
+                if (0 <= X - 1 && (_script.Board[X - 1, Z] == -1
+                || (_script.Dices[_script.Board[X - 1, Z]].transform.position.y < 0f && _script.Dices[_script.Board[X - 1, Z]].GetComponent<DiceController>().IsVanishing == true)))
                 {
                     // 隣のさいころが沈み途中の時
-                    if (script.board[X - 1, Z] != -1)
+                    if (_script.Board[X - 1, Z] != -1)
                     {
 
-                        if (script.dices[script.board[X - 1, Z]].GetComponent<DiceController>().isVanishing == true)
+                        if (_script.Dices[_script.Board[X - 1, Z]].GetComponent<DiceController>().IsVanishing == true)
                         {
                             //そのさいころを削除
-                            script.dices[script.board[X - 1, Z]].GetComponent<DiceController>().destroyDice();
+                            _script.Dices[_script.Board[X - 1, Z]].GetComponent<DiceController>().DestroyDice();
                         }
                     }
-                    if (script.gameType == 1)
+                    if (_script.GameType == 1)
                     {
-                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
                     }
                     X -= 1;
 
                     //さいころの面を計算
-                    int result = ComputeNextDice(surfaceA, surfaceB, "left");
-                    surfaceA = result / 10;
-                    surfaceB = result - surfaceA * 10;
+                    int result = ComputeNextDice(SurfaceA, SurfaceB, "left");
+                    SurfaceA = result / 10;
+                    SurfaceB = result - SurfaceA * 10;
 
-                    script.board[X, Z] = diceId;
-                    script.board_num[X, Z] = surfaceA;
-                    rotatePoint = transform.position + new Vector3(-diceSizeHalf, -diceSizeHalf, 0f);
-                    rotateAxis = new Vector3(0, 0, 1);
+                    _script.Board[X, Z] = DiceId;
+                    _script.BoardNum[X, Z] = SurfaceA;
+                    _rotatePoint = transform.position + new Vector3(-_diceSizeHalf, -_diceSizeHalf, 0f);
+                    _rotateAxis = new Vector3(0, 0, 1);
                     StartCoroutine(MoveDice());
 
-                    script.board[X + 1, Z] = -1;
-                    script.board_num[X + 1, Z] = -1;
-                    sound_roll.PlayOneShot(sound_roll.clip);
+                    _script.Board[X + 1, Z] = -1;
+                    _script.BoardNum[X + 1, Z] = -1;
+                    _soundRoll.PlayOneShot(_soundRoll.clip);
 
                     return true;
                 }
@@ -147,39 +148,39 @@ public class DiceController : MonoBehaviour
             }
             if (d == 1)
             {
-                if (Z + 1 < script.board.GetLength(1) && (script.board[X, Z + 1] == -1
-                || (script.dices[script.board[X, Z + 1]].transform.position.y < 0f && script.dices[script.board[X, Z + 1]].GetComponent<DiceController>().isVanishing == true)))
+                if (Z + 1 < _script.Board.GetLength(1) && (_script.Board[X, Z + 1] == -1
+                || (_script.Dices[_script.Board[X, Z + 1]].transform.position.y < 0f && _script.Dices[_script.Board[X, Z + 1]].GetComponent<DiceController>().IsVanishing == true)))
                 {
                     // 隣のさいころが沈み途中の時
-                    if (script.board[X, Z + 1] != -1)
+                    if (_script.Board[X, Z + 1] != -1)
                     {
 
-                        if (script.dices[script.board[X, Z + 1]].GetComponent<DiceController>().isVanishing == true)
+                        if (_script.Dices[_script.Board[X, Z + 1]].GetComponent<DiceController>().IsVanishing == true)
                         {
                             //そのさいころを削除
-                            script.dices[script.board[X, Z + 1]].GetComponent<DiceController>().destroyDice();
+                            _script.Dices[_script.Board[X, Z + 1]].GetComponent<DiceController>().DestroyDice();
                         }
                     }
-                    if (script.gameType == 1)
+                    if (_script.GameType == 1)
                     {
-                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
                     }
                     Z += 1;
 
                     //さいころの面を計算
-                    int result = ComputeNextDice(surfaceA, surfaceB, "up");
-                    surfaceA = result / 10;
-                    surfaceB = result - surfaceA * 10;
+                    int result = ComputeNextDice(SurfaceA, SurfaceB, "up");
+                    SurfaceA = result / 10;
+                    SurfaceB = result - SurfaceA * 10;
 
-                    script.board[X, Z] = diceId;
-                    script.board_num[X, Z] = surfaceA;
-                    rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, diceSizeHalf);
-                    rotateAxis = new Vector3(1, 0, 0);
+                    _script.Board[X, Z] = DiceId;
+                    _script.BoardNum[X, Z] = SurfaceA;
+                    _rotatePoint = transform.position + new Vector3(0f, -_diceSizeHalf, _diceSizeHalf);
+                    _rotateAxis = new Vector3(1, 0, 0);
                     StartCoroutine(MoveDice());
 
-                    script.board[X, Z - 1] = -1;
-                    script.board_num[X, Z - 1] = -1;
-                    sound_roll.PlayOneShot(sound_roll.clip);
+                    _script.Board[X, Z - 1] = -1;
+                    _script.BoardNum[X, Z - 1] = -1;
+                    _soundRoll.PlayOneShot(_soundRoll.clip);
 
                     return true;
                 }
@@ -187,39 +188,39 @@ public class DiceController : MonoBehaviour
             }
             if (d == 3)
             {
-                if (0 <= Z - 1 && (script.board[X, Z - 1] == -1
-                || (script.dices[script.board[X, Z - 1]].transform.position.y < 0f && script.dices[script.board[X, Z - 1]].GetComponent<DiceController>().isVanishing == true)))
+                if (0 <= Z - 1 && (_script.Board[X, Z - 1] == -1
+                || (_script.Dices[_script.Board[X, Z - 1]].transform.position.y < 0f && _script.Dices[_script.Board[X, Z - 1]].GetComponent<DiceController>().IsVanishing == true)))
                 {
                     // 隣のさいころが沈み途中の時
-                    if (script.board[X, Z - 1] != -1)
+                    if (_script.Board[X, Z - 1] != -1)
                     {
 
-                        if (script.dices[script.board[X, Z - 1]].GetComponent<DiceController>().isVanishing == true)
+                        if (_script.Dices[_script.Board[X, Z - 1]].GetComponent<DiceController>().IsVanishing == true)
                         {
                             //そのさいころを削除
-                            script.dices[script.board[X, Z - 1]].GetComponent<DiceController>().destroyDice();
+                            _script.Dices[_script.Board[X, Z - 1]].GetComponent<DiceController>().DestroyDice();
                         }
                     }
-                    if (script.gameType == 1)
+                    if (_script.GameType == 1)
                     {
-                        gobjOGController.GetComponent<OnlineGameController>().sendRoll(X, Z, d);
+                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
                     }
                     Z -= 1;
 
                     //さいころの面を計算
-                    int result = ComputeNextDice(surfaceA, surfaceB, "down");
-                    surfaceA = result / 10;
-                    surfaceB = result - surfaceA * 10;
+                    int result = ComputeNextDice(SurfaceA, SurfaceB, "down");
+                    SurfaceA = result / 10;
+                    SurfaceB = result - SurfaceA * 10;
 
-                    script.board[X, Z] = diceId;
-                    script.board_num[X, Z] = surfaceA;
-                    rotatePoint = transform.position + new Vector3(0f, -diceSizeHalf, -diceSizeHalf);
-                    rotateAxis = new Vector3(-1, 0, 0);
+                    _script.Board[X, Z] = DiceId;
+                    _script.BoardNum[X, Z] = SurfaceA;
+                    _rotatePoint = transform.position + new Vector3(0f, -_diceSizeHalf, -_diceSizeHalf);
+                    _rotateAxis = new Vector3(-1, 0, 0);
                     StartCoroutine(MoveDice());
 
-                    script.board[X, Z + 1] = -1;
-                    script.board_num[X, Z + 1] = -1;
-                    sound_roll.PlayOneShot(sound_roll.clip);
+                    _script.Board[X, Z + 1] = -1;
+                    _script.BoardNum[X, Z + 1] = -1;
+                    _soundRoll.PlayOneShot(_soundRoll.clip);
 
                     return true;
                 }
@@ -233,24 +234,24 @@ public class DiceController : MonoBehaviour
 
     IEnumerator MoveDice()
     {
-        script.isRotate_dice = true;
+        _script.IsRotateDice = true;
 
         float sumAngle = 0f;
         while (sumAngle < 90f)
         {
-            diceAngle = 6f * Time.deltaTime * 50f;
-            sumAngle += diceAngle;
+            _diceAngle = 6f * Time.deltaTime * 50f;
+            sumAngle += _diceAngle;
 
             if (sumAngle > 90f)
             {
-                diceAngle -= sumAngle - 90f;
+                _diceAngle -= sumAngle - 90f;
             }
-            transform.RotateAround(rotatePoint, rotateAxis, diceAngle);
+            transform.RotateAround(_rotatePoint, _rotateAxis, _diceAngle);
 
             yield return null;
         }
 
-        script.isRotate_dice = false;
+        _script.IsRotateDice = false;
 
         yield break;
     }
@@ -566,9 +567,9 @@ public class DiceController : MonoBehaviour
         return nextA * 10 + nextB;
     }
 
-    public void risingDice()
+    public void RisingDice()
     {
-        if (isGenerate)
+        if (IsGenerate)
         {
             Vector3 position = transform.position;
             position.y += Time.deltaTime * 2.0f;
@@ -576,14 +577,14 @@ public class DiceController : MonoBehaviour
             if (position.y >= 0.5f)
             {
                 position.y = 0.5f;
-                isGenerate = false;
+                IsGenerate = false;
             }
             transform.position = position;
         }
     }
-    public void sinkingDice()
+    public void SinkingDice()
     {
-        if (isVanishing)
+        if (IsVanishing)
         {
             Vector3 position = transform.position;
             position.y -= Time.deltaTime * 0.125f;
@@ -598,20 +599,20 @@ public class DiceController : MonoBehaviour
             }
             if (position.y <= -0.5f)
             {
-                destroyDice();
+                DestroyDice();
             }
         }
     }
 
-    public void destroyDice()
+    public void DestroyDice()
     {
-        isVanishing = false;
-        script.board[X, Z] = -1;
-        script.board_num[X, Z] = -1;
+        IsVanishing = false;
+        _script.Board[X, Z] = -1;
+        _script.BoardNum[X, Z] = -1;
         Destroy(this.gameObject);
-        if (script.gameType == 1)
+        if (_script.GameType == 1)
         {
-            gobjOGController.GetComponent<OnlineGameController>().sendVanish(X, Z);
+            _gobjOgController.GetComponent<OnlineGameController>().SendVanish(X, Z);
         }
     }
 

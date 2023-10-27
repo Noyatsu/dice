@@ -2,39 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class OnlineSystem : MonoBehaviour
 {
 
-    int mode = 0; //1ならフリーマッチ
-    string version = "v0.5", key = "";
-    public GameObject objLoading, objkeyBox, objKey;
+    int _mode = 0; //1ならフリーマッチ
+    string _version = "v0.5", _key = "";
+    [FormerlySerializedAs("objLoading")] public GameObject ObjLoading;
+    [FormerlySerializedAs("objkeyBox")] public GameObject ObjkeyBox;
+    [FormerlySerializedAs("objKey")] public GameObject ObjKey;
 
     void Start()
     {
 
     }
 
-    public void startFreeMatch()
+    public void StartFreeMatch()
     {
-        objLoading.SetActive(true);
-        mode = 1;
-        PhotonNetwork.ConnectUsingSettings(version);
+        ObjLoading.SetActive(true);
+        _mode = 1;
+        PhotonNetwork.ConnectUsingSettings(_version);
     }
 
-    public void displayKeyWindow()
+    public void DisplayKeyWindow()
     {
-        objkeyBox.SetActive(true);
+        ObjkeyBox.SetActive(true);
     }
-    public void startKeyMatch()
+    public void StartKeyMatch()
     {
-        key = objKey.GetComponent<InputField>().text;
-        Debug.Log(key);
-        objkeyBox.SetActive(false);
-        objLoading.SetActive(true);
-        mode = 3;
-        PhotonNetwork.ConnectUsingSettings(version);
+        _key = ObjKey.GetComponent<InputField>().text;
+        Debug.Log(_key);
+        ObjkeyBox.SetActive(false);
+        ObjLoading.SetActive(true);
+        _mode = 3;
+        PhotonNetwork.ConnectUsingSettings(_version);
     }
 
     // ロビーに入ると呼ばれる
@@ -42,16 +45,16 @@ public class OnlineSystem : MonoBehaviour
     {
         Debug.Log("ロビーに入りました。");
 
-        if (mode == 1)
+        if (_mode == 1)
         {
             // ランダムにルームに入室する
             ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 1 } };
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 2);
         }
-        else if (mode == 3)
+        else if (_mode == 3)
         {
             // ルームに入室する
-            ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 3 }, {"key", key} };
+            ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 3 }, {"key", _key} };
             PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 2);
         }
     }
@@ -74,17 +77,17 @@ public class OnlineSystem : MonoBehaviour
 
         RoomOptions roomOptions = new RoomOptions();
 
-        if (mode == 1)
+        if (_mode == 1)
         {
             // ルームがないと入室に失敗するため、その時は自分で作る
             roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 1 } };
             roomOptions.CustomRoomPropertiesForLobby = new string[] { "mode" };
             roomOptions.MaxPlayers = 2;
         }
-        else if (mode == 3)
+        else if (_mode == 3)
         {
             // ルームがないと入室に失敗するため、その時は自分で作る
-            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 3 }, { "key", key } };
+            roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "mode", 3 }, { "key", _key } };
             roomOptions.CustomRoomPropertiesForLobby = new string[] { "mode", "key" };
             roomOptions.MaxPlayers = 2;
         }
@@ -99,11 +102,11 @@ public class OnlineSystem : MonoBehaviour
     }
 
 
-    public void cancelButtonClicked()
+    public void CancelButtonClicked()
     {
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
-        objLoading.SetActive(false);
+        ObjLoading.SetActive(false);
     }
 
     void GameStart()

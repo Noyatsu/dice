@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class SumScoreTextController : MonoBehaviour {
-    MainGameController script;
-    public Text text;
+    MainGameController _script;
+    [FormerlySerializedAs("text")] public Text Text;
 	// Use this for initialization
 	void Start () {
-        script = GameObject.Find("Board").GetComponent<MainGameController>();
+        _script = GameObject.Find("Board").GetComponent<MainGameController>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        text.text = script.sumScore.ToString();
+        Text.text = _script.SumScore.ToString();
 	}
 }

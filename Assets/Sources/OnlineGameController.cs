@@ -2,55 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
 public class OnlineGameController : MonoBehaviour
 {
-    MainGameController script;
-    private PhotonView objPhotonViewControl;
-    private AudioSource sound_enemy;
-    public int enemyScore;
+    MainGameController _script;
+    private PhotonView _objPhotonViewControl;
+    private AudioSource _soundEnemy;
+    [FormerlySerializedAs("enemyScore")] public int EnemyScore;
 
-    public int boardSize = 7; //!< 盤面のサイズ
-    public int[,] board = new int[7, 7]; //!< さいころのIDを格納
-    public int[,] board_num = new int[7, 7]; //!< さいころの面を格納
-    public List<GameObject> dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
-    int maxDiceId = 0; //!< 現在のさいころIDの最大値
-    int DamageDice = 0; //相手のスコアによって生成されたダイス数
+    [FormerlySerializedAs("boardSize")] public int BoardSize = 7; //!< 盤面のサイズ
+    public int[,] Board = new int[7, 7]; //!< さいころのIDを格納
+    public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
+    [FormerlySerializedAs("dices")] public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
+    int _maxDiceId = 0; //!< 現在のさいころIDの最大値
+    int _damageDice = 0; //相手のスコアによって生成されたダイス数
 
-    GameObject Dice, DiceBase, Aqui, VanishingDice, StatusText, ScreenText;
-    public GameObject waitingPanel, myName, enemyName;
+    GameObject _dice, _diceBase, _aqui, _vanishingDice, _statusText, _screenText;
+    [FormerlySerializedAs("waitingPanel")] public GameObject WaitingPanel;
+    [FormerlySerializedAs("myName")] public GameObject MyName;
+    [FormerlySerializedAs("enemyName")] public GameObject EnemyName;
 
     void Start()
     {
-        waitingPanel.SetActive(true);
+        WaitingPanel.SetActive(true);
 
-        script = GameObject.Find("Board").GetComponent<MainGameController>();
-        script.gameType = 1; // ゲームタイプを1に設定
-        sound_enemy = GetComponent<AudioSource>();
-        objPhotonViewControl = GetComponent<PhotonView>();
+        _script = GameObject.Find("Board").GetComponent<MainGameController>();
+        _script.GameType = 1; // ゲームタイプを1に設定
+        _soundEnemy = GetComponent<AudioSource>();
+        _objPhotonViewControl = GetComponent<PhotonView>();
 
         //配列の初期化
-        for (int i = 0; i < board.GetLength(0); i++)
+        for (int i = 0; i < Board.GetLength(0); i++)
         {
-            for (int j = 0; j < board.GetLength(1); j++)
+            for (int j = 0; j < Board.GetLength(1); j++)
             {
-                board[i, j] = -1;
-                board_num[i, j] = -1;
+                Board[i, j] = -1;
+                BoardNum[i, j] = -1;
             }
         }
         //初期用配列設定
-        board[0, 0] = maxDiceId;
-        board_num[0, 0] = 1;
+        Board[0, 0] = _maxDiceId;
+        BoardNum[0, 0] = 1;
 
-        DiceBase = (GameObject)Resources.Load("DiceE");
-        Dice = GameObject.Find("DiceE");
-        dices.Add(Dice);  //リストにオブジェクトを追加
+        _diceBase = (GameObject)Resources.Load("DiceE");
+        _dice = GameObject.Find("DiceE");
+        Dices.Add(_dice);  //リストにオブジェクトを追加
 
         //名前の設定
-        myName.GetComponent<Text>().text = PlayerPrefs.GetString("userName");
-        objPhotonViewControl.RPC("setEnemyName", PhotonTargets.Others, PlayerPrefs.GetString("userName"));
+        MyName.GetComponent<Text>().text = PlayerPrefs.GetString("userName");
+        _objPhotonViewControl.RPC("setEnemyName", PhotonTargets.Others, PlayerPrefs.GetString("userName"));
 
         //Aqui = GameObject.Find("AquiE");
     }
@@ -61,103 +64,103 @@ public class OnlineGameController : MonoBehaviour
         object value = null;
         if (changedProperties.TryGetValue("sumScore", out value))
         {
-            script.sumScore = (int)value;
+            _script.SumScore = (int)value;
             //レベルを計算
-            script.ComputeLevel();
+            _script.ComputeLevel();
         }
     }
 
-    public void sendScore(int score)
+    public void SendScore(int score)
     {
-        objPhotonViewControl.RPC("setEnemyScore", PhotonTargets.Others, score);
+        _objPhotonViewControl.RPC("setEnemyScore", PhotonTargets.Others, score);
     }
 
-    public void pause()
+    public void Pause()
     {
-        sendLose();
+        SendLose();
         FadeManager.Instance.LoadScene("YouLose", 0.3f);
     }
 
-    public void sendLose()
+    public void SendLose()
     {
-        objPhotonViewControl.RPC("youWin", PhotonTargets.Others, 0);
+        _objPhotonViewControl.RPC("youWin", PhotonTargets.Others, 0);
     }
 
-    public void sendPoint(int x, int z, int a, int b)
+    public void SendPoint(int x, int z, int a, int b)
     {
-        objPhotonViewControl.RPC("setEnemyBoard", PhotonTargets.Others, x, z, a, b);
+        _objPhotonViewControl.RPC("setEnemyBoard", PhotonTargets.Others, x, z, a, b);
     }
-    public void sendSink(int x, int z)
+    public void SendSink(int x, int z)
     {
-        objPhotonViewControl.RPC("setEnemyDiceSinking", PhotonTargets.Others, x, z);
+        _objPhotonViewControl.RPC("setEnemyDiceSinking", PhotonTargets.Others, x, z);
     }
 
-    public void sendVanish(int x, int z)
+    public void SendVanish(int x, int z)
     {
         Debug.Log("RPCED(Vanish)");
-        objPhotonViewControl.RPC("setEnemyDiceVanish", PhotonTargets.Others, x, z);
+        _objPhotonViewControl.RPC("setEnemyDiceVanish", PhotonTargets.Others, x, z);
 
     }
 
-    public void sendRoll(int x, int z, int d)
+    public void SendRoll(int x, int z, int d)
     {
-        objPhotonViewControl.RPC("setEnemyDiceRoll", PhotonTargets.Others, x, z, d);
-    }
-
-    [PunRPC]
-    private void setEnemyName(string eName)
-    {
-        enemyName.GetComponent<Text>().text = eName;
+        _objPhotonViewControl.RPC("setEnemyDiceRoll", PhotonTargets.Others, x, z, d);
     }
 
     [PunRPC]
-    private void setEnemyScore(int eScore)
+    private void SetEnemyName(string eName)
     {
-        enemyScore = eScore;
-        sound_enemy.PlayOneShot(sound_enemy.clip);
-        if((enemyScore / 50) > DamageDice) { //スコアが一定値を超えたら
-            int i = (enemyScore / 50) - DamageDice;
-            DamageDice += i;
+        EnemyName.GetComponent<Text>().text = eName;
+    }
+
+    [PunRPC]
+    private void SetEnemyScore(int eScore)
+    {
+        EnemyScore = eScore;
+        _soundEnemy.PlayOneShot(_soundEnemy.clip);
+        if((EnemyScore / 50) > _damageDice) { //スコアが一定値を超えたら
+            int i = (EnemyScore / 50) - _damageDice;
+            _damageDice += i;
             for ( ; i>0 ; i--){
-            script.randomDiceGenerate(1); //超えた分だけダイスを送る
+            _script.RandomDiceGenerate(1); //超えた分だけダイスを送る
             Debug.Log("相手のスコアによってサイコロが増えました");
             }
         }
     }
 
     [PunRPC] 
-    private void youWin(int data)
+    private void YouWin(int data)
     {
         SceneManager.LoadScene("YouWin");
     }
 
     [PunRPC]
-    private void setEnemyBoard(int x, int z, int a, int b)
+    private void SetEnemyBoard(int x, int z, int a, int b)
     {
-        diceGenerateE(x, z, a, b);
+        DiceGenerateE(x, z, a, b);
         if (Time.timeScale == 0f)
         {
-            waitingPanel.SetActive(false);
+            WaitingPanel.SetActive(false);
             Time.timeScale = 1f;
         }
     }
 
     [PunRPC]
-    private void setEnemyDiceSinking(int x, int z)
+    private void SetEnemyDiceSinking(int x, int z)
     {
-        diceSinkingE(x, z);
+        DiceSinkingE(x, z);
     }
 
     [PunRPC]
-    private void setEnemyDiceVanish(int x, int z)
+    private void SetEnemyDiceVanish(int x, int z)
     {
-        diceVanishE(x, z);
+        DiceVanishE(x, z);
     }
 
     [PunRPC]
-    private void setEnemyDiceRoll(int x, int z, int d)
+    private void SetEnemyDiceRoll(int x, int z, int d)
     {
-        diceRollE(x, z, d);
+        DiceRollE(x, z, d);
     }
     // EnemyBoardControl
 
@@ -167,7 +170,7 @@ public class OnlineGameController : MonoBehaviour
     * @params z 配置するz座標
     * @params a 上にする面
     */
-    public void diceGenerateE(int x, int z, int a, int b = 0)
+    public void DiceGenerateE(int x, int z, int a, int b = 0)
     {
         // 側面の決定用乱数
         int i = Random.Range(1, 4);
@@ -328,14 +331,14 @@ public class OnlineGameController : MonoBehaviour
         }
 
         // その座標が空だったらさいころを追加
-        if (board[x, z] == -1)
+        if (Board[x, z] == -1)
         {
-            maxDiceId++;
-            board[x, z] = maxDiceId;
+            _maxDiceId++;
+            Board[x, z] = _maxDiceId;
             Vector3 position = new Vector3(2.5f + (float)x * 0.5f, 0.25f, 1.5f + (float)z * 0.5f); //位置
-            GameObject objDice = (GameObject)Instantiate(DiceBase, position, Quaternion.Euler(xi, yi, zi));
-            dices.Add(objDice); //リストにオブジェクトを追加
-            board_num[x, z] = a;
+            GameObject objDice = (GameObject)Instantiate(_diceBase, position, Quaternion.Euler(xi, yi, zi));
+            Dices.Add(objDice); //リストにオブジェクトを追加
+            BoardNum[x, z] = a;
         }
 
     }
@@ -343,35 +346,35 @@ public class OnlineGameController : MonoBehaviour
     /**
      * ダイスを沈み状態にする
      */
-    public void diceSinkingE(int x, int z)
+    public void DiceSinkingE(int x, int z)
     {
-        script.ChangeColorOfGameObject(dices[board[x, z]], new Color(0.3f, 0.3f, 0.7f, 1.0f));
+        _script.ChangeColorOfGameObject(Dices[Board[x, z]], new Color(0.3f, 0.3f, 0.7f, 1.0f));
     }
 
     /**
      * ダイスを削除
      */
-    public void diceVanishE(int x, int z)
+    public void DiceVanishE(int x, int z)
     {
-        int diceId = board[x, z];
-        GameObject dice = dices[diceId];
-        board[x, z] = -1;
+        int diceId = Board[x, z];
+        GameObject dice = Dices[diceId];
+        Board[x, z] = -1;
         Destroy(dice);
     }
 
     /**
      * ダイスを回転
      */
-    public void diceRollE(int x, int z, int d)
+    public void DiceRollE(int x, int z, int d)
     {
-        int diceId = board[x, z];
-        GameObject dice = dices[diceId];
+        int diceId = Board[x, z];
+        GameObject dice = Dices[diceId];
         Vector3 rotatePoint, rotateAxis;
         float diceSizeHalf = dice.transform.localScale.x / 2f;
         if (d == 2)
         {
-            board[x + 1, z] = diceId;
-            board[x, z] = -1;
+            Board[x + 1, z] = diceId;
+            Board[x, z] = -1;
             rotatePoint = dice.transform.position + new Vector3(diceSizeHalf, -diceSizeHalf, 0f);
             rotateAxis = new Vector3(0, 0, -1);
             StartCoroutine(MoveDice(diceId, rotatePoint, rotateAxis));
@@ -380,8 +383,8 @@ public class OnlineGameController : MonoBehaviour
         }
         if (d == 0)
         {
-            board[x - 1, z] = diceId;
-            board[x, z] = -1;
+            Board[x - 1, z] = diceId;
+            Board[x, z] = -1;
             rotatePoint = dice.transform.position + new Vector3(-diceSizeHalf, -diceSizeHalf, 0f);
             rotateAxis = new Vector3(0, 0, 1);
             StartCoroutine(MoveDice(diceId, rotatePoint, rotateAxis));
@@ -390,8 +393,8 @@ public class OnlineGameController : MonoBehaviour
         }
         if (d == 1)
         {
-            board[x, z + 1] = diceId;
-            board[x, z] = -1;
+            Board[x, z + 1] = diceId;
+            Board[x, z] = -1;
             rotatePoint = dice.transform.position + new Vector3(0f, -diceSizeHalf, diceSizeHalf);
             rotateAxis = new Vector3(1, 0, 0);
             StartCoroutine(MoveDice(diceId, rotatePoint, rotateAxis));
@@ -400,8 +403,8 @@ public class OnlineGameController : MonoBehaviour
         }
         if (d == 3)
         {
-            board[x, z - 1] = diceId;
-            board[x, z] = -1;
+            Board[x, z - 1] = diceId;
+            Board[x, z] = -1;
             rotatePoint = dice.transform.position + new Vector3(0f, -diceSizeHalf, -diceSizeHalf);
             rotateAxis = new Vector3(-1, 0, 0);
             StartCoroutine(MoveDice(diceId, rotatePoint, rotateAxis));
@@ -412,7 +415,7 @@ public class OnlineGameController : MonoBehaviour
 
     IEnumerator MoveDice(int id, Vector3 rotatePoint, Vector3 rotateAxis)
     {
-        GameObject dice = dices[id];
+        GameObject dice = Dices[id];
         float diceAngle, sumAngle = 0f;
         while (sumAngle < 90f)
         {

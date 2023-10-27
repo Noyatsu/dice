@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-    GameObject bgImage;
-    [SerializeField] GameObject StageDice, Up, Down, Left, Right, rankImg;
-    int StageNum = 1;
-    private int frame = 0;
+    GameObject _bgImage;
+    [FormerlySerializedAs("StageDice")] [SerializeField] GameObject _stageDice;
+    [FormerlySerializedAs("Up")] [SerializeField] GameObject _up;
+    [FormerlySerializedAs("Down")] [SerializeField] GameObject _down;
+    [FormerlySerializedAs("Left")] [SerializeField] GameObject _left;
+    [FormerlySerializedAs("Right")] [SerializeField] GameObject _right;
+    [FormerlySerializedAs("rankImg")] [SerializeField] GameObject _rankImg;
+    int _stageNum = 1;
+    private int _frame = 0;
     // Use this for initialization
     void Start()
     {
-        bgImage = GameObject.Find("bgImage");
+        _bgImage = GameObject.Find("bgImage");
 
         // 初回起動時はチュートリアルへ
         if (!PlayerPrefs.HasKey("userName"))
@@ -27,22 +33,22 @@ public class MainMenuController : MonoBehaviour
         }
 
         //ランクを表示
-        Texture2D texture = Resources.Load("ranks/" + getString()) as Texture2D;
-        rankImg.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        Texture2D texture = Resources.Load("ranks/" + GetString()) as Texture2D;
+        _rankImg.GetComponent<Image>().sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        bgImage.transform.Rotate(0f, 0f, Time.deltaTime * 2.0f);
+        _bgImage.transform.Rotate(0f, 0f, Time.deltaTime * 2.0f);
     }
 
-    public void showRanking()
+    public void ShowRanking()
     {
         naichilab.RankingLoader.Instance.ShowRanking();
     }
-    string getString()
+    string GetString()
     {
         int i = PlayerPrefs.GetInt("rank", 0) / 100;
 

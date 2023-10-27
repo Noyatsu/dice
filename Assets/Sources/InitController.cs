@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class InitController : MonoBehaviour
 {
-    [SerializeField] GameObject gobjTextbox;
+    [FormerlySerializedAs("gobjTextbox")] [SerializeField] GameObject _gobjTextbox;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,11 +20,11 @@ public class InitController : MonoBehaviour
         
     }
 
-    public void setUsername()
+    public void SetUsername()
     {
-        if (gobjTextbox.GetComponent<InputField>().text != "")
+        if (_gobjTextbox.GetComponent<InputField>().text != "")
         {
-            PlayerPrefs.SetString("userName", gobjTextbox.GetComponent<InputField>().text);
+            PlayerPrefs.SetString("userName", _gobjTextbox.GetComponent<InputField>().text);
             Debug.Log("Player情報を格納しました！");
             SceneManager.LoadScene("Tutorial");
         }

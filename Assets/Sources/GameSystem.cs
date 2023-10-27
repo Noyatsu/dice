@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
+using UnityEngine.Serialization;
 
 public class GameSystem : MonoBehaviour
 {
 
-    public GameObject objNowLoading;
+    [FormerlySerializedAs("objNowLoading")] public GameObject ObjNowLoading;
 
     void Start()
     {
@@ -16,7 +17,7 @@ public class GameSystem : MonoBehaviour
 
     public void OnePlayerGameStart()
     {
-        objNowLoading.SetActive(true);
+        ObjNowLoading.SetActive(true);
         FadeManager.Instance.LoadScene("1PlayerGame", 0.3f);
     }
 
@@ -28,13 +29,13 @@ public class GameSystem : MonoBehaviour
 
     public void TutorialStart()
     {
-        objNowLoading.SetActive(true);
+        ObjNowLoading.SetActive(true);
         FadeManager.Instance.LoadScene("Tutorial", 0.3f);
     }
 
     public void PuzzleStart(int stage)
     {
-        objNowLoading.SetActive(true);
+        ObjNowLoading.SetActive(true);
         FadeManager.Instance.LoadScene("stage"+stage.ToString(), 0.3f);
         BgmManager.Instance.Play("puzzle"); //BGM
 
@@ -42,8 +43,8 @@ public class GameSystem : MonoBehaviour
 
     public void ReturnTitle()
     {
-        GameObject Board = GameObject.Find("Board");
-        Destroy(Board);
+        GameObject board = GameObject.Find("Board");
+        Destroy(board);
         BgmManager.Instance.Stop();
         ShowRewardedAd();
     }
