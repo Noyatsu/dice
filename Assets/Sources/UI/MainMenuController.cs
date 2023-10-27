@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -20,9 +18,7 @@ public class MainMenuController : MonoBehaviour
     private GameObject _right;
     [FormerlySerializedAs("rankImg")] [SerializeField]
     private GameObject _rankImg;
-
-    private int _stageNum = 1;
-    private int _frame = 0;
+    
     // Use this for initialization
     private void Start()
     {
@@ -50,11 +46,7 @@ public class MainMenuController : MonoBehaviour
     {
         _bgImage.transform.Rotate(0f, 0f, Time.deltaTime * 2.0f);
     }
-
-    public void ShowRanking()
-    {
-        naichilab.RankingLoader.Instance.ShowRanking();
-    }
+    
 
     private string GetString()
     {

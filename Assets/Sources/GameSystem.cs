@@ -46,18 +46,8 @@ public class GameSystem : MonoBehaviour
         GameObject board = GameObject.Find("Board");
         Destroy(board);
         BgmManager.Instance.Stop();
-        ShowRewardedAd();
     }
-
-    public void ShowRewardedAd()
-    {
-        if (Advertisement.IsReady("rewardedVideo"))
-        {
-            var options = new ShowOptions { resultCallback = HandleShowResult };
-            Advertisement.Show("rewardedVideo", options);
-        }
-    }
-
+    
     private void HandleShowResult(ShowResult result)
     {
         switch (result)

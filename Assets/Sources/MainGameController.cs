@@ -478,12 +478,6 @@ public class MainGameController : MonoBehaviour
         // その座標が空だったらさいころを追加
         if (Board[x, z] == -1)
         {
-            // オンラインの場合通信相手にも通達
-            if (GameType == 1)
-            {
-                _gobjOgController.GetComponent<OnlineGameController>().SendPoint(x, z, a, b);
-            }
-
             _maxDiceId++;
             Board[x, z] = _maxDiceId;
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
@@ -553,16 +547,11 @@ public class MainGameController : MonoBehaviour
             if (gameoverFlag == true && _isGameovered == false)
             {
                 _isGameovered = true;
-                if (GameType == 1)
-                {
-                    _gobjOgController.GetComponent<OnlineGameController>().SendLose();
-                }
                 BgmManager.Instance.Stop();
                 _objScreenText.SetText("Game Over!");
                 _objAquiController.DeathMotion();
 
                 DontDestroyOnLoad(this);
-                Invoke("Delay", 3f); // 3秒待ってからシーン遷移
             }
 
             return;
@@ -582,16 +571,7 @@ public class MainGameController : MonoBehaviour
 
     private void Delay()
     {
-        if (GameType == 0)
-        {
-            naichilab.RankingLoader.Instance.SendScoreAndShowRanking(Score);
-            //SceneManager.LoadScene("GameOver");
-        }
-        else if (GameType == 1)
-        {
-            Debug.Log("sendlosed");
-            SceneManager.LoadScene("Youlose");
-        }
+
     }
 
     //サイコロ消える
@@ -651,12 +631,6 @@ public class MainGameController : MonoBehaviour
                         {
                             _vanishingDices.Add(Dices[Board[i, j]]); //削除リストへ追加
                             sum++; //数を記録
-
-                            // オンラインゲームなら沈み始めたことを相手に通達
-                            if (GameType == 1)
-                            {
-                                _gobjOgController.GetComponent<OnlineGameController>().SendSink(i, j);
-                            }
                         }
                     }
                 }
@@ -700,12 +674,6 @@ public class MainGameController : MonoBehaviour
                 {
                     temp = _vanishingDices[j].GetComponent<DiceController>();
                     temp.IsVanishing = true;
-
-                    // オンラインゲームなら沈み始めたことを相手に通達
-                    if (GameType == 1)
-                    {
-                        _gobjOgController.GetComponent<OnlineGameController>().SendSink(temp.X, temp.Z);
-                    }
                 }
                 AddScore(count * BoardNum[x, z]);
                 _objStatusText.SetText("+" + count * BoardNum[x, z]);
@@ -873,24 +841,6 @@ public class MainGameController : MonoBehaviour
         int prevScoreDiv = Score / 50;
         Score += num;
         SumScore += num;
-
-        //オンラインモードなら
-        if (GameType == 1)
-        {
-            // ルームプロパティでsumScoreを送信
-            var properties = new ExitGames.Client.Photon.Hashtable();
-            properties.Add("sumScore", SumScore);
-            PhotonNetwork.room.SetCustomProperties(properties);
-
-            //自分のスコアを相手に送信
-            _gobjOgController.GetComponent<OnlineGameController>().SendScore(Score);
-
-            // 相手にお邪魔ダイスを送るアニメーション
-            if (prevScoreDiv != Score / 50)
-            { //スコアが一定値を超えたら
-                _gobjSendDice.GetComponent<Animator>().SetTrigger("sendDice");
-            }
-        }
     }
 
     private void ShowArraylog()

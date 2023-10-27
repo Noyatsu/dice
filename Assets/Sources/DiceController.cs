@@ -24,7 +24,6 @@ public class DiceController : MonoBehaviour
     [FormerlySerializedAs("diceId")] public int DiceId = 0; //!サイコロのID
     [FormerlySerializedAs("surfaceA")] public int SurfaceA = 1;
     [FormerlySerializedAs("surfaceB")] public int SurfaceB = 2;
-    private float _step = 2f;
 
     //音
     private AudioSource _soundRoll;
@@ -72,14 +71,9 @@ public class DiceController : MonoBehaviour
                     {
                         if (_script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().IsVanishing == true)
                         {
-                            Debug.Log(_script.Dices[_script.Board[X + 1, Z]]);
                             //そのさいころを削除
                             _script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().DestroyDice();
                         }
-                    }
-                    if (_script.GameType == 1)
-                    {
-                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
                     }
                     X += 1; //インクリメント
 
@@ -120,10 +114,6 @@ public class DiceController : MonoBehaviour
                             _script.Dices[_script.Board[X - 1, Z]].GetComponent<DiceController>().DestroyDice();
                         }
                     }
-                    if (_script.GameType == 1)
-                    {
-                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
-                    }
                     X -= 1;
 
                     //さいころの面を計算
@@ -160,10 +150,6 @@ public class DiceController : MonoBehaviour
                             _script.Dices[_script.Board[X, Z + 1]].GetComponent<DiceController>().DestroyDice();
                         }
                     }
-                    if (_script.GameType == 1)
-                    {
-                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
-                    }
                     Z += 1;
 
                     //さいころの面を計算
@@ -199,10 +185,6 @@ public class DiceController : MonoBehaviour
                             //そのさいころを削除
                             _script.Dices[_script.Board[X, Z - 1]].GetComponent<DiceController>().DestroyDice();
                         }
-                    }
-                    if (_script.GameType == 1)
-                    {
-                        _gobjOgController.GetComponent<OnlineGameController>().SendRoll(X, Z, d);
                     }
                     Z -= 1;
 
@@ -608,10 +590,6 @@ public class DiceController : MonoBehaviour
         _script.Board[X, Z] = -1;
         _script.BoardNum[X, Z] = -1;
         Destroy(this.gameObject);
-        if (_script.GameType == 1)
-        {
-            _gobjOgController.GetComponent<OnlineGameController>().SendVanish(X, Z);
-        }
     }
 
     private void ChangeColorOfGameObject(GameObject targetObject, Color color)
