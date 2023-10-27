@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 
 public class FinalScoreText : MonoBehaviour {
-    GameObject _board;
-    MainGameController _script;
+	private GameObject _board;
+	private MainGameController _script;
 
     [FormerlySerializedAs("text")] public Text Text;
 
 
     // Use this for initialization
-    void Start () {
+    private void Start () {
         // Board = GameObject.Find("Board");
         // script = Board.GetComponent<MainGameController>();
 				// text.text = "スコア: " + script.score;
@@ -21,7 +21,7 @@ public class FinalScoreText : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	private void Update () {
         
     }
 }

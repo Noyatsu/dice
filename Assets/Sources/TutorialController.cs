@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TutorialController : MonoBehaviour
 {
-    string[,] _ttData = {
+    private string[,] _ttData = {
         {"", "", "Six sided travelerへようこそ！ "},
         {"", "", "これは、砂漠にすんでいた女の子\"Zoro\"が六面世界を旅する物語です。"},
         {"", "", "早速、旅の仕方をマスターしましょう。"},
@@ -51,15 +51,14 @@ public class TutorialController : MonoBehaviour
     };
 
 
-
-    GameObject _objTt, _objBoard;
-    TutorialTextController _objTtController;
-    MainGameController _objMgController;
-    int _nowDataIdx = 0;
-    int _maxDataIdx;
+    private GameObject _objTt, _objBoard;
+    private TutorialTextController _objTtController;
+    private MainGameController _objMgController;
+    private int _nowDataIdx = 0;
+    private int _maxDataIdx;
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         _ttData[0, 2] += PlayerPrefs.GetString("userName") + "さん。";
 
@@ -112,7 +111,7 @@ public class TutorialController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
     }

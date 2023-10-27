@@ -7,19 +7,19 @@ public class AquiController : MonoBehaviour
 {
 
     private Animator _anim;
-    GameObject _board;
-    MainGameController _script;
+    private GameObject _board;
+    private MainGameController _script;
 
     [FormerlySerializedAs("x")] public int X = 0; //< キャラクターのX座標
     [FormerlySerializedAs("y")] public float Y = 1.1f; //キャラクターのY座標
     [FormerlySerializedAs("z")] public int Z = 0; //< キャラクターのZ座標
 
-    float _step = 5f;     //!< 移動速度
-    int _direction = 2; //!< キャラクターの向き
-    Vector3 _target;      //!< 入力受付時、移動後の位置を算出して保存
-    Vector3 _prevPos;     //!< 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
+    private float _step = 5f;     //!< 移動速度
+    private int _direction = 2; //!< キャラクターの向き
+    private Vector3 _target;      //!< 入力受付時、移動後の位置を算出して保存
+    private Vector3 _prevPos;     //!< 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
 
-    void Start()
+    private void Start()
     {
         _board = GameObject.Find("Board");
         _script = _board.GetComponent<MainGameController>();
@@ -27,7 +27,7 @@ public class AquiController : MonoBehaviour
         _anim = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetKey("up") || Input.GetKey("down") || Input.GetKey("right") || Input.GetKey("left"))
         {
@@ -45,7 +45,7 @@ public class AquiController : MonoBehaviour
         Move();
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (_script.Dices.Count != 0)
         {
@@ -145,10 +145,6 @@ public class AquiController : MonoBehaviour
         {
             GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().DecrementRemainTurnNum();
         }
-
-        Debug.Log("charactor=" + X.ToString() + ", " + Z.ToString());
-
-        return;
     }
 
     public void SetTarget(int x, float y, int z)
@@ -170,7 +166,7 @@ public class AquiController : MonoBehaviour
         return;
     }
 
-    void RotateCharactor(int d)
+    private void RotateCharactor(int d)
     {
         //入力方向と既存の向きが違う場合
         if (d != _direction)
@@ -204,7 +200,7 @@ public class AquiController : MonoBehaviour
     }
 
     // 目的地へ移動する
-    void Move()
+    private void Move()
     {
         transform.position = Vector3.MoveTowards(transform.position, _target, _step * Time.deltaTime);
     }

@@ -7,14 +7,14 @@ using UnityEngine.UI;
 
 public class TutorialTextController : MonoBehaviour
 {
-    GameObject _board;
-    MainGameController _script;
+    private GameObject _board;
+    private MainGameController _script;
 
     [FormerlySerializedAs("text")] public Text Text;
 
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         _board = GameObject.Find("Board");
         _script = _board.GetComponent<MainGameController>();
@@ -22,7 +22,7 @@ public class TutorialTextController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
     }

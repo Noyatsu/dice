@@ -7,17 +7,24 @@ using UnityEngine.UI;
 
 public class MainMenuController : MonoBehaviour
 {
-    GameObject _bgImage;
-    [FormerlySerializedAs("StageDice")] [SerializeField] GameObject _stageDice;
-    [FormerlySerializedAs("Up")] [SerializeField] GameObject _up;
-    [FormerlySerializedAs("Down")] [SerializeField] GameObject _down;
-    [FormerlySerializedAs("Left")] [SerializeField] GameObject _left;
-    [FormerlySerializedAs("Right")] [SerializeField] GameObject _right;
-    [FormerlySerializedAs("rankImg")] [SerializeField] GameObject _rankImg;
-    int _stageNum = 1;
+    private GameObject _bgImage;
+    [FormerlySerializedAs("StageDice")] [SerializeField]
+    private GameObject _stageDice;
+    [FormerlySerializedAs("Up")] [SerializeField]
+    private GameObject _up;
+    [FormerlySerializedAs("Down")] [SerializeField]
+    private GameObject _down;
+    [FormerlySerializedAs("Left")] [SerializeField]
+    private GameObject _left;
+    [FormerlySerializedAs("Right")] [SerializeField]
+    private GameObject _right;
+    [FormerlySerializedAs("rankImg")] [SerializeField]
+    private GameObject _rankImg;
+
+    private int _stageNum = 1;
     private int _frame = 0;
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         _bgImage = GameObject.Find("bgImage");
 
@@ -39,7 +46,7 @@ public class MainMenuController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         _bgImage.transform.Rotate(0f, 0f, Time.deltaTime * 2.0f);
     }
@@ -48,7 +55,8 @@ public class MainMenuController : MonoBehaviour
     {
         naichilab.RankingLoader.Instance.ShowRanking();
     }
-    string GetString()
+
+    private string GetString()
     {
         int i = PlayerPrefs.GetInt("rank", 0) / 100;
 

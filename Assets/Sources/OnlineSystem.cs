@@ -7,14 +7,13 @@ using UnityEngine.UI;
 
 public class OnlineSystem : MonoBehaviour
 {
-
-    int _mode = 0; //1ならフリーマッチ
-    string _version = "v0.5", _key = "";
+    private int _mode = 0; //1ならフリーマッチ
+    private string _version = "v0.5", _key = "";
     [FormerlySerializedAs("objLoading")] public GameObject ObjLoading;
     [FormerlySerializedAs("objkeyBox")] public GameObject ObjkeyBox;
     [FormerlySerializedAs("objKey")] public GameObject ObjKey;
 
-    void Start()
+    private void Start()
     {
 
     }
@@ -41,7 +40,7 @@ public class OnlineSystem : MonoBehaviour
     }
 
     // ロビーに入ると呼ばれる
-    void OnJoinedLobby()
+    private void OnJoinedLobby()
     {
         Debug.Log("ロビーに入りました。");
 
@@ -60,7 +59,7 @@ public class OnlineSystem : MonoBehaviour
     }
 
     // ルームに入室すると呼ばれる
-    void OnJoinedRoom()
+    private void OnJoinedRoom()
     {
         Debug.Log("ルームへ入室しました。");
         Debug.Log(PhotonNetwork.room.PlayerCount);
@@ -71,7 +70,7 @@ public class OnlineSystem : MonoBehaviour
     }
 
     // ルームの入室に失敗すると呼ばれる
-    void OnPhotonRandomJoinFailed()
+    private void OnPhotonRandomJoinFailed()
     {
         Debug.Log("ルームの入室に失敗しました。");
 
@@ -95,7 +94,7 @@ public class OnlineSystem : MonoBehaviour
     }
 
     // ほかのプレイヤーが入室してきた際に呼ばれる
-    void OnPhotonPlayerConnected(PhotonPlayer player)
+    private void OnPhotonPlayerConnected(PhotonPlayer player)
     {
         Debug.Log(player.name + " is joined.");
         GameStart();
@@ -109,7 +108,7 @@ public class OnlineSystem : MonoBehaviour
         ObjLoading.SetActive(false);
     }
 
-    void GameStart()
+    private void GameStart()
     {
         //ゲームを開始
         PhotonNetwork.room.IsOpen = false;

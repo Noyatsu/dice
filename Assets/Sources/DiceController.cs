@@ -5,15 +5,14 @@ using UnityEngine.Serialization;
 
 public class DiceController : MonoBehaviour
 {
+    private GameObject _board, _gobjOgController;
+    private MainGameController _script;
 
-    GameObject _board, _gobjOgController;
-    MainGameController _script;
+    private Vector3 _rotatePoint = Vector3.zero;
+    private Vector3 _rotateAxis = Vector3.zero;
+    private float _diceAngle = 0f;
 
-    Vector3 _rotatePoint = Vector3.zero;
-    Vector3 _rotateAxis = Vector3.zero;
-    float _diceAngle = 0f;
-
-    float _diceSizeHalf;
+    private float _diceSizeHalf;
     [FormerlySerializedAs("isSelected")] public bool IsSelected = true; //!< 上にキャラクターが乗っているかどうか
 
     [FormerlySerializedAs("isGenerate")] public bool IsGenerate = true; // サイコロが出現中かどうか
@@ -25,14 +24,14 @@ public class DiceController : MonoBehaviour
     [FormerlySerializedAs("diceId")] public int DiceId = 0; //!サイコロのID
     [FormerlySerializedAs("surfaceA")] public int SurfaceA = 1;
     [FormerlySerializedAs("surfaceB")] public int SurfaceB = 2;
-    float _step = 2f;
+    private float _step = 2f;
 
     //音
     private AudioSource _soundRoll;
 
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         _board = GameObject.Find("Board");
         _script = _board.GetComponent<MainGameController>();
@@ -43,7 +42,7 @@ public class DiceController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         RisingDice();
         SinkingDice();
@@ -231,8 +230,7 @@ public class DiceController : MonoBehaviour
     }
 
 
-
-    IEnumerator MoveDice()
+    private IEnumerator MoveDice()
     {
         _script.IsRotateDice = true;
 
@@ -263,7 +261,7 @@ public class DiceController : MonoBehaviour
      * @param string direction 入力方向(up/down/left/right)
      * @return int 2桁の数字(56なら面Aが5, 面Bが6)
      */
-    int ComputeNextDice(int a, int b, string direction)
+    private int ComputeNextDice(int a, int b, string direction)
     {
         int nextA = 0, nextB = 0;
         switch (a)
@@ -609,6 +607,7 @@ public class DiceController : MonoBehaviour
         IsVanishing = false;
         _script.Board[X, Z] = -1;
         _script.BoardNum[X, Z] = -1;
+        Debug.Log($"Destroy: {gameObject.name}");
         Destroy(this.gameObject);
         if (_script.GameType == 1)
         {

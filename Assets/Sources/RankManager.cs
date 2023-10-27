@@ -10,13 +10,16 @@ using UnityEngine.UI;
 
 public class RankManager : MonoBehaviour
 {
-    [FormerlySerializedAs("initType")] [SerializeField] int _initType = 2; // 勝利->1, 敗北->0
-    [FormerlySerializedAs("rankText")] [SerializeField] GameObject _rankText;
-    [FormerlySerializedAs("rankImg")] [SerializeField] GameObject _rankImg;
+    [FormerlySerializedAs("initType")] [SerializeField]
+    private int _initType = 2; // 勝利->1, 敗北->0
+    [FormerlySerializedAs("rankText")] [SerializeField]
+    private GameObject _rankText;
+    [FormerlySerializedAs("rankImg")] [SerializeField]
+    private GameObject _rankImg;
 
-    int _nowRank = 0;
+    private int _nowRank = 0;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _nowRank = PlayerPrefs.GetInt("rank", 0);
 
@@ -35,12 +38,12 @@ public class RankManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
     }
 
-    void ShowRank()
+    private void ShowRank()
     {
         _rankText.GetComponent<Text>().text = (_nowRank % 100).ToString() + "/100";
         Texture2D texture = Resources.Load("ranks/" + GetString()) as Texture2D;
@@ -48,7 +51,7 @@ public class RankManager : MonoBehaviour
     }
 
     // 勝利->1, 敗北->0
-    int ChangeRank(int type)
+    private int ChangeRank(int type)
     {
         int point = 0;
         int i = _nowRank / 100;
@@ -91,7 +94,7 @@ public class RankManager : MonoBehaviour
         return _nowRank;
     }
 
-    string GetString()
+    private string GetString()
     {
         int i = _nowRank / 100;
 

@@ -7,15 +7,16 @@ using UnityEngine.Serialization;
 
 public class InitController : MonoBehaviour
 {
-    [FormerlySerializedAs("gobjTextbox")] [SerializeField] GameObject _gobjTextbox;
+    [FormerlySerializedAs("gobjTextbox")] [SerializeField]
+    private GameObject _gobjTextbox;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }

@@ -10,7 +10,7 @@ public class GameSystem : MonoBehaviour
 
     [FormerlySerializedAs("objNowLoading")] public GameObject ObjNowLoading;
 
-    void Start()
+    private void Start()
     {
         //Advertisement.Initialize ("41f00082-510f-4b97-829f-89280c5074ad", true);
     }

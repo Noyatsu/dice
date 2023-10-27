@@ -8,13 +8,13 @@ public class PauseController : MonoBehaviour
     [FormerlySerializedAs("pauseUIInstance")] [SerializeField] private GameObject _pauseUIInstance;
     private bool _isPause = false;
 
-    void Start()
+    private void Start()
     {
         _pauseUIInstance.SetActive(_isPause);
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown("q"))
         {

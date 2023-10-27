@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class OnlineGameController : MonoBehaviour
 {
-    MainGameController _script;
+    private MainGameController _script;
     private PhotonView _objPhotonViewControl;
     private AudioSource _soundEnemy;
     [FormerlySerializedAs("enemyScore")] public int EnemyScore;
@@ -17,15 +17,15 @@ public class OnlineGameController : MonoBehaviour
     public int[,] Board = new int[7, 7]; //!< さいころのIDを格納
     public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
     [FormerlySerializedAs("dices")] public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
-    int _maxDiceId = 0; //!< 現在のさいころIDの最大値
-    int _damageDice = 0; //相手のスコアによって生成されたダイス数
+    private int _maxDiceId = 0; //!< 現在のさいころIDの最大値
+    private int _damageDice = 0; //相手のスコアによって生成されたダイス数
 
-    GameObject _dice, _diceBase, _aqui, _vanishingDice, _statusText, _screenText;
+    private GameObject _dice, _diceBase, _aqui, _vanishingDice, _statusText, _screenText;
     [FormerlySerializedAs("waitingPanel")] public GameObject WaitingPanel;
     [FormerlySerializedAs("myName")] public GameObject MyName;
     [FormerlySerializedAs("enemyName")] public GameObject EnemyName;
 
-    void Start()
+    private void Start()
     {
         WaitingPanel.SetActive(true);
 
@@ -413,7 +413,7 @@ public class OnlineGameController : MonoBehaviour
         }
     }
 
-    IEnumerator MoveDice(int id, Vector3 rotatePoint, Vector3 rotateAxis)
+    private IEnumerator MoveDice(int id, Vector3 rotatePoint, Vector3 rotateAxis)
     {
         GameObject dice = Dices[id];
         float diceAngle, sumAngle = 0f;

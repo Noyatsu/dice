@@ -7,13 +7,13 @@ using UnityEngine.UI;
 public class PuzzleGameController : MonoBehaviour
 {
     // 現在用意できている最後のステージ
-    int _maxStageIdx = 7; // (worldnum-1)*8 + (stageNum-1) で計算, 例えば2-3なら(2-1)*8 + (3-1) = 10
+    private int _maxStageIdx = 7; // (worldnum-1)*8 + (stageNum-1) で計算, 例えば2-3なら(2-1)*8 + (3-1) = 10
 
     /**
      * {指定ターン数, プレイヤーの初期xyz, サイコロの(x,z,A面の数字,B面の数字(0にするとランダム))xサイコロの数だけ書く}
      * 全てstring型
      */
-    string[,] _ttData = {
+    private string[,] _ttData = {
         // stage1
         {"1", "3,1.0,2", "3,2,2,1,2,3,4,1,3,3,4,2,4,3,4,5"},
         {"3", "4,1.0,2", "4,2,5,1,2,2,6,3,3,3,3,5"},
@@ -35,18 +35,24 @@ public class PuzzleGameController : MonoBehaviour
 
 
 
-    [FormerlySerializedAs("objBoard")] [SerializeField] GameObject _objBoard;
-    [FormerlySerializedAs("gobjStageText")] [SerializeField] GameObject _gobjStageText;
-    [FormerlySerializedAs("gobjRemainText")] [SerializeField] GameObject _gobjRemainText;
-    [FormerlySerializedAs("gobjYouWin")] [SerializeField] GameObject _gobjYouWin;
-    [FormerlySerializedAs("gobjYouLose")] [SerializeField] GameObject _gobjYouLose;
-    MainGameController _objMgController;
-    int _stageIdx, _ttsize, _remainTurnNum;
-    bool _winFlag = false, _loseFlag = false;
-    string _strStage = ""; //1-1みたいな
+    [FormerlySerializedAs("objBoard")] [SerializeField]
+    private GameObject _objBoard;
+    [FormerlySerializedAs("gobjStageText")] [SerializeField]
+    private GameObject _gobjStageText;
+    [FormerlySerializedAs("gobjRemainText")] [SerializeField]
+    private GameObject _gobjRemainText;
+    [FormerlySerializedAs("gobjYouWin")] [SerializeField]
+    private GameObject _gobjYouWin;
+    [FormerlySerializedAs("gobjYouLose")] [SerializeField]
+    private GameObject _gobjYouLose;
+
+    private MainGameController _objMgController;
+    private int _stageIdx, _ttsize, _remainTurnNum;
+    private bool _winFlag = false, _loseFlag = false;
+    private string _strStage = ""; //1-1みたいな
 
     // Use this for initialization
-    void Start()
+    private void Start()
     {
         _objMgController = _objBoard.GetComponent<MainGameController>();
 
@@ -130,7 +136,7 @@ public class PuzzleGameController : MonoBehaviour
     }
 
 
-    void ShowArraylog()
+    private void ShowArraylog()
     {
         string str = "";
         for (int i = 0; i < 7; i++)
@@ -184,7 +190,7 @@ public class PuzzleGameController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
     }

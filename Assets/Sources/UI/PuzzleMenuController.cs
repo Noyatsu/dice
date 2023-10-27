@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PuzzleMenuController : MonoBehaviour
 {
-    [SerializeField] int _worldNum;
+    [SerializeField] private int _worldNum;
     public static int WorldNum, StageNum;
 
     public static int GetStageIdx()
@@ -14,7 +14,7 @@ public class PuzzleMenuController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         WorldNum = _worldNum;
 
@@ -39,7 +39,7 @@ public class PuzzleMenuController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
     }

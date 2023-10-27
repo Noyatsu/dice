@@ -6,22 +6,22 @@ using UnityEngine.UI;
 
 
 public class StatusTextController : MonoBehaviour {
-    GameObject _board;
-    MainGameController _script;
+    private GameObject _board;
+    private MainGameController _script;
 
-    int _lastFlame = 0;
+    private int _lastFlame = 0;
     [FormerlySerializedAs("text")] public Text Text;
 
 
     // Use this for initialization
-    void Start () {
+    private void Start () {
         _board = GameObject.Find("Board");
         _script = _board.GetComponent<MainGameController>();
 
     }
 	
 	// Update is called once per frame
-	void Update () {
+    private void Update () {
         if (_lastFlame > 0)
         {
             _lastFlame--;

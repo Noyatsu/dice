@@ -20,25 +20,28 @@ public class MainGameController : MonoBehaviour
     public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
     public float[,] BoardY = new float[7, 7]; //!< さいころのY座標を格納
     [FormerlySerializedAs("dices")] public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
-    List<GameObject> _vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
-    double _timeElapsed = 0.0; //!< イベント用フレームカウント
-    int _maxDiceId = 0; //!< 現在のさいころIDの最大値
+    private List<GameObject> _vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
+    private double _timeElapsed = 0.0; //!< イベント用フレームカウント
+    private int _maxDiceId = 0; //!< 現在のさいころIDの最大値
     [FormerlySerializedAs("isRotate_dice")] public bool IsRotateDice = false; //!< さいころが回転中かどうか
     [FormerlySerializedAs("isRotate_charactor")] public bool IsRotateCharactor = false; //!< キャラクターが移動中かどうか
-    bool _isGameovered = false; //ゲームオーバーしたかどうか
+    private bool _isGameovered = false; //ゲームオーバーしたかどうか
     [FormerlySerializedAs("isStarting")] public bool IsStarting = true; // スタート処理が行われているか
 
     [FormerlySerializedAs("initDicesNum")] public int InitDicesNum = 20; //!< 初期のさいころの数
 
     [SerializeField] private GameObject _dicePrefab;
-    
-    GameObject _dice, _aqui, _vanishingDice, _statusText, _screenText, _gobjOgController;
-    [FormerlySerializedAs("gobjSendDice")] [SerializeField] GameObject _gobjSendDice;
-    [FormerlySerializedAs("gobjSendedDice")] [SerializeField] GameObject _gobjSendedDice;
-    AquiController _objAquiController;
-    DiceController _objDiceController;
-    StatusTextController _objStatusText;
-    ScreenTextController _objScreenText;
+
+    private GameObject _dice, _aqui, _vanishingDice, _statusText, _screenText, _gobjOgController;
+    [FormerlySerializedAs("gobjSendDice")] [SerializeField]
+    private GameObject _gobjSendDice;
+    [FormerlySerializedAs("gobjSendedDice")] [SerializeField]
+    private GameObject _gobjSendedDice;
+
+    private AquiController _objAquiController;
+    private DiceController _objDiceController;
+    private StatusTextController _objStatusText;
+    private ScreenTextController _objScreenText;
 
     [FormerlySerializedAs("_material")] public Material[] Material;
     [FormerlySerializedAs("_skyboxMaterial")] public Material[] SkyboxMaterial;
@@ -50,7 +53,7 @@ public class MainGameController : MonoBehaviour
     private Vector3 _clickstartPos;
 
     // Use this for initialization
-    void Awake()
+    private void Awake()
     {
         Score = 0;
 
@@ -113,7 +116,7 @@ public class MainGameController : MonoBehaviour
      * ぷに操作による移動方向を返す
      * @return 移動方向(int)
      */
-    int Puni()
+    private int Puni()
     {
         double threshold = 50.0f; //!< 移動判定の閾値
 
@@ -156,7 +159,7 @@ public class MainGameController : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // スタート処理
         if (IsStarting)
@@ -577,7 +580,7 @@ public class MainGameController : MonoBehaviour
         DiceGenerate(x, z, a, 0, type);
     }
 
-    void Delay()
+    private void Delay()
     {
         if (GameType == 0)
         {
@@ -592,7 +595,7 @@ public class MainGameController : MonoBehaviour
     }
 
     //サイコロ消える
-    void VanishDice(int x, int z)
+    private void VanishDice(int x, int z)
     {
         if (BoardNum[x, z] == 1) // ワンゾロバニッシュ発生
         {
@@ -743,7 +746,7 @@ public class MainGameController : MonoBehaviour
 
     }
 
-    int CountDice(int x, int z, int cnt)
+    private int CountDice(int x, int z, int cnt)
     {
         bool flag = false; //脱出用
 
@@ -865,7 +868,7 @@ public class MainGameController : MonoBehaviour
     }
 
     //スコア計算用
-    void AddScore(int num)
+    private void AddScore(int num)
     {
         int prevScoreDiv = Score / 50;
         Score += num;
@@ -890,7 +893,7 @@ public class MainGameController : MonoBehaviour
         }
     }
 
-   void ShowArraylog()
+    private void ShowArraylog()
     {
         string str = "";
         for (int i = 0; i < 7; i++)
