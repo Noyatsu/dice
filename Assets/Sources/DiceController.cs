@@ -607,7 +607,6 @@ public class DiceController : MonoBehaviour
         IsVanishing = false;
         _script.Board[X, Z] = -1;
         _script.BoardNum[X, Z] = -1;
-        Debug.Log($"Destroy: {gameObject.name}");
         Destroy(this.gameObject);
         if (_script.GameType == 1)
         {
