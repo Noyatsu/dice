@@ -1,50 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class MainGameController : MonoBehaviour
 {
-    [FormerlySerializedAs("gameType")] public int GameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
-    [FormerlySerializedAs("playerType")] public int PlayerType = 0; //!< 0なら部屋主、1ならそれ以外(オンライン用)
+    public int GameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
 
-    [FormerlySerializedAs("level")] public int Level = 1; //!< ゲームのレベル
+    public int Level = 1; //!< ゲームのレベル
     public static int Score = 0; //!< ゲームのスコア
-    [FormerlySerializedAs("sumScore")] public int SumScore = 0; //!< 対戦用合計スコア
-    [FormerlySerializedAs("stage")] public int Stage = 1; //!< ゲームのステージ(0-6)
+    public int SumScore = 0; //!< 対戦用合計スコア
+    public int Stage = 1; //!< ゲームのステージ(0-6)
     private int _stageBefore = 1; //!< 前フレームのゲームのステージ
 
-    [FormerlySerializedAs("boardSize")] public int BoardSize = 7; //!< 盤面のサイズ
+    public int BoardSize = 7; //!< 盤面のサイズ
     public int[,] Board = new int[7, 7]; //!< さいころのIDを格納
     public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
     public float[,] BoardY = new float[7, 7]; //!< さいころのY座標を格納
-    [FormerlySerializedAs("dices")] public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
+    public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
     private List<GameObject> _vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
     private double _timeElapsed = 0.0; //!< イベント用フレームカウント
     private int _maxDiceId = 0; //!< 現在のさいころIDの最大値
-    [FormerlySerializedAs("isRotate_dice")] public bool IsRotateDice = false; //!< さいころが回転中かどうか
-    [FormerlySerializedAs("isRotate_charactor")] public bool IsRotateCharactor = false; //!< キャラクターが移動中かどうか
+    public bool IsRotateDice = false; //!< さいころが回転中かどうか
+    public bool IsRotateCharactor = false; //!< キャラクターが移動中かどうか
     private bool _isGameovered = false; //ゲームオーバーしたかどうか
-    [FormerlySerializedAs("isStarting")] public bool IsStarting = true; // スタート処理が行われているか
+    public bool IsStarting = true; // スタート処理が行われているか
 
-    [FormerlySerializedAs("initDicesNum")] public int InitDicesNum = 20; //!< 初期のさいころの数
+    public int InitDicesNum = 20; //!< 初期のさいころの数
 
     [SerializeField] private GameObject _dicePrefab;
 
-    private GameObject _dice, _aqui, _vanishingDice, _statusText, _screenText, _gobjOgController;
-    [FormerlySerializedAs("gobjSendDice")] [SerializeField]
-    private GameObject _gobjSendDice;
-    [FormerlySerializedAs("gobjSendedDice")] [SerializeField]
-    private GameObject _gobjSendedDice;
+    private GameObject _dice, _aqui, _vanishingDice, _statusText, _screenText;
 
     private AquiController _objAquiController;
     private DiceController _objDiceController;
     private StatusTextController _objStatusText;
     private ScreenTextController _objScreenText;
 
-    [FormerlySerializedAs("_material")] public Material[] Material;
-    [FormerlySerializedAs("_skyboxMaterial")] public Material[] SkyboxMaterial;
+    public Material[] Material;
+    public Material[] SkyboxMaterial;
 
     private AudioSource _soundOne;
     private AudioSource _soundLevelup;
@@ -90,11 +82,7 @@ public class MainGameController : MonoBehaviour
         _objStatusText = _statusText.GetComponent<StatusTextController>();
         _screenText = GameObject.Find("ScreenText");
         _objScreenText = _screenText.GetComponent<ScreenTextController>();
-
-        _gobjOgController = GameObject.Find("OnlineGameController");
-
-
-
+        
         //BGM
         if (GameType != 2)
         {
@@ -492,12 +480,6 @@ public class MainGameController : MonoBehaviour
             mobjDiceController.IsGenerate = true;
      
             Dices.Add(objDice); //リストにオブジェクトを追加
-
-            if (type == 1)
-            {
-                ChangeColorOfGameObject(Dices[Board[x, z]], new Color(1.0f, 0.5f, 0.8f, 1.0f));
-                _gobjSendedDice.GetComponent<Animator>().SetTrigger("sendedDice");
-            }
             BoardNum[x, z] = a;
         }
 
@@ -567,11 +549,6 @@ public class MainGameController : MonoBehaviour
 
         // ダイスを生成
         DiceGenerate(x, z, a, 0, type);
-    }
-
-    private void Delay()
-    {
-
     }
 
     //サイコロ消える
