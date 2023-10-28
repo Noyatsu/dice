@@ -54,6 +54,7 @@ namespace SSTraveler.Game
 
         private void Awake()
         {
+            Application.targetFrameRate = 60;
             _gameProcessManager.ResetScore();
             _gameProcessManager.Stage.Value = 1;
             _gameProcessManager.Stage.Subscribe(_ => _soundLevelup.PlayOneShot(_soundLevelup.clip)).AddTo(this);
