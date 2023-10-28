@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7213311c55a740ab8c3472f588d2ae22, type: 3}
+  m_Name: StageSettings6
+  m_EditorClassIdentifier: 
+  BoardTexture: {fileID: 2800000, guid: bd102c15f9b16ee47a03e6fb9e4dbbd9, type: 3}
+  SkyboxMaterial: {fileID: 2100000, guid: 1b7ed9069abcf2342b5a340b80a80727, type: 2}
+  Color1: {r: 0.5411765, g: 0.6605506, b: 1, a: 1}
+  Color2: {r: 0.83773106, g: 0.63529414, b: 1, a: 1}

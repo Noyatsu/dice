@@ -2086,6 +2086,79 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1088123538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1088123541}
+  - component: {fileID: 1088123540}
+  - component: {fileID: 1088123539}
+  m_Layer: 0
+  m_Name: StageAppearanceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1088123539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088123538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 1088123540}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 0}
+  _bindType: 1
+--- !u!114 &1088123540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088123538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317a9a76983d4f66a63485019d94e916, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _settings:
+  - {fileID: 11400000, guid: 5692b95afc4f863488da20e3c633862f, type: 2}
+  - {fileID: 11400000, guid: ca3b30e797c7dec4cb5fa29c17e3f499, type: 2}
+  - {fileID: 11400000, guid: 19dc76cf14faf65448c5a70595495ccd, type: 2}
+  - {fileID: 11400000, guid: dfad11f0764386c449cf6edf7cd393b2, type: 2}
+  - {fileID: 11400000, guid: 8d0f834e60ecaa04f8d3086ddc429a57, type: 2}
+  - {fileID: 11400000, guid: 06599be1033c6c842af68476555d6a45, type: 2}
+  - {fileID: 11400000, guid: 5152201b772313b4eb8335392430342b, type: 2}
+  _boardRenderer: {fileID: 680280986}
+  _baseBoxRenderer: {fileID: 1465723307}
+--- !u!4 &1088123541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088123538}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1109800271
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2735,7 +2808,7 @@ GameObject:
   - component: {fileID: 1465723307}
   - component: {fileID: 1465723306}
   m_Layer: 0
-  m_Name: BaseCube
+  m_Name: BaseBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3740,3 +3813,4 @@ SceneRoots:
   - {fileID: 1465723309}
   - {fileID: 2029205448}
   - {fileID: 1914465690}
+  - {fileID: 1088123541}

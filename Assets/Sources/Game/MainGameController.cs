@@ -23,18 +23,13 @@ namespace SSTraveler.Game
         private bool _isGameovered = false; //ゲームオーバーしたかどうか
 
         public int InitDicesNum = 20; //!< 初期のさいころの数
-
-        [SerializeField] private GameObject _dicePrefab;
-
+        
         private GameObject _aqui, _vanishingDice, _statusText, _screenText;
 
         private AquiController _objAquiController;
         private DiceController _currentDice;
         private StatusTextController _objStatusText;
         private ScreenTextController _objScreenText;
-
-        public Material[] Material;
-        public Material[] SkyboxMaterial;
 
         private AudioSource _soundOne;
         private AudioSource _soundLevelup;
@@ -45,13 +40,16 @@ namespace SSTraveler.Game
         private IBoard _board;
         private IDiceContainer _diceContainer;
         private IGameProcessManager _gameProcessManager;
+        private IStageEffectManager _stageEffectManager;
         
         [Inject]
-        public void Construct(IBoard board, IDiceContainer diceContainer, IGameProcessManager gameProcessManager)
+        public void Construct(IBoard board, IDiceContainer diceContainer, IGameProcessManager gameProcessManager,
+            IStageEffectManager stageEffectManager)
         {
             _board = board;
             _diceContainer = diceContainer;
             _gameProcessManager = gameProcessManager;
+            _stageEffectManager = stageEffectManager;
         }
 
         private void Awake()
@@ -60,6 +58,7 @@ namespace SSTraveler.Game
             _gameProcessManager.Stage.Value = 1;
             _gameProcessManager.Stage.Subscribe(_ => _soundLevelup.PlayOneShot(_soundLevelup.clip)).AddTo(this);
             _gameProcessManager.Stage.Subscribe(ChangeStage).AddTo(this);
+            _stageEffectManager.SetStage(_gameProcessManager.Stage);
             
             _diceContainer.Init();
             _board.Reset();
@@ -268,14 +267,7 @@ namespace SSTraveler.Game
         // ステージを変える
         public void ChangeStage(int nextStage)
         {
-            this.GetComponent<Renderer>().sharedMaterial = Material[nextStage]; //盤面
-            if (_gameType == 1)
-            {
-                GameObject.Find("EnemyBoard").GetComponent<Renderer>().sharedMaterial = Material[nextStage];
-            }
-
-            RenderSettings.skybox = SkyboxMaterial[nextStage]; //背景
-            BgmManager.Instance.Play((nextStage + 1).ToString()); //BGM
+            _stageEffectManager.SetStage(nextStage);
             if (nextStage == 6)
             {
                 _objStatusText.SetText("Stage Changed! (ステージボーナスは無し!)");
