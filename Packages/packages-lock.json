@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.svermeulen.extenject": {
+      "version": "https://github.com/starikcetin/Extenject.git#9.1.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "8261b211687c43c40203c3e7dcdf9e0edfaf17a6"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
