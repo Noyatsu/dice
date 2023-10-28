@@ -301,197 +301,24 @@ namespace SSTraveler.Game
          */
         public DiceController DiceGenerate(int x, int z, int a, int b = 0, int type = 0)
         {
-            // 側面の決定用乱数
-            int i = Random.Range(1, 4);
-
-            //面によって回転角度を決定
-            int xi = 0, yi = 0, zi = 0, ra = 90;
-            switch (a)
-            {
-                case 1:
-                    if (b == 0)
-                    {
-                        int[] num1 = { 2, 3, 4, 5 };
-                        b = num1[i];
-                    }
-
-                    switch (b)
-                    {
-                        case 2:
-                            break;
-                        case 3:
-                            yi = ra;
-                            break;
-                        case 4:
-                            yi = ra * 3;
-                            break;
-                        case 5:
-                            yi = ra * 2;
-                            break;
-                    }
-
-                    break;
-
-                case 2:
-                    if (b == 0)
-                    {
-                        int[] num2 = { 1, 3, 4, 6 };
-                        b = num2[i];
-                    }
-
-                    switch (b)
-                    {
-                        case 1:
-                            xi = ra;
-                            yi = ra * 2;
-                            break;
-                        case 3:
-                            xi = ra;
-                            yi = ra;
-                            break;
-                        case 4:
-                            xi = ra;
-                            yi = ra * 3;
-                            break;
-                        case 6:
-                            xi = ra;
-                            break;
-                    }
-
-                    break;
-
-                case 3:
-                    if (b == 0)
-                    {
-                        int[] num3 = { 1, 2, 5, 6 };
-                        b = num3[i];
-                    }
-
-                    switch (b)
-                    {
-                        case 1:
-                            zi = ra;
-                            yi = ra * 3;
-                            break;
-                        case 2:
-                            zi = ra;
-                            break;
-                        case 5:
-                            zi = ra;
-                            yi = ra * 2;
-                            break;
-                        case 6:
-                            zi = ra;
-                            yi = ra;
-                            break;
-                    }
-
-                    break;
-                case 4:
-                    if (b == 0)
-                    {
-                        int[] num4 = { 1, 2, 5, 6 };
-                        b = num4[i];
-                    }
-
-                    switch (b)
-                    {
-                        case 1:
-                            zi = ra * 3;
-                            yi = ra * 1;
-                            break;
-                        case 2:
-                            zi = ra * 3;
-                            break;
-                        case 5:
-                            zi = ra * 3;
-                            yi = ra * 2;
-                            break;
-                        case 6:
-                            zi = ra * 3;
-                            yi = ra * 3;
-                            break;
-                    }
-
-                    break;
-
-                case 5:
-                    if (b == 0)
-                    {
-                        int[] num5 = { 1, 3, 4, 6 };
-                        b = num5[i];
-                    }
-
-                    switch (b)
-                    {
-                        case 1:
-                            xi = ra * 3;
-                            break;
-                        case 3:
-                            xi = ra * 3;
-                            yi = ra;
-                            break;
-                        case 4:
-                            xi = ra * 3;
-                            yi = ra * 3;
-                            break;
-                        case 6:
-                            xi = ra * 3;
-                            yi = ra * 2;
-                            break;
-                    }
-
-                    break;
-                case 6:
-                    if (b == 0)
-                    {
-                        int[] num6 = { 2, 3, 4, 5 };
-                        b = num6[i];
-                    }
-
-                    switch (b)
-                    {
-                        case 2:
-                            xi = ra * 2;
-                            yi = ra * 2;
-                            break;
-                        case 3:
-                            xi = ra * 2;
-                            yi = ra;
-                            break;
-                        case 4:
-                            xi = ra * 2;
-                            yi = ra * 3;
-                            break;
-                        case 5:
-                            xi = ra * 2;
-                            break;
-                    }
-
-                    break;
-            }
+            if (Board[x, z] != -1) return null;
 
             // その座標が空だったらさいころを追加
-            if (Board[x, z] == -1)
-            {
-                Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
-                DiceController dice = _diceContainer.GetNewInstance();
-                dice.transform.position = position;
-                dice.transform.rotation = Quaternion.Euler(xi, yi, zi);
-                dice.IsSelected = false;
-                dice.X = x;
-                dice.Z = z;
-                dice.SurfaceA = a;
-                dice.SurfaceB = b;
-                dice.IsGenerate = true;
+            Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
+            DiceController dice = _diceContainer.GetNewInstance();
+            dice.SetInitTransform(position, a, b);
+            dice.IsSelected = false;
+            dice.X = x;
+            dice.Z = z;
+            dice.SurfaceA = a;
+            dice.SurfaceB = b;
+            dice.IsGenerate = true;
 
-                Board[x, z] = dice.DiceId; //配列にIDを格納
-                BoardNum[x, z] = a;
+            Board[x, z] = dice.DiceId; //配列にIDを格納
+            BoardNum[x, z] = a;
 
-                return dice;
-            }
+            return dice;
 
-            return null;
         }
 
         public void RandomDiceGenerate(int type = 0)
