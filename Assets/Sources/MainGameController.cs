@@ -17,7 +17,7 @@ namespace SSTraveler.Game
         public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
         private List<GameObject> _vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
         private double _timeElapsed = 0.0; //!< イベント用フレームカウント
-        private int _maxDiceId = 0; //!< 現在のさいころIDの最大値
+        private int _maxDiceId = -1; //!< 現在のさいころIDの最大値, IDは連番で割り振られる
         public bool IsRotateDice = false; //!< さいころが回転中かどうか
         public bool IsRotateCharactor = false; //!< キャラクターが移動中かどうか
         private bool _isGameovered = false; //ゲームオーバーしたかどうか
@@ -27,10 +27,10 @@ namespace SSTraveler.Game
 
         [SerializeField] private GameObject _dicePrefab;
 
-        private GameObject _dice, _aqui, _vanishingDice, _statusText, _screenText;
+        private GameObject _aqui, _vanishingDice, _statusText, _screenText;
 
         private AquiController _objAquiController;
-        private DiceController _objDiceController;
+        private DiceController _currentDice;
         private StatusTextController _objStatusText;
         private ScreenTextController _objScreenText;
 
@@ -43,20 +43,24 @@ namespace SSTraveler.Game
 
         private Vector3 _clickstartPos;
         
+        private IDiceContainer _diceContainer;
         private IGameProcessManager _gameProcessManager;
         
         [Inject]
-        public void Construct(IGameProcessManager gameProcessManager)
+        public void Construct(IDiceContainer diceContainer, IGameProcessManager gameProcessManager)
         {
+            _diceContainer = diceContainer;
             _gameProcessManager = gameProcessManager;
         }
 
-        // Use this for initialization
         private void Awake()
         {
             _gameProcessManager.ResetScore();
+            _gameProcessManager.Stage.Value = 1;
             _gameProcessManager.Stage.Subscribe(_ => _soundLevelup.PlayOneShot(_soundLevelup.clip)).AddTo(this);
             _gameProcessManager.Stage.Subscribe(ChangeStage).AddTo(this);
+            
+            _diceContainer.Init();
 
             //配列の初期化
             for (int i = 0; i < Board.GetLength(0); i++)
@@ -69,14 +73,10 @@ namespace SSTraveler.Game
             }
 
             //初期用配列設定
-            Board[0, 0] = _maxDiceId;
-            BoardNum[0, 0] = 1;
-
-            _dice = GameObject.Find("Dice");
-            Dices.Add(_dice); //リストにオブジェクトを追加
+            _currentDice = DiceGenerate(0, 0, 1);
+            _currentDice.IsSelected = true;
             _aqui = GameObject.Find("Aqui");
             _objAquiController = _aqui.GetComponent<AquiController>();
-            _objDiceController = _dice.GetComponent<DiceController>();
 
             if (GameType == 3)
             {
@@ -84,7 +84,7 @@ namespace SSTraveler.Game
                 BoardNum[0, 0] = -1;
                 _maxDiceId = 0;
                 Dices.Clear();
-                Destroy(_dice);
+                _diceContainer.ReturnInstance(_currentDice);
             }
 
             _statusText = GameObject.Find("StatusText");
@@ -189,36 +189,36 @@ namespace SSTraveler.Game
             {
                 if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
                 {
-                    if (_dice && _objDiceController.SetTargetPosition(2))
+                    if (_currentDice && _currentDice.SetTargetPosition(2))
                     {
-                        VanishDice(_objDiceController.X, _objDiceController.Z);
+                        VanishDice(_currentDice.X, _currentDice.Z);
                     }
 
                     _objAquiController.SetTargetPosition(2);
                 }
                 else if (Input.GetKey(KeyCode.LeftArrow) || flick == 0)
                 {
-                    if (_dice && _objDiceController.SetTargetPosition(0))
+                    if (_currentDice && _currentDice.SetTargetPosition(0))
                     {
-                        VanishDice(_objDiceController.X, _objDiceController.Z);
+                        VanishDice(_currentDice.X, _currentDice.Z);
                     }
 
                     _objAquiController.SetTargetPosition(0);
                 }
                 else if (Input.GetKey(KeyCode.UpArrow) || flick == 1)
                 {
-                    if (_dice && _objDiceController.SetTargetPosition(1))
+                    if (_currentDice && _currentDice.SetTargetPosition(1))
                     {
-                        VanishDice(_objDiceController.X, _objDiceController.Z);
+                        VanishDice(_currentDice.X, _currentDice.Z);
                     }
 
                     _objAquiController.SetTargetPosition(1);
                 }
                 else if (Input.GetKey(KeyCode.DownArrow) || flick == 3)
                 {
-                    if (_dice && _objDiceController.SetTargetPosition(3))
+                    if (_currentDice && _currentDice.SetTargetPosition(3))
                     {
-                        VanishDice(_objDiceController.X, _objDiceController.Z);
+                        VanishDice(_currentDice.X, _currentDice.Z);
                     }
 
                     _objAquiController.SetTargetPosition(3);
@@ -228,13 +228,12 @@ namespace SSTraveler.Game
                     _gameProcessManager.AddScore(1000);
                 }
 
-                if (_objAquiController.X != _objDiceController.X || _objAquiController.Z != _objDiceController.Z)
+                if (_objAquiController.X != _currentDice.X || _objAquiController.Z != _currentDice.Z)
                 {
                     if (Board[_objAquiController.X, _objAquiController.Z] != -1) // 移動先にサイコロが存在するならば
                     {
-                        _dice = Dices[Board[_objAquiController.X, _objAquiController.Z]];
-                        _objDiceController = _dice.GetComponent<DiceController>();
-                        _objDiceController.IsSelected = true; //選択
+                        _currentDice = Dices[Board[_objAquiController.X, _objAquiController.Z]].GetComponent<DiceController>();
+                        _currentDice.IsSelected = true; //選択
                     }
                 }
             }
@@ -304,7 +303,7 @@ namespace SSTraveler.Game
          * @params z 配置するz座標
          * @params a 上にする面
          */
-        public void DiceGenerate(int x, int z, int a, int b = 0, int type = 0)
+        public DiceController DiceGenerate(int x, int z, int a, int b = 0, int type = 0)
         {
             // 側面の決定用乱数
             int i = Random.Range(1, 4);
@@ -482,20 +481,24 @@ namespace SSTraveler.Game
                 _maxDiceId++;
                 Board[x, z] = _maxDiceId;
                 Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
-                GameObject objDice = Instantiate(_dicePrefab, position, Quaternion.Euler(xi, yi, zi));
-                DiceController mobjDiceController = objDice.GetComponent<DiceController>();
-                mobjDiceController.IsSelected = false;
-                mobjDiceController.X = x;
-                mobjDiceController.Z = z;
-                mobjDiceController.SurfaceA = a;
-                mobjDiceController.SurfaceB = b;
-                mobjDiceController.DiceId = _maxDiceId;
-                mobjDiceController.IsGenerate = true;
+                DiceController dice = _diceContainer.GetInstance();
+                dice.transform.position = position;
+                dice.transform.rotation = Quaternion.Euler(xi, yi, zi);
+                dice.IsSelected = false;
+                dice.X = x;
+                dice.Z = z;
+                dice.SurfaceA = a;
+                dice.SurfaceB = b;
+                dice.DiceId = _maxDiceId;
+                dice.IsGenerate = true;
 
-                Dices.Add(objDice); //リストにオブジェクトを追加
+                Dices.Add(dice.gameObject); //リストにオブジェクトを追加
                 BoardNum[x, z] = a;
+
+                return dice;
             }
 
+            return null;
         }
 
         public void RandomDiceGenerate(int type = 0)
@@ -756,18 +759,12 @@ namespace SSTraveler.Game
 
         public void ResetGame()
         {
-            Destroy(_objDiceController);
-            Destroy(_dice);
+            _diceContainer.ReturnInstance(_currentDice);
 
             var clones = GameObject.FindGameObjectsWithTag("dice");
             foreach (var clone in clones)
             {
-                foreach (Transform n in clone.transform)
-                {
-                    GameObject.Destroy(n.gameObject);
-                }
-
-                Destroy(clone);
+                _diceContainer.ReturnInstance(clone.GetComponent<DiceController>());
                 Dices.Remove(clone);
             }
 

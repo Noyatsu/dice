@@ -7,9 +7,9 @@ namespace SSTraveler.Game
     /// </summary>
     public class GameProcessManager : IGameProcessManager
     {
-        public ReactiveProperty<int> Level { get; private set; } = new();
-        public ReactiveProperty<int> Score { get; private set; } = new();
-        public ReactiveProperty<int> Stage { get; private set; } = new();
+        public ReactiveProperty<int> Level { get; } = new();
+        public ReactiveProperty<int> Score { get; } = new();
+        public ReactiveProperty<int> Stage { get; } = new();
         
         public void AddScore(int score)
         {

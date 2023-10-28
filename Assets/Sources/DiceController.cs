@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Zenject;
 
 namespace SSTraveler.Game
 {
@@ -29,9 +29,32 @@ namespace SSTraveler.Game
 
         //音
         private AudioSource _soundRoll;
+        
+        private IDiceContainer _diceContainer;
+        
+        [Inject]
+        public void Construct(IDiceContainer diceContainer)
+        {
+            _diceContainer = diceContainer;
+        }
 
+        public void ResetDice()
+        {
+            _rotatePoint = Vector3.zero;
+            _rotateAxis = Vector3.zero;
+            _diceAngle = 0f;
+            IsSelected = true;
+            IsGenerate = true;
+            IsVanishing = false;
+            IsRotating = false;
+            X = 0;
+            Z = 0;
+            DiceId = 0;
+            SurfaceA = 1;
+            SurfaceB = 2;
+            ChangeColorOfGameObject(gameObject, new Color(0.7f, 0.7f, 0.7f, 1f));
+        }
 
-        // Use this for initialization
         private void Start()
         {
             _board = GameObject.Find("Board");
@@ -623,7 +646,7 @@ namespace SSTraveler.Game
             IsVanishing = false;
             _script.Board[X, Z] = -1;
             _script.BoardNum[X, Z] = -1;
-            Destroy(this.gameObject);
+            _diceContainer.ReturnInstance(this);
         }
 
         private void ChangeColorOfGameObject(GameObject targetObject, Color color)
