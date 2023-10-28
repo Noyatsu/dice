@@ -1,19 +1,15 @@
 ﻿using System.Collections.Generic;
 using SSTraveler.Ui;
+using SSTraveler.Utility.ReactiveProperty;
 using UnityEngine;
+using Zenject;
 
 namespace SSTraveler.Game
 {
     public class MainGameController : MonoBehaviour
     {
         public int GameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
-
-        public int Level = 1; //!< ゲームのレベル
-        public static int Score = 0; //!< ゲームのスコア
-        public int SumScore = 0; //!< 対戦用合計スコア
-        public int Stage = 1; //!< ゲームのステージ(0-6)
-        private int _stageBefore = 1; //!< 前フレームのゲームのステージ
-
+        
         public int BoardSize = 7; //!< 盤面のサイズ
         public int[,] Board = new int[7, 7]; //!< さいころのIDを格納
         public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
@@ -46,11 +42,21 @@ namespace SSTraveler.Game
         private AudioSource _soundVanish;
 
         private Vector3 _clickstartPos;
+        
+        private IGameProcessManager _gameProcessManager;
+        
+        [Inject]
+        public void Construct(IGameProcessManager gameProcessManager)
+        {
+            _gameProcessManager = gameProcessManager;
+        }
 
         // Use this for initialization
         private void Awake()
         {
-            Score = 0;
+            _gameProcessManager.ResetScore();
+            _gameProcessManager.Stage.Subscribe(_ => _soundLevelup.PlayOneShot(_soundLevelup.clip)).AddTo(this);
+            _gameProcessManager.Stage.Subscribe(ChangeStage).AddTo(this);
 
             //配列の初期化
             for (int i = 0; i < Board.GetLength(0); i++)
@@ -89,7 +95,7 @@ namespace SSTraveler.Game
             //BGM
             if (GameType != 2)
             {
-                BgmManager.Instance.Play((Stage + 1).ToString()); //BGM
+                BgmManager.Instance.Play((_gameProcessManager.Stage + 1).ToString()); //BGM
             }
             else
             {
@@ -219,7 +225,7 @@ namespace SSTraveler.Game
                 }
                 else if (Input.GetKey(KeyCode.K))
                 {
-                    Score += 1000;
+                    _gameProcessManager.AddScore(1000);
                 }
 
                 if (_objAquiController.X != _objDiceController.X || _objAquiController.Z != _objDiceController.Z)
@@ -241,17 +247,17 @@ namespace SSTraveler.Game
                 if (GameType == 0)
                 {
                     //ソロモードの速さ
-                    if (Level > 21)
+                    if (_gameProcessManager.Level.Value > 21)
                     {
                         //現状レベル21で速さは打ち止め
-                        if (_timeElapsed >= (1.2 + (0.3 * Mathf.Sin(Mathf.PI * Level / 4))))
+                        if (_timeElapsed >= (1.2 + (0.3 * Mathf.Sin(Mathf.PI * _gameProcessManager.Level.Value / 4))))
                         {
                             RandomDiceGenerate();
                             _timeElapsed = 0.0f;
                         }
                     }
                     // さいころ追加 スタートは3秒ごと、ゴールは1.25秒ごと
-                    else if (_timeElapsed >= (3f - (1 / 12f) * Level)) //1/12は(初速-最高速)/レベルで求められた
+                    else if (_timeElapsed >= (3f - (1 / 12f) * _gameProcessManager.Level.Value)) //1/12は(初速-最高速)/レベルで求められた
                     {
                         RandomDiceGenerate();
                         _timeElapsed = 0.0f;
@@ -628,16 +634,15 @@ namespace SSTraveler.Game
                         count++;
                     }
 
-                    AddScore(count);
+                    _gameProcessManager.AddScore(count);
                     _objStatusText.SetText("+" + count + " (ワンゾロバニッシュ!!)");
                     //ステージボーナス
-                    if (BoardNum[x, z] == Stage + 1)
+                    if (BoardNum[x, z] == _gameProcessManager.Stage + 1)
                     {
-                        AddScore(count);
+                        _gameProcessManager.AddScore(count);
                         _objScreenText.SetText("Stage Bonus! +" + count * 10);
                     }
 
-                    ComputeLevel(); //レベル計算
                     _soundOne.PlayOneShot(_soundOne.clip);
                 }
             }
@@ -664,17 +669,15 @@ namespace SSTraveler.Game
                         temp.IsVanishing = true;
                     }
 
-                    AddScore(count * BoardNum[x, z]);
+                    _gameProcessManager.AddScore(count * BoardNum[x, z]);
                     _objStatusText.SetText("+" + count * BoardNum[x, z]);
 
                     //ステージボーナス
-                    if (BoardNum[x, z] == Stage + 1)
+                    if (BoardNum[x, z] == _gameProcessManager.Stage + 1)
                     {
-                        AddScore(BoardNum[x, z] * count);
+                        _gameProcessManager.AddScore(BoardNum[x, z] * count);
                         _objScreenText.SetText("Stage Bonus! +" + BoardNum[x, z] * count);
                     }
-
-                    ComputeLevel(); //レベル計算
                     _soundVanish.PlayOneShot(_soundVanish.clip);
                 }
             }
@@ -779,82 +782,11 @@ namespace SSTraveler.Game
 
             Dices.Clear();
             _maxDiceId = -1;
-            Score = 0;
+            _gameProcessManager.ResetScore();
             IsRotateDice = false;
             IsRotateCharactor = false;
             _isGameovered = false;
         }
-
-        public void ComputeLevel()
-        {
-            int a = 150; //おおよそ1レベルの上昇に必要なスコア
-            int b = a; //前の必要経験値を記録する
-            int lv = 1;
-
-            //レベルの変化
-            while (true)
-            {
-                b = (int)((a * lv + b * 1.08) / 2);
-                if (Score > b && GameType == 0)
-                {
-                    lv++;
-                }
-                else if (SumScore > b && GameType == 1)
-                {
-                    lv++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (Level != lv)
-            {
-                _soundLevelup.PlayOneShot(_soundLevelup.clip);
-            }
-
-            // ステージの計算
-            Level = lv;
-            _stageBefore = Stage;
-            Stage = Level % 21 / 3 + 1;
-            if (Stage == 7)
-            {
-                Stage -= 7;
-            }
-
-            if (_stageBefore != Stage)
-            {
-                ChangeStage(Stage);
-            }
-
-        }
-
-        //スコア計算用
-        private void AddScore(int num)
-        {
-            int prevScoreDiv = Score / 50;
-            Score += num;
-            SumScore += num;
-        }
-
-        private void ShowArraylog()
-        {
-            string str = "";
-            for (int i = 0; i < 7; i++)
-            {
-                for (int j = 0; j < 7; j++)
-                {
-                    str += Board[i, j].ToString() + ",";
-                }
-
-                str += "\n";
-            }
-
-            Debug.Log(str);
-
-        }
-
     }
 
 }

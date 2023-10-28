@@ -21,7 +21,7 @@ namespace SSTraveler.Ui
 			// Board = GameObject.Find("Board");
 			// script = Board.GetComponent<MainGameController>();
 			// text.text = "スコア: " + script.score;
-			Text.text = "スコア: " + MainGameController.Score;
+			// Text.text = "スコア: " + MainGameController.Score;
 		}
 
 		// Update is called once per frame

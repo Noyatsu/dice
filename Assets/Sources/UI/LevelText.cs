@@ -1,32 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using SSTraveler.Game;
+﻿using SSTraveler.Game;
+using SSTraveler.Utility.ReactiveProperty;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
 namespace SSTraveler.Ui
 {
     public class LevelText : MonoBehaviour
     {
-        private GameObject _board;
-        private MainGameController _script;
+        private IGameProcessManager _gameProcessManager;
 
         [FormerlySerializedAs("text")] public Text Text;
 
-
-        // Use this for initialization
-        private void Start()
+        [Inject]
+        public void Construct(IGameProcessManager gameProcessManager)
         {
-            _board = GameObject.Find("Board");
-            _script = _board.GetComponent<MainGameController>();
-
+            _gameProcessManager = gameProcessManager;
         }
 
-        // Update is called once per frame
-        private void Update()
+        private void Start()
         {
-            Text.text = "Level " + _script.Level;
+            _gameProcessManager.Level.Subscribe(lv => Text.text = "Level " + lv).AddTo(this);
         }
     }
 }
