@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Zenject;
 
 namespace SSTraveler.Game
 {
@@ -58,6 +59,15 @@ namespace SSTraveler.Game
         private int _stageIdx, _ttsize, _remainTurnNum;
         private bool _winFlag = false, _loseFlag = false;
         private string _strStage = ""; //1-1みたいな
+        
+        private IDiceContainer _diceContainer;
+        
+        [Inject]
+        public void Construct(IDiceContainer diceContainer)
+        {
+            _diceContainer = diceContainer;
+        }
+        
 
         // Use this for initialization
         private void Start()
@@ -122,9 +132,9 @@ namespace SSTraveler.Game
                 _gobjRemainText.GetComponent<Text>().text = _remainTurnNum.ToString();
 
                 int flag = 0;
-                foreach (GameObject gobj in _objMgController.Dices)
+                foreach (var dice in _diceContainer.DicePool)
                 {
-                    if (!gobj.GetComponent<DiceController>().IsVanishing)
+                    if (dice.gameObject.activeSelf && !dice.IsVanishing)
                     {
                         flag++;
                     }

@@ -49,7 +49,6 @@ namespace SSTraveler.Game
             IsRotating = false;
             X = 0;
             Z = 0;
-            DiceId = 0;
             SurfaceA = 1;
             SurfaceB = 2;
             ChangeColorOfGameObject(gameObject, new Color(0.7f, 0.7f, 0.7f, 1f));
@@ -77,28 +76,23 @@ namespace SSTraveler.Game
             //もし上にキャラクターが乗っていたら
             if (IsSelected)
             {
-                if (IsVanishing == true)
+                if (IsVanishing || IsGenerate || !gameObject.activeSelf)
                 {
                     return false;
                 }
-
-                if (IsGenerate == true)
-                {
-                    return false;
-                }
-
+                
                 if (d == 2)
                 {
                     if (X + 1 < _script.Board.GetLength(0) && (_script.Board[X + 1, Z] == -1
-                                                               || (_script.Dices[_script.Board[X + 1, Z]].transform.position.y < 0f && _script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().IsVanishing == true)))
+                                                               || (_diceContainer[_script.Board[X + 1, Z]].transform.position.y < 0f && _diceContainer[_script.Board[X + 1, Z]].IsVanishing)))
                     {
                         // 隣のさいころが沈み途中の時
                         if (_script.Board[X + 1, Z] != -1)
                         {
-                            if (_script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().IsVanishing == true)
+                            if (_diceContainer[_script.Board[X + 1, Z]].IsVanishing)
                             {
                                 //そのさいころを削除
-                                _script.Dices[_script.Board[X + 1, Z]].GetComponent<DiceController>().DestroyDice();
+                                _diceContainer[_script.Board[X + 1, Z]].DestroyDice();
                             }
                         }
 
@@ -130,16 +124,16 @@ namespace SSTraveler.Game
                 if (d == 0)
                 {
                     if (0 <= X - 1 && (_script.Board[X - 1, Z] == -1
-                                       || (_script.Dices[_script.Board[X - 1, Z]].transform.position.y < 0f && _script.Dices[_script.Board[X - 1, Z]].GetComponent<DiceController>().IsVanishing == true)))
+                                       || (_diceContainer[_script.Board[X - 1, Z]].transform.position.y < 0f && _diceContainer[_script.Board[X - 1, Z]].IsVanishing)))
                     {
                         // 隣のさいころが沈み途中の時
                         if (_script.Board[X - 1, Z] != -1)
                         {
 
-                            if (_script.Dices[_script.Board[X - 1, Z]].GetComponent<DiceController>().IsVanishing == true)
+                            if (_diceContainer[_script.Board[X - 1, Z]].IsVanishing)
                             {
                                 //そのさいころを削除
-                                _script.Dices[_script.Board[X - 1, Z]].GetComponent<DiceController>().DestroyDice();
+                                _diceContainer[_script.Board[X - 1, Z]].DestroyDice();
                             }
                         }
 
@@ -168,16 +162,16 @@ namespace SSTraveler.Game
                 if (d == 1)
                 {
                     if (Z + 1 < _script.Board.GetLength(1) && (_script.Board[X, Z + 1] == -1
-                                                               || (_script.Dices[_script.Board[X, Z + 1]].transform.position.y < 0f && _script.Dices[_script.Board[X, Z + 1]].GetComponent<DiceController>().IsVanishing == true)))
+                                                               || (_diceContainer[_script.Board[X, Z + 1]].transform.position.y < 0f && _diceContainer[_script.Board[X, Z + 1]].IsVanishing)))
                     {
                         // 隣のさいころが沈み途中の時
                         if (_script.Board[X, Z + 1] != -1)
                         {
 
-                            if (_script.Dices[_script.Board[X, Z + 1]].GetComponent<DiceController>().IsVanishing == true)
+                            if (_diceContainer[_script.Board[X, Z + 1]].IsVanishing)
                             {
                                 //そのさいころを削除
-                                _script.Dices[_script.Board[X, Z + 1]].GetComponent<DiceController>().DestroyDice();
+                                _diceContainer[_script.Board[X, Z + 1]].DestroyDice();
                             }
                         }
 
@@ -206,16 +200,16 @@ namespace SSTraveler.Game
                 if (d == 3)
                 {
                     if (0 <= Z - 1 && (_script.Board[X, Z - 1] == -1
-                                       || (_script.Dices[_script.Board[X, Z - 1]].transform.position.y < 0f && _script.Dices[_script.Board[X, Z - 1]].GetComponent<DiceController>().IsVanishing == true)))
+                                       || (_diceContainer[_script.Board[X, Z - 1]].transform.position.y < 0f && _diceContainer[_script.Board[X, Z - 1]].IsVanishing)))
                     {
                         // 隣のさいころが沈み途中の時
                         if (_script.Board[X, Z - 1] != -1)
                         {
 
-                            if (_script.Dices[_script.Board[X, Z - 1]].GetComponent<DiceController>().IsVanishing == true)
+                            if (_diceContainer[_script.Board[X, Z - 1]].IsVanishing)
                             {
                                 //そのさいころを削除
-                                _script.Dices[_script.Board[X, Z - 1]].GetComponent<DiceController>().DestroyDice();
+                                _diceContainer[_script.Board[X, Z - 1]].DestroyDice();
                             }
                         }
 

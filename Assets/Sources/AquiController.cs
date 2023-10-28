@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Zenject;
 
 namespace SSTraveler.Game
 {
@@ -20,6 +21,14 @@ namespace SSTraveler.Game
         private int _direction = 2; //!< キャラクターの向き
         private Vector3 _target; //!< 入力受付時、移動後の位置を算出して保存
         private Vector3 _prevPos; //!< 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
+        
+        private IDiceContainer _diceContainer;
+        
+        [Inject]
+        public void Construct(IDiceContainer diceContainer)
+        {
+            _diceContainer = diceContainer;
+        }
 
         private void Start()
         {
@@ -50,12 +59,12 @@ namespace SSTraveler.Game
 
         private void LateUpdate()
         {
-            if (_script.Dices.Count != 0)
+            if (_diceContainer.ActiveDiceCount != 0)
             {
                 if (_script.Board[X, Z] != -1)
                 {
                     //現在位置の下にダイスがあるとき
-                    Y = _script.Dices[_script.Board[X, Z]].transform.position.y + 0.5f;
+                    Y = _diceContainer[_script.Board[X, Z]].transform.position.y + 0.5f;
                 }
                 else if (_script.IsRotateDice)
                 {
@@ -117,12 +126,12 @@ namespace SSTraveler.Game
             }
 
             //キャラクターのy座標の設定
-            if (_script.Dices.Count != 0)
+            if (_diceContainer.ActiveDiceCount != 0)
             {
                 if (_script.Board[X, Z] != -1)
                 {
                     //現在位置の下にダイスがあるとき
-                    Y = _script.Dices[_script.Board[X, Z]].transform.position.y + 0.5f;
+                    Y = _diceContainer[_script.Board[X, Z]].transform.position.y + 0.5f;
                 }
                 else if (_script.IsRotateDice)
                 {

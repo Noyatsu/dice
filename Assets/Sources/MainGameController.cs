@@ -14,10 +14,8 @@ namespace SSTraveler.Game
         public int[,] Board = new int[7, 7]; //!< さいころのIDを格納
         public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
         public float[,] BoardY = new float[7, 7]; //!< さいころのY座標を格納
-        public List<GameObject> Dices = new List<GameObject>(); //!< さいころオブジェクト格納用リスト
         private List<GameObject> _vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
         private double _timeElapsed = 0.0; //!< イベント用フレームカウント
-        private int _maxDiceId = -1; //!< 現在のさいころIDの最大値, IDは連番で割り振られる
         public bool IsRotateDice = false; //!< さいころが回転中かどうか
         public bool IsRotateCharactor = false; //!< キャラクターが移動中かどうか
         private bool _isGameovered = false; //ゲームオーバーしたかどうか
@@ -82,8 +80,6 @@ namespace SSTraveler.Game
             {
                 Board[0, 0] = -1;
                 BoardNum[0, 0] = -1;
-                _maxDiceId = 0;
-                Dices.Clear();
                 _diceContainer.ReturnInstance(_currentDice);
             }
 
@@ -232,7 +228,7 @@ namespace SSTraveler.Game
                 {
                     if (Board[_objAquiController.X, _objAquiController.Z] != -1) // 移動先にサイコロが存在するならば
                     {
-                        _currentDice = Dices[Board[_objAquiController.X, _objAquiController.Z]].GetComponent<DiceController>();
+                        _currentDice = _diceContainer.GetInstanceAt(Board[_objAquiController.X, _objAquiController.Z]);
                         _currentDice.IsSelected = true; //選択
                     }
                 }
@@ -478,10 +474,8 @@ namespace SSTraveler.Game
             // その座標が空だったらさいころを追加
             if (Board[x, z] == -1)
             {
-                _maxDiceId++;
-                Board[x, z] = _maxDiceId;
                 Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
-                DiceController dice = _diceContainer.GetInstance();
+                DiceController dice = _diceContainer.GetNewInstance();
                 dice.transform.position = position;
                 dice.transform.rotation = Quaternion.Euler(xi, yi, zi);
                 dice.IsSelected = false;
@@ -489,10 +483,9 @@ namespace SSTraveler.Game
                 dice.Z = z;
                 dice.SurfaceA = a;
                 dice.SurfaceB = b;
-                dice.DiceId = _maxDiceId;
                 dice.IsGenerate = true;
 
-                Dices.Add(dice.gameObject); //リストにオブジェクトを追加
+                Board[x, z] = dice.DiceId; //配列にIDを格納
                 BoardNum[x, z] = a;
 
                 return dice;
@@ -533,7 +526,7 @@ namespace SSTraveler.Game
                 {
                     for (int k = 0; k < BoardSize; k++)
                     {
-                        if (Dices[Board[j, k]].GetComponent<DiceController>().IsVanishing == true)
+                        if (_diceContainer.GetInstanceAt(Board[j, k]).IsVanishing)
                         {
                             gameoverFlag = false;
                             break;
@@ -576,7 +569,7 @@ namespace SSTraveler.Game
 
                 if (x < BoardSize - 1 && Board[x + 1, z] != -1)
                 {
-                    DiceController right = Dices[Board[x + 1, z]].GetComponent<DiceController>();
+                    DiceController right = _diceContainer.GetInstanceAt(Board[x + 1, z]);
                     if (right.IsVanishing == true && BoardNum[x + 1, z] != 1)
                     {
                         flag = true;
@@ -585,7 +578,7 @@ namespace SSTraveler.Game
 
                 if (x > 0 && Board[x - 1, z] != -1)
                 {
-                    DiceController left = Dices[Board[x - 1, z]].GetComponent<DiceController>();
+                    DiceController left = _diceContainer.GetInstanceAt(Board[x - 1, z]);
                     if (left.IsVanishing == true && BoardNum[x - 1, z] != 1)
                     {
                         flag = true;
@@ -594,7 +587,7 @@ namespace SSTraveler.Game
 
                 if (z < BoardSize - 1 && Board[x, z + 1] != -1)
                 {
-                    DiceController up = Dices[Board[x, z + 1]].GetComponent<DiceController>();
+                    DiceController up = _diceContainer.GetInstanceAt(Board[x, z + 1]);
                     if (up.IsVanishing == true && BoardNum[x, z + 1] != 1)
                     {
                         flag = true;
@@ -604,7 +597,7 @@ namespace SSTraveler.Game
 
                 if (z > 0 && Board[x, z - 1] != -1)
                 {
-                    DiceController down = Dices[Board[x, z - 1]].GetComponent<DiceController>();
+                    DiceController down = _diceContainer.GetInstanceAt(Board[x, z - 1]);
                     if (down.IsVanishing == true && BoardNum[x, z - 1] != 1)
                     {
                         flag = true;
@@ -623,13 +616,13 @@ namespace SSTraveler.Game
                         {
                             if (BoardNum[i, j] == 1)
                             {
-                                _vanishingDices.Add(Dices[Board[i, j]]); //削除リストへ追加
+                                _vanishingDices.Add(_diceContainer.GetInstanceAt(Board[i, j]).gameObject); //削除リストへ追加
                                 sum++; //数を記録
                             }
                         }
                     }
 
-                    _vanishingDices.Remove(Dices[Board[x, z]]); //足元のダイスのみ削除リストから減らす
+                    _vanishingDices.Remove(_diceContainer.GetInstanceAt(Board[x, z]).gameObject); //足元のダイスのみ削除リストから減らす
                     int count = 0;
                     while (count < sum - 1)
                     {
@@ -655,7 +648,7 @@ namespace SSTraveler.Game
 
                 //カウントしたダイスのリストを初期化
                 _vanishingDices.Clear();
-                _vanishingDices.Add(Dices[Board[x, z]]);
+                _vanishingDices.Add(_diceContainer.GetInstanceAt(Board[x, z]).gameObject);
 
                 //隣接する同じ目のダイス数の計算
                 count = CountDice(x, z, count);
@@ -663,7 +656,7 @@ namespace SSTraveler.Game
                 //消す処理
                 if (count >= BoardNum[x, z]) //隣接するさいころの数がそのさいころの目以上だったら
                 {
-                    _vanishingDices.Add(Dices[Board[x, z]]);
+                    _vanishingDices.Add(_diceContainer.GetInstanceAt(Board[x, z]).gameObject);
 
                     DiceController temp;
                     for (int j = 0; j < count; j++)
@@ -717,37 +710,37 @@ namespace SSTraveler.Game
             while (flag == false)
             {
                 flag = true;
-                if (x < BoardSize - 1 && BoardNum[x + 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x + 1, z]]))
+                if (x < BoardSize - 1 && BoardNum[x + 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer.GetInstanceAt(Board[x + 1, z]).gameObject))
                 {
                     cnt++;
-                    _vanishingDices.Add(Dices[Board[x + 1, z]]);
+                    _vanishingDices.Add(_diceContainer[Board[x + 1, z]].gameObject);
 
                     flag = false;
                     cnt = CountDice(x + 1, z, cnt);
                 }
 
-                if (x > 0 && BoardNum[x - 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x - 1, z]]))
+                if (x > 0 && BoardNum[x - 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer[Board[x - 1, z]].gameObject))
                 {
                     cnt++;
-                    _vanishingDices.Add(Dices[Board[x - 1, z]]);
+                    _vanishingDices.Add(_diceContainer[Board[x - 1, z]].gameObject);
 
                     flag = false;
                     cnt = CountDice(x - 1, z, cnt);
                 }
 
-                if (z < BoardSize - 1 && BoardNum[x, z + 1] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x, z + 1]]))
+                if (z < BoardSize - 1 && BoardNum[x, z + 1] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer[Board[x, z + 1]].gameObject))
                 {
                     cnt++;
-                    _vanishingDices.Add(Dices[Board[x, z + 1]]);
+                    _vanishingDices.Add(_diceContainer[Board[x, z + 1]].gameObject);
 
                     flag = false;
                     cnt = CountDice(x, z + 1, cnt);
                 }
 
-                if (z > 0 && BoardNum[x, z - 1] == BoardNum[x, z] && !_vanishingDices.Contains(Dices[Board[x, z - 1]]))
+                if (z > 0 && BoardNum[x, z - 1] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer[Board[x, z - 1]].gameObject))
                 {
                     cnt++;
-                    _vanishingDices.Add(Dices[Board[x, z - 1]]);
+                    _vanishingDices.Add(_diceContainer[Board[x, z - 1]].gameObject);
 
                     flag = false;
                     cnt = CountDice(x, z - 1, cnt);
@@ -765,7 +758,6 @@ namespace SSTraveler.Game
             foreach (var clone in clones)
             {
                 _diceContainer.ReturnInstance(clone.GetComponent<DiceController>());
-                Dices.Remove(clone);
             }
 
             for (int i = 0; i < BoardSize; i++)
@@ -777,8 +769,6 @@ namespace SSTraveler.Game
                 }
             }
 
-            Dices.Clear();
-            _maxDiceId = -1;
             _gameProcessManager.ResetScore();
             IsRotateDice = false;
             IsRotateCharactor = false;
