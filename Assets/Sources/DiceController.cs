@@ -7,9 +7,6 @@ namespace SSTraveler.Game
 {
     public class DiceController : MonoBehaviour
     {
-        private GameObject _board, _gobjOgController;
-        private MainGameController _script;
-
         private Vector3 _rotatePoint = Vector3.zero;
         private Vector3 _rotateAxis = Vector3.zero;
         private float _diceAngle = 0f;
@@ -31,11 +28,15 @@ namespace SSTraveler.Game
         private AudioSource _soundRoll;
         
         private IDiceContainer _diceContainer;
+        private IBoard _board;
+        private IMainGameController _mainGameController;
         
         [Inject]
-        public void Construct(IDiceContainer diceContainer)
+        public void Construct(IDiceContainer diceContainer, IBoard board, IMainGameController mainGameController)
         {
             _diceContainer = diceContainer;
+            _board = board;
+            _mainGameController = mainGameController;
         }
 
         public void ResetDice()
@@ -56,9 +57,6 @@ namespace SSTraveler.Game
 
         private void Start()
         {
-            _board = GameObject.Find("Board");
-            _script = _board.GetComponent<MainGameController>();
-            _gobjOgController = GameObject.Find("OnlineGameController");
             _diceSizeHalf = transform.localScale.x / 2f;
 
             _soundRoll = GetComponent<AudioSource>();
@@ -76,7 +74,7 @@ namespace SSTraveler.Game
              // 側面の決定用乱数
             int i = Random.Range(1, 4);
 
-            //面によって回転角度を決定
+            // 面によって回転角度を決定
             int xi = 0, yi = 0, zi = 0, ra = 90;
             switch (a)
             {
@@ -243,13 +241,15 @@ namespace SSTraveler.Game
                     break;
             }
 
+            SurfaceA = a;
+            SurfaceB = b;
             transform.position = worldPos;
             transform.rotation = Quaternion.Euler(xi, yi, zi);
         }
-
+        
         public bool SetTargetPosition(int d)
         {
-            //もし上にキャラクターが乗っていたら
+            // もし上にキャラクターが乗っていたら
             if (IsSelected)
             {
                 if (IsVanishing || IsGenerate || !gameObject.activeSelf)
@@ -259,58 +259,45 @@ namespace SSTraveler.Game
                 
                 if (d == 2)
                 {
-                    if (X + 1 < _script.Board.GetLength(0) && (_script.Board[X + 1, Z] == -1
-                                                               || (_diceContainer[_script.Board[X + 1, Z]].transform.position.y < 0f && _diceContainer[_script.Board[X + 1, Z]].IsVanishing)))
+                    if (X + 1 < _board.Size && (_board[X + 1, Z].IsEmpty || (_board[X + 1, Z].Dice.transform.position.y < 0f && _board[X + 1, Z].Dice.IsVanishing)))
                     {
-                        // 隣のさいころが沈み途中の時
-                        if (_script.Board[X + 1, Z] != -1)
+                        // 隣のさいころが沈み途中で踏みつぶせるとき
+                        if (_board[X + 1, Z].IsExist && _board[X + 1, Z].Dice.IsVanishing)
                         {
-                            if (_diceContainer[_script.Board[X + 1, Z]].IsVanishing)
-                            {
-                                //そのさいころを削除
-                                _diceContainer[_script.Board[X + 1, Z]].DestroyDice();
-                            }
+                            _board[X + 1, Z].Dice.DestroyDice();
                         }
 
                         X += 1; //インクリメント
 
-                        //さいころの面を計算
+                        // さいころの面を計算
                         int result = ComputeNextDice(SurfaceA, SurfaceB, "right");
                         SurfaceA = result / 10;
                         SurfaceB = result - SurfaceA * 10;
 
-                        //新たなる位置に代入
-                        _script.Board[X, Z] = DiceId;
-                        _script.BoardNum[X, Z] = SurfaceA;
+                        // 新たなる位置に代入
+                        _board.SetDice(X, Z, this);
 
                         _rotatePoint = transform.position + new Vector3(_diceSizeHalf, -_diceSizeHalf, 0f);
                         _rotateAxis = new Vector3(0, 0, -1);
                         StartCoroutine(MoveDice());
-
-
-                        //過去の位置に-1を代入
-                        _script.Board[X - 1, Z] = -1;
-                        _script.BoardNum[X - 1, Z] = -1;
+                        
+                        //過去の位置を空に
+                        _board.SetDice(X - 1, Z, null);
                         _soundRoll.PlayOneShot(_soundRoll.clip);
-
+                        
                         return true;
                     }
                 }
 
                 if (d == 0)
                 {
-                    if (0 <= X - 1 && (_script.Board[X - 1, Z] == -1
-                                       || (_diceContainer[_script.Board[X - 1, Z]].transform.position.y < 0f && _diceContainer[_script.Board[X - 1, Z]].IsVanishing)))
+                    if (0 <= X - 1 && (_board[X - 1, Z].IsEmpty || (_board[X - 1, Z].Dice.transform.position.y < 0f && _board[X - 1, Z].Dice.IsVanishing)))
                     {
                         // 隣のさいころが沈み途中の時
-                        if (_script.Board[X - 1, Z] != -1)
+                        if (_board[X - 1, Z].IsExist && _board[X - 1, Z].Dice.IsVanishing)
                         {
-
-                            if (_diceContainer[_script.Board[X - 1, Z]].IsVanishing)
-                            {
-                                //そのさいころを削除
-                                _diceContainer[_script.Board[X - 1, Z]].DestroyDice();
-                            }
+                            // そのさいころを削除
+                            _board[X - 1, Z].Dice.DestroyDice();
                         }
 
                         X -= 1;
@@ -320,14 +307,12 @@ namespace SSTraveler.Game
                         SurfaceA = result / 10;
                         SurfaceB = result - SurfaceA * 10;
 
-                        _script.Board[X, Z] = DiceId;
-                        _script.BoardNum[X, Z] = SurfaceA;
+                        _board.SetDice(X, Z, this);
                         _rotatePoint = transform.position + new Vector3(-_diceSizeHalf, -_diceSizeHalf, 0f);
                         _rotateAxis = new Vector3(0, 0, 1);
                         StartCoroutine(MoveDice());
 
-                        _script.Board[X + 1, Z] = -1;
-                        _script.BoardNum[X + 1, Z] = -1;
+                        _board.SetDice(X + 1, Z, null);
                         _soundRoll.PlayOneShot(_soundRoll.clip);
 
                         return true;
@@ -337,35 +322,27 @@ namespace SSTraveler.Game
 
                 if (d == 1)
                 {
-                    if (Z + 1 < _script.Board.GetLength(1) && (_script.Board[X, Z + 1] == -1
-                                                               || (_diceContainer[_script.Board[X, Z + 1]].transform.position.y < 0f && _diceContainer[_script.Board[X, Z + 1]].IsVanishing)))
+                    if (Z + 1 < _board.Size && (_board[X, Z + 1].IsEmpty || (_board[X, Z + 1].Dice.transform.position.y < 0f && _board[X, Z + 1].Dice.IsVanishing)))
                     {
                         // 隣のさいころが沈み途中の時
-                        if (_script.Board[X, Z + 1] != -1)
+                        if (_board[X, Z + 1].IsExist && _board[X, Z + 1].Dice.IsVanishing)
                         {
-
-                            if (_diceContainer[_script.Board[X, Z + 1]].IsVanishing)
-                            {
-                                //そのさいころを削除
-                                _diceContainer[_script.Board[X, Z + 1]].DestroyDice();
-                            }
+                            _board[X, Z + 1].Dice.DestroyDice();
                         }
-
+                        
                         Z += 1;
 
-                        //さいころの面を計算
+                        // さいころの面を計算
                         int result = ComputeNextDice(SurfaceA, SurfaceB, "up");
                         SurfaceA = result / 10;
                         SurfaceB = result - SurfaceA * 10;
 
-                        _script.Board[X, Z] = DiceId;
-                        _script.BoardNum[X, Z] = SurfaceA;
+                        _board.SetDice(X, Z, this);
                         _rotatePoint = transform.position + new Vector3(0f, -_diceSizeHalf, _diceSizeHalf);
                         _rotateAxis = new Vector3(1, 0, 0);
                         StartCoroutine(MoveDice());
 
-                        _script.Board[X, Z - 1] = -1;
-                        _script.BoardNum[X, Z - 1] = -1;
+                        _board.SetDice(X, Z - 1, null);
                         _soundRoll.PlayOneShot(_soundRoll.clip);
 
                         return true;
@@ -375,18 +352,12 @@ namespace SSTraveler.Game
 
                 if (d == 3)
                 {
-                    if (0 <= Z - 1 && (_script.Board[X, Z - 1] == -1
-                                       || (_diceContainer[_script.Board[X, Z - 1]].transform.position.y < 0f && _diceContainer[_script.Board[X, Z - 1]].IsVanishing)))
+                    if (0 <= Z - 1 && (_board[X, Z - 1].IsEmpty || (_board[X, Z - 1].Dice.transform.position.y < 0f && _board[X, Z - 1].Dice.IsVanishing)))
                     {
                         // 隣のさいころが沈み途中の時
-                        if (_script.Board[X, Z - 1] != -1)
+                        if (_board[X, Z - 1].IsExist && _board[X, Z - 1].Dice.IsVanishing)
                         {
-
-                            if (_diceContainer[_script.Board[X, Z - 1]].IsVanishing)
-                            {
-                                //そのさいころを削除
-                                _diceContainer[_script.Board[X, Z - 1]].DestroyDice();
-                            }
+                            _board[X, Z - 1].Dice.DestroyDice();
                         }
 
                         Z -= 1;
@@ -396,14 +367,12 @@ namespace SSTraveler.Game
                         SurfaceA = result / 10;
                         SurfaceB = result - SurfaceA * 10;
 
-                        _script.Board[X, Z] = DiceId;
-                        _script.BoardNum[X, Z] = SurfaceA;
+                        _board.SetDice(X, Z, this);
                         _rotatePoint = transform.position + new Vector3(0f, -_diceSizeHalf, -_diceSizeHalf);
                         _rotateAxis = new Vector3(-1, 0, 0);
                         StartCoroutine(MoveDice());
 
-                        _script.Board[X, Z + 1] = -1;
-                        _script.BoardNum[X, Z + 1] = -1;
+                        _board.SetDice(X, Z + 1, null);
                         _soundRoll.PlayOneShot(_soundRoll.clip);
 
                         return true;
@@ -418,7 +387,7 @@ namespace SSTraveler.Game
 
         private IEnumerator MoveDice()
         {
-            _script.IsRotateDice = true;
+            _mainGameController.IsRotateDice = true;
 
             float sumAngle = 0f;
             while (sumAngle < 90f)
@@ -436,7 +405,7 @@ namespace SSTraveler.Game
                 yield return null;
             }
 
-            _script.IsRotateDice = false;
+            _mainGameController.IsRotateDice = false;
 
             yield break;
         }
@@ -814,8 +783,7 @@ namespace SSTraveler.Game
         public void DestroyDice()
         {
             IsVanishing = false;
-            _script.Board[X, Z] = -1;
-            _script.BoardNum[X, Z] = -1;
+            _board.SetDice(X, Z, null);
             _diceContainer.ReturnInstance(this);
         }
 

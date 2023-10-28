@@ -1,25 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SSTraveler.Ui;
 using SSTraveler.Utility.ReactiveProperty;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace SSTraveler.Game
 {
-    public class MainGameController : MonoBehaviour
+    public class MainGameController : MonoBehaviour, IMainGameController
     {
-        public int GameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
+        public int GameType => _gameType;
+        public bool IsRotateDice { get; set; }
+        public bool IsRotateCharacter { get; set; }
+        public bool IsStarting { get; set; } = true;
         
-        public int BoardSize = 7; //!< 盤面のサイズ
-        public int[,] Board = new int[7, 7]; //!< さいころのIDを格納
-        public int[,] BoardNum = new int[7, 7]; //!< さいころの面を格納
-        public float[,] BoardY = new float[7, 7]; //!< さいころのY座標を格納
-        private List<GameObject> _vanishingDices = new List<GameObject>(); //!<消えるサイコロオブジェクト格納用リスト
+        [SerializeField]
+        [FormerlySerializedAs("GameType")] private int _gameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
+
+        private List<DiceController> _vanishingDices = new(); //!<消えるサイコロオブジェクト格納用リスト
         private double _timeElapsed = 0.0; //!< イベント用フレームカウント
-        public bool IsRotateDice = false; //!< さいころが回転中かどうか
-        public bool IsRotateCharactor = false; //!< キャラクターが移動中かどうか
         private bool _isGameovered = false; //ゲームオーバーしたかどうか
-        public bool IsStarting = true; // スタート処理が行われているか
 
         public int InitDicesNum = 20; //!< 初期のさいころの数
 
@@ -41,12 +42,14 @@ namespace SSTraveler.Game
 
         private Vector3 _clickstartPos;
         
+        private IBoard _board;
         private IDiceContainer _diceContainer;
         private IGameProcessManager _gameProcessManager;
         
         [Inject]
-        public void Construct(IDiceContainer diceContainer, IGameProcessManager gameProcessManager)
+        public void Construct(IBoard board, IDiceContainer diceContainer, IGameProcessManager gameProcessManager)
         {
+            _board = board;
             _diceContainer = diceContainer;
             _gameProcessManager = gameProcessManager;
         }
@@ -59,27 +62,17 @@ namespace SSTraveler.Game
             _gameProcessManager.Stage.Subscribe(ChangeStage).AddTo(this);
             
             _diceContainer.Init();
+            _board.Reset();
 
-            //配列の初期化
-            for (int i = 0; i < Board.GetLength(0); i++)
-            {
-                for (int j = 0; j < Board.GetLength(1); j++)
-                {
-                    Board[i, j] = -1;
-                    BoardNum[i, j] = -1;
-                }
-            }
-
-            //初期用配列設定
-            _currentDice = DiceGenerate(0, 0, 1);
+            // 初期用配列設定
+            _currentDice = DiceGenerate(0, 0, 3);
             _currentDice.IsSelected = true;
             _aqui = GameObject.Find("Aqui");
             _objAquiController = _aqui.GetComponent<AquiController>();
 
-            if (GameType == 3)
+            if (_gameType == 3)
             {
-                Board[0, 0] = -1;
-                BoardNum[0, 0] = -1;
+                _board.SetDice(0, 0, null);
                 _diceContainer.ReturnInstance(_currentDice);
             }
 
@@ -88,8 +81,8 @@ namespace SSTraveler.Game
             _screenText = GameObject.Find("ScreenText");
             _objScreenText = _screenText.GetComponent<ScreenTextController>();
 
-            //BGM
-            if (GameType != 2)
+            // BGM
+            if (_gameType != 2)
             {
                 BgmManager.Instance.Play((_gameProcessManager.Stage + 1).ToString()); //BGM
             }
@@ -158,7 +151,7 @@ namespace SSTraveler.Game
             // スタート処理
             if (IsStarting)
             {
-                if (GameType < 2)
+                if (_gameType < 2)
                 {
                     //さいころをいくつか追加
                     for (int i = 0; i < InitDicesNum; i++)
@@ -169,19 +162,17 @@ namespace SSTraveler.Game
 
                 IsStarting = false;
 
-                if (GameType == 1)
+                if (_gameType == 1)
                 {
                     Time.timeScale = 0f;
                 }
 
             }
-
-
-
+            
             int flick = Puni(); //ぷに検知
 
             // キー入力一括制御
-            if (IsRotateDice == false && IsRotateCharactor == false && _isGameovered == false)
+            if (IsRotateDice == false && IsRotateCharacter == false && _isGameovered == false)
             {
                 if (Input.GetKey(KeyCode.RightArrow) || flick == 2)
                 {
@@ -226,20 +217,22 @@ namespace SSTraveler.Game
 
                 if (_objAquiController.X != _currentDice.X || _objAquiController.Z != _currentDice.Z)
                 {
-                    if (Board[_objAquiController.X, _objAquiController.Z] != -1) // 移動先にサイコロが存在するならば
+                    if (!_board.GetCell(_objAquiController.X, _objAquiController.Z).IsEmpty) // 移動先にサイコロが存在するならば
                     {
-                        _currentDice = _diceContainer.GetInstanceAt(Board[_objAquiController.X, _objAquiController.Z]);
+                        _currentDice = _board[_objAquiController.X, _objAquiController.Z].Dice;
                         _currentDice.IsSelected = true; //選択
                     }
                 }
             }
 
 
+            
             _timeElapsed += Time.deltaTime;
 
-            if (GameType != 2)
+            if (_isGameovered) return;
+            if (_gameType != 2)
             {
-                if (GameType == 0)
+                if (_gameType == 0)
                 {
                     //ソロモードの速さ
                     if (_gameProcessManager.Level.Value > 21)
@@ -276,7 +269,7 @@ namespace SSTraveler.Game
         public void ChangeStage(int nextStage)
         {
             this.GetComponent<Renderer>().sharedMaterial = Material[nextStage]; //盤面
-            if (GameType == 1)
+            if (_gameType == 1)
             {
                 GameObject.Find("EnemyBoard").GetComponent<Renderer>().sharedMaterial = Material[nextStage];
             }
@@ -301,7 +294,7 @@ namespace SSTraveler.Game
          */
         public DiceController DiceGenerate(int x, int z, int a, int b = 0, int type = 0)
         {
-            if (Board[x, z] != -1) return null;
+            if (_board[x, z].IsExist) return null;
 
             // その座標が空だったらさいころを追加
             Vector3 position = new Vector3(-4.5f + (float)x, -0.5f, -4.5f + (float)z); //位置
@@ -310,122 +303,114 @@ namespace SSTraveler.Game
             dice.IsSelected = false;
             dice.X = x;
             dice.Z = z;
-            dice.SurfaceA = a;
-            dice.SurfaceB = b;
             dice.IsGenerate = true;
-
-            Board[x, z] = dice.DiceId; //配列にIDを格納
-            BoardNum[x, z] = a;
+            _board.SetDice(x, z, dice);
 
             return dice;
 
         }
 
-        public void RandomDiceGenerate(int type = 0)
+        public void RandomDiceGenerate()
         {
             // 配置する座標を決定
-            int count = 0;
-            int[,] chusen = new int[BoardSize * BoardSize, 2];
-            for (int j = 0; j < BoardSize; j++)
+            List<Vector2Int> candidates = new(_board.MaxCellNum);
+            for (int j = 0; j < _board.Size; j++)
             {
-                for (int k = 0; k < BoardSize; k++)
+                for (int k = 0; k < _board.Size; k++)
                 {
-                    if (Board[j, k] == -1)
+                    if (_board[j, k].IsEmpty)
                     {
-                        chusen[count, 0] = j;
-                        chusen[count, 1] = k;
-                        count++; //空白の座標をchusenに保存
+                        candidates.Add(new Vector2Int(j, k));
                     }
                 }
             }
 
-            if (GameType == 3 && count == 49)
+            if (_gameType == 3 && candidates.Count == 49)
             {
                 GameObject.Find("PuzzleGameController").GetComponent<PuzzleGameController>().YouWin();
             }
 
-            if (count == 0 && _isGameovered == false)
+            // 全部埋まってた場合
+            if (candidates.Count == 0 && _isGameovered == false)
             {
-                //全てのさいころがisVanishingかチェック
-                bool gameoverFlag = true;
+                // 全てのさいころがisVanishingかチェック
+                bool gameOverFlag = true;
 
-                for (int j = 0; j < BoardSize; j++)
+                for (int j = 0; j < _board.Size; j++)
                 {
-                    for (int k = 0; k < BoardSize; k++)
+                    for (int k = 0; k < _board.Size; k++)
                     {
-                        if (_diceContainer.GetInstanceAt(Board[j, k]).IsVanishing)
+                        if (_board[j, k].Dice.IsVanishing)
                         {
-                            gameoverFlag = false;
+                            gameOverFlag = false;
                             break;
                         }
                     }
                 }
 
                 //ゲームオーバーの時
-                if (gameoverFlag == true && _isGameovered == false)
+                if (gameOverFlag && _isGameovered == false)
                 {
                     _isGameovered = true;
                     BgmManager.Instance.Stop();
                     _objScreenText.SetText("Game Over!");
                     _objAquiController.DeathMotion();
-
-                    DontDestroyOnLoad(this);
+                    return;
                 }
 
                 return;
-            } //全部埋まってた場合
+            }
 
-            int choose = Random.Range(0, count); //配置する場所をランダムに決定
-            int x = chusen[choose, 0];
-            int z = chusen[choose, 1];
-
+            // 配置する場所をランダムに決定
+            var newPos = candidates[Random.Range(0, candidates.Count)];
 
             // 配置する面を決定
-            int a = Random.Range(1, 6);
+            int top = Random.Range(1, 6);
 
             // ダイスを生成
-            DiceGenerate(x, z, a, 0, type);
+            DiceGenerate(newPos.x, newPos.y, top);
         }
 
-        //サイコロ消える
+        // サイコロ消える
         private void VanishDice(int x, int z)
         {
-            if (BoardNum[x, z] == 1) // ワンゾロバニッシュ発生
+            // ワンゾロバニッシュ発生
+            if (_board[x, z].DiceNum == 1)
             {
                 bool flag = false;
 
-                if (x < BoardSize - 1 && Board[x + 1, z] != -1)
+                if (x < _board.Size - 1 && _board[x + 1, z].IsExist)
                 {
-                    DiceController right = _diceContainer.GetInstanceAt(Board[x + 1, z]);
-                    if (right.IsVanishing == true && BoardNum[x + 1, z] != 1)
+                    DiceController right = _board[x + 1, z].Dice;
+                    if (right.IsVanishing  && right.SurfaceA != 1)
                     {
                         flag = true;
                     }
                 }
 
-                if (x > 0 && Board[x - 1, z] != -1)
+                if (x > 0 && _board[x - 1, z].IsExist)
                 {
-                    DiceController left = _diceContainer.GetInstanceAt(Board[x - 1, z]);
-                    if (left.IsVanishing == true && BoardNum[x - 1, z] != 1)
+                    DiceController left = _board[x - 1, z].Dice;
+                    if (left.IsVanishing && left.SurfaceA != 1)
                     {
                         flag = true;
                     }
                 }
 
-                if (z < BoardSize - 1 && Board[x, z + 1] != -1)
+                if (z < _board.Size - 1 && _board[x, z + 1].IsExist)
                 {
-                    DiceController up = _diceContainer.GetInstanceAt(Board[x, z + 1]);
-                    if (up.IsVanishing == true && BoardNum[x, z + 1] != 1)
+                    DiceController up = _board[x, z + 1].Dice;
+                    if (up.IsVanishing && up.SurfaceA != 1)
                     {
                         flag = true;
                     }
                 }
 
 
-                if (z > 0 && Board[x, z - 1] != -1)
+                if (z > 0 && _board[x, z - 1].IsExist)
                 {
-                    DiceController down = _diceContainer.GetInstanceAt(Board[x, z - 1]);
-                    if (down.IsVanishing == true && BoardNum[x, z - 1] != 1)
+                    DiceController down = _board[x, z - 1].Dice;
+                    if (down.IsVanishing && down.SurfaceA != 1)
                     {
                         flag = true;
                     }
@@ -433,36 +418,25 @@ namespace SSTraveler.Game
 
                 if (flag)
                 {
+                    // 1のダイスを探す (足元のダイスは除く)
+                    _vanishingDices = _board.Cells.Where(c => c.DiceNum == 1).Select(c => c.Dice).ToList();
+                    _vanishingDices.Remove(_board[x, z].Dice); // 足元のダイスのみ削除リストから減らす
+                    int count = _vanishingDices.Count;
+                    if (count <= 0) return;
+                    
                     Debug.Log("ワンゾロバニッシュ!!");
-                    int sum = 0;
-                    _vanishingDices.Clear(); //カウントしたダイスのリストを初期化
-                    for (int i = 0; i < BoardSize; i++)
+                    foreach (var dice in _vanishingDices)
                     {
-                        //1のダイスを検索
-                        for (int j = 0; j < BoardSize; j++)
-                        {
-                            if (BoardNum[i, j] == 1)
-                            {
-                                _vanishingDices.Add(_diceContainer.GetInstanceAt(Board[i, j]).gameObject); //削除リストへ追加
-                                sum++; //数を記録
-                            }
-                        }
-                    }
-
-                    _vanishingDices.Remove(_diceContainer.GetInstanceAt(Board[x, z]).gameObject); //足元のダイスのみ削除リストから減らす
-                    int count = 0;
-                    while (count < sum - 1)
-                    {
-                        _vanishingDices[count].GetComponent<DiceController>().IsVanishing = true;
-                        count++;
+                        dice.IsVanishing = true;
                     }
 
                     _gameProcessManager.AddScore(count);
                     _objStatusText.SetText("+" + count + " (ワンゾロバニッシュ!!)");
-                    //ステージボーナス
-                    if (BoardNum[x, z] == _gameProcessManager.Stage + 1)
+                        
+                    // ステージボーナス
+                    if (_board[x, z].DiceNum == _gameProcessManager.Stage + 1)
                     {
-                        _gameProcessManager.AddScore(count);
+                        _gameProcessManager.AddScore(count * 10);
                         _objScreenText.SetText("Stage Bonus! +" + count * 10);
                     }
 
@@ -473,33 +447,30 @@ namespace SSTraveler.Game
             {
                 int count = 1; //隣接サイコロ数
 
-                //カウントしたダイスのリストを初期化
+                // カウントしたダイスのリストを初期化
                 _vanishingDices.Clear();
-                _vanishingDices.Add(_diceContainer.GetInstanceAt(Board[x, z]).gameObject);
+                _vanishingDices.Add(_board[x, z].Dice);
 
-                //隣接する同じ目のダイス数の計算
+                // 隣接する同じ目のダイス数の計算
                 count = CountDice(x, z, count);
 
-                //消す処理
-                if (count >= BoardNum[x, z]) //隣接するさいころの数がそのさいころの目以上だったら
+                // 消す処理 : 隣接するさいころの数がそのさいころの目以上だったら
+                if (count >= _board[x, z].DiceNum)
                 {
-                    _vanishingDices.Add(_diceContainer.GetInstanceAt(Board[x, z]).gameObject);
-
-                    DiceController temp;
+                    _vanishingDices.Add(_board[x, z].Dice);
                     for (int j = 0; j < count; j++)
                     {
-                        temp = _vanishingDices[j].GetComponent<DiceController>();
-                        temp.IsVanishing = true;
+                        _vanishingDices[j].IsVanishing = true;
                     }
 
-                    _gameProcessManager.AddScore(count * BoardNum[x, z]);
-                    _objStatusText.SetText("+" + count * BoardNum[x, z]);
+                    _gameProcessManager.AddScore(count * _board[x, z].DiceNum);
+                    _objStatusText.SetText("+" + count * _board[x, z].DiceNum);
 
-                    //ステージボーナス
-                    if (BoardNum[x, z] == _gameProcessManager.Stage + 1)
+                    // ステージボーナス
+                    if (_board[x, z].DiceNum == _gameProcessManager.Stage + 1)
                     {
-                        _gameProcessManager.AddScore(BoardNum[x, z] * count);
-                        _objScreenText.SetText("Stage Bonus! +" + BoardNum[x, z] * count);
+                        _gameProcessManager.AddScore(_board[x, z].DiceNum * count);
+                        _objScreenText.SetText("Stage Bonus! +" + _board[x, z].DiceNum * count);
                     }
                     _soundVanish.PlayOneShot(_soundVanish.clip);
                 }
@@ -530,6 +501,13 @@ namespace SSTraveler.Game
 
         }
 
+        /// <summary>
+        /// 隣接する同じ目のさいころの計算
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="z"></param>
+        /// <param name="cnt"></param>
+        /// <returns></returns>
         private int CountDice(int x, int z, int cnt)
         {
             bool flag = false; //脱出用
@@ -537,37 +515,38 @@ namespace SSTraveler.Game
             while (flag == false)
             {
                 flag = true;
-                if (x < BoardSize - 1 && BoardNum[x + 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer.GetInstanceAt(Board[x + 1, z]).gameObject))
+                int searchingDiceNum = _board[x, z].DiceNum;
+                if (x < _board.Size - 1 && _board[x + 1, z].DiceNum == searchingDiceNum && !_vanishingDices.Contains(_board[x + 1, z].Dice))
                 {
                     cnt++;
-                    _vanishingDices.Add(_diceContainer[Board[x + 1, z]].gameObject);
+                    _vanishingDices.Add(_board[x + 1, z].Dice);
 
                     flag = false;
                     cnt = CountDice(x + 1, z, cnt);
                 }
 
-                if (x > 0 && BoardNum[x - 1, z] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer[Board[x - 1, z]].gameObject))
+                if (x > 0 && _board[x - 1, z].DiceNum == searchingDiceNum && !_vanishingDices.Contains(_board[x - 1, z].Dice))
                 {
                     cnt++;
-                    _vanishingDices.Add(_diceContainer[Board[x - 1, z]].gameObject);
+                    _vanishingDices.Add(_board[x - 1, z].Dice);
 
                     flag = false;
                     cnt = CountDice(x - 1, z, cnt);
                 }
 
-                if (z < BoardSize - 1 && BoardNum[x, z + 1] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer[Board[x, z + 1]].gameObject))
+                if (z < _board.Size - 1 && _board[x, z + 1].DiceNum == searchingDiceNum && !_vanishingDices.Contains(_board[x, z + 1].Dice))
                 {
                     cnt++;
-                    _vanishingDices.Add(_diceContainer[Board[x, z + 1]].gameObject);
+                    _vanishingDices.Add(_board[x, z + 1].Dice);
 
                     flag = false;
                     cnt = CountDice(x, z + 1, cnt);
                 }
 
-                if (z > 0 && BoardNum[x, z - 1] == BoardNum[x, z] && !_vanishingDices.Contains(_diceContainer[Board[x, z - 1]].gameObject))
+                if (z > 0 && _board[x, z - 1].DiceNum == searchingDiceNum && !_vanishingDices.Contains(_board[x, z - 1].Dice))
                 {
                     cnt++;
-                    _vanishingDices.Add(_diceContainer[Board[x, z - 1]].gameObject);
+                    _vanishingDices.Add(_board[x, z - 1].Dice);
 
                     flag = false;
                     cnt = CountDice(x, z - 1, cnt);
@@ -587,18 +566,10 @@ namespace SSTraveler.Game
                 _diceContainer.ReturnInstance(clone.GetComponent<DiceController>());
             }
 
-            for (int i = 0; i < BoardSize; i++)
-            {
-                for (int j = 0; j < BoardSize; j++)
-                {
-                    Board[i, j] = -1;
-                    BoardNum[i, j] = -1;
-                }
-            }
-
+            _board.Reset();
             _gameProcessManager.ResetScore();
             IsRotateDice = false;
-            IsRotateCharactor = false;
+            IsRotateCharacter = false;
             _isGameovered = false;
         }
     }

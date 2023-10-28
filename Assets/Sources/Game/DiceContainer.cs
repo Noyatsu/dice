@@ -42,6 +42,7 @@ namespace SSTraveler.Game
             {
                 var obj = _container.InstantiatePrefab(_dicePrefab, transform);
                 obj.SetActive(false);
+                obj.name = $"Dice_{i}";
                 var dice = obj.GetComponent<DiceController>();
                 dice.DiceId = i;
                 _diceQueue.Enqueue(dice);

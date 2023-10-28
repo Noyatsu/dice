@@ -61,11 +61,13 @@ namespace SSTraveler.Game
         private string _strStage = ""; //1-1みたいな
         
         private IDiceContainer _diceContainer;
+        private IBoard _board;
         
         [Inject]
-        public void Construct(IDiceContainer diceContainer)
+        public void Construct(IDiceContainer diceContainer, IBoard board)
         {
             _diceContainer = diceContainer;
+            _board = board;
         }
         
 
@@ -163,7 +165,7 @@ namespace SSTraveler.Game
             {
                 for (int j = 0; j < 7; j++)
                 {
-                    str += _objMgController.Board[i, j].ToString() + ",";
+                    str += _board[i, j].DiceNum + ",";
                 }
 
                 str += "\n";

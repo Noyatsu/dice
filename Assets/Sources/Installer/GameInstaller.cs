@@ -8,6 +8,7 @@ namespace SSTraveler.Installer
         public override void InstallBindings()
         {
             Container.Bind<IGameProcessManager>().To<GameProcessManager>().AsSingle();
+            Container.Bind<IBoard>().To<Board>().AsSingle();
         }
     }
 }
