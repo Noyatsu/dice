@@ -5,29 +5,21 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
-public class InitController : MonoBehaviour
+namespace SSTraveler.Game
 {
-    [FormerlySerializedAs("gobjTextbox")] [SerializeField]
-    private GameObject _gobjTextbox;
-    // Start is called before the first frame update
-    private void Start()
+    public class InitController : MonoBehaviour
     {
-        
-    }
+        [FormerlySerializedAs("gobjTextbox")] [SerializeField]
+        private GameObject _gobjTextbox;
 
-    // Update is called once per frame
-    private void Update()
-    {
-        
-    }
-
-    public void SetUsername()
-    {
-        if (_gobjTextbox.GetComponent<InputField>().text != "")
+        public void SetUsername()
         {
-            PlayerPrefs.SetString("userName", _gobjTextbox.GetComponent<InputField>().text);
-            Debug.Log("Player情報を格納しました！");
-            SceneManager.LoadScene("Tutorial");
+            if (_gobjTextbox.GetComponent<InputField>().text != "")
+            {
+                PlayerPrefs.SetString("userName", _gobjTextbox.GetComponent<InputField>().text);
+                Debug.Log("Player情報を格納しました！");
+                SceneManager.LoadScene("Tutorial");
+            }
         }
     }
 }

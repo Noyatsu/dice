@@ -2,46 +2,51 @@
 using System.Collections;
 using UnityEngine.Serialization;
 
-public class PauseController : MonoBehaviour
+namespace SSTraveler.Game
 {
-    //　ポーズUIのインスタンス
-    [FormerlySerializedAs("pauseUIInstance")] [SerializeField] private GameObject _pauseUIInstance;
-    private bool _isPause = false;
-
-    private void Start()
+    public class PauseController : MonoBehaviour
     {
-        _pauseUIInstance.SetActive(_isPause);
-    }
+        //　ポーズUIのインスタンス
+        [FormerlySerializedAs("pauseUIInstance")] [SerializeField]
+        private GameObject _pauseUIInstance;
 
-    // Update is called once per frame
-    private void Update()
-    {
-        if (Input.GetKeyDown("q"))
+        private bool _isPause = false;
+
+        private void Start()
         {
-            Pause();
+            _pauseUIInstance.SetActive(_isPause);
         }
-    }
 
-    public void Pause()
-    {
-        if (!_isPause)
+        // Update is called once per frame
+        private void Update()
         {
-            _pauseUIInstance.SetActive(true);
-            _isPause = true;
-            Time.timeScale = 0f;
-
+            if (Input.GetKeyDown("q"))
+            {
+                Pause();
+            }
         }
-        else
+
+        public void Pause()
         {
-            _pauseUIInstance.SetActive(false);
-            _isPause = false;
+            if (!_isPause)
+            {
+                _pauseUIInstance.SetActive(true);
+                _isPause = true;
+                Time.timeScale = 0f;
+
+            }
+            else
+            {
+                _pauseUIInstance.SetActive(false);
+                _isPause = false;
+                Time.timeScale = 1f;
+            }
+        }
+
+        public void ReturnTitle()
+        {
             Time.timeScale = 1f;
+            FadeManager.Instance.LoadScene("TopMenu", 0.3f);
         }
-    }
-
-    public void ReturnTitle()
-    {
-        Time.timeScale = 1f;
-        FadeManager.Instance.LoadScene("TopMenu", 0.3f);
     }
 }

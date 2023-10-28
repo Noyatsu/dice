@@ -5,67 +5,71 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
 using UnityEngine.Serialization;
 
-public class GameSystem : MonoBehaviour
+namespace SSTraveler.Game
 {
-
-    [FormerlySerializedAs("objNowLoading")] public GameObject ObjNowLoading;
-
-    private void Start()
+    public class GameSystem : MonoBehaviour
     {
-        //Advertisement.Initialize ("41f00082-510f-4b97-829f-89280c5074ad", true);
-    }
 
-    public void OnePlayerGameStart()
-    {
-        ObjNowLoading.SetActive(true);
-        FadeManager.Instance.LoadScene("1PlayerGame", 0.3f);
-    }
+        [FormerlySerializedAs("objNowLoading")]
+        public GameObject ObjNowLoading;
 
-    public void OnlineMenuStart()
-    {
-        FadeManager.Instance.LoadScene("OnlineMenu", 0.3f);
-        BgmManager.Instance.Play("online"); //BGM
-    }
-
-    public void TutorialStart()
-    {
-        ObjNowLoading.SetActive(true);
-        FadeManager.Instance.LoadScene("Tutorial", 0.3f);
-    }
-
-    public void PuzzleStart(int stage)
-    {
-        ObjNowLoading.SetActive(true);
-        FadeManager.Instance.LoadScene("stage"+stage.ToString(), 0.3f);
-        BgmManager.Instance.Play("puzzle"); //BGM
-
-    }
-
-    public void ReturnTitle()
-    {
-        GameObject board = GameObject.Find("Board");
-        Destroy(board);
-        BgmManager.Instance.Stop();
-    }
-    
-    private void HandleShowResult(ShowResult result)
-    {
-        switch (result)
+        private void Start()
         {
-            case ShowResult.Finished:
-                Debug.Log("The ad was successfully shown.");
-                FadeManager.Instance.LoadScene("TopMenu", 0.3f);
-                BgmManager.Instance.Play("opening"); //BGM
-                break;
-            case ShowResult.Skipped:
-                Debug.Log("The ad was skipped before reaching the end.");
-                FadeManager.Instance.LoadScene("TopMenu", 0.3f);
-                BgmManager.Instance.Play("opening"); //BGM
-                break;
-            case ShowResult.Failed:
-                Debug.LogError("The ad failed to be shown.");
-                break;
+            //Advertisement.Initialize ("41f00082-510f-4b97-829f-89280c5074ad", true);
         }
-    }
 
+        public void OnePlayerGameStart()
+        {
+            ObjNowLoading.SetActive(true);
+            FadeManager.Instance.LoadScene("1PlayerGame", 0.3f);
+        }
+
+        public void OnlineMenuStart()
+        {
+            FadeManager.Instance.LoadScene("OnlineMenu", 0.3f);
+            BgmManager.Instance.Play("online"); //BGM
+        }
+
+        public void TutorialStart()
+        {
+            ObjNowLoading.SetActive(true);
+            FadeManager.Instance.LoadScene("Tutorial", 0.3f);
+        }
+
+        public void PuzzleStart(int stage)
+        {
+            ObjNowLoading.SetActive(true);
+            FadeManager.Instance.LoadScene("stage" + stage.ToString(), 0.3f);
+            BgmManager.Instance.Play("puzzle"); //BGM
+
+        }
+
+        public void ReturnTitle()
+        {
+            GameObject board = GameObject.Find("Board");
+            Destroy(board);
+            BgmManager.Instance.Stop();
+        }
+
+        private void HandleShowResult(ShowResult result)
+        {
+            switch (result)
+            {
+                case ShowResult.Finished:
+                    Debug.Log("The ad was successfully shown.");
+                    FadeManager.Instance.LoadScene("TopMenu", 0.3f);
+                    BgmManager.Instance.Play("opening"); //BGM
+                    break;
+                case ShowResult.Skipped:
+                    Debug.Log("The ad was skipped before reaching the end.");
+                    FadeManager.Instance.LoadScene("TopMenu", 0.3f);
+                    BgmManager.Instance.Play("opening"); //BGM
+                    break;
+                case ShowResult.Failed:
+                    Debug.LogError("The ad failed to be shown.");
+                    break;
+            }
+        }
+
+    }
 }
