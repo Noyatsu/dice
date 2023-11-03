@@ -1,30 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using SSTraveler.Game;
+﻿using SSTraveler.Game;
+using SSTraveler.Utility.ReactiveProperty;
+using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
+using Zenject;
 
 namespace SSTraveler.Ui
 {
     public class ScreenTextController : MonoBehaviour
     {
-        private GameObject _board;
-        private MainGameController _script;
-
+        [SerializeField] private TextMeshProUGUI _screenText;
+        
         private int _lastFlame = 100;
-        [FormerlySerializedAs("text")] public Text Text;
-
-
-        // Use this for initialization
-        private void Start()
+        private IMainGameController _mainGameController;
+        
+        [Inject]
+        public void Construct(IMainGameController mainGameController)
         {
-            _board = GameObject.Find("Board");
-            _script = _board.GetComponent<MainGameController>();
-
+            _mainGameController = mainGameController;
         }
 
-        // Update is called once per frame
+        private void Start()
+        {
+            _mainGameController.ScreenText.Subscribe(SetText).AddTo(this);
+        }
+
         private void Update()
         {
             if (_lastFlame > 0)
@@ -33,14 +32,14 @@ namespace SSTraveler.Ui
             }
             else if (_lastFlame == 0)
             {
-                Text.text = "";
+                _screenText.text = "";
             }
         }
 
         public void SetText(string msg)
         {
             _lastFlame = 70;
-            Text.text = msg;
+            _screenText.text = msg;
         }
     }
 }

@@ -9,5 +9,6 @@ namespace SSTraveler.Game.Data
         public Material SkyboxMaterial;
         public Color Color1;
         public Color Color2;
+        public Color TextColor;
     }
 }

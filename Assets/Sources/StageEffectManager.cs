@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SSTraveler.Game.Data;
+using TMPro;
 using UnityEngine;
 
 namespace SSTraveler.Game
@@ -17,6 +18,7 @@ namespace SSTraveler.Game
         [Header("References")]
         [SerializeField] private Renderer _boardRenderer;
         [SerializeField] private Renderer _baseBoxRenderer;
+        [SerializeField] private List<TextMeshProUGUI> _uiTexts;
         
         private Color _targetColor1;
         private Color _targetColor2;
@@ -25,8 +27,6 @@ namespace SSTraveler.Game
 
         private void Awake()
         {
-            _targetColor1 = _settings[^1].Color1;
-            _targetColor2 = _settings[^1].Color2;
             _currentColor1 = _settings[^1].Color1;
             _currentColor2 = _settings[^1].Color2;
         }
@@ -40,6 +40,11 @@ namespace SSTraveler.Game
             _targetColor2 = nextSettings.Color2;
             RenderSettings.skybox = nextSettings.SkyboxMaterial;
             BgmManager.Instance.Play((nextStage + 1).ToString()); //BGM
+            
+            foreach (var uiText in _uiTexts)
+            {
+                uiText.color = nextSettings.TextColor;
+            }
         }
 
         private void Update()

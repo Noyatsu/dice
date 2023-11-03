@@ -797,6 +797,7 @@ namespace SSTraveler.Game
                     foreach (Material material in targetRenderer.materials)
                     {
                         material.color = color;
+                        material.SetColor("_BaseColor", color);
                     }
                 }
 

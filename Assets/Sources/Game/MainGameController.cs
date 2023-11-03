@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SSTraveler.Ui;
 using SSTraveler.Utility.ReactiveProperty;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -14,6 +13,8 @@ namespace SSTraveler.Game
         public bool IsRotateDice { get; set; }
         public bool IsRotateCharacter { get; set; }
         public bool IsStarting { get; set; } = true;
+        public ReactiveProperty<string> StatusText { get; } = new();
+        public ReactiveProperty<string> ScreenText { get; } = new();
         
         [SerializeField]
         [FormerlySerializedAs("GameType")] private int _gameType = 0; //!< ゲームタイプ(0ならエンドレス、1ならオンライン、2ならチュートリアル)
@@ -24,12 +25,10 @@ namespace SSTraveler.Game
 
         public int InitDicesNum = 20; //!< 初期のさいころの数
         
-        private GameObject _aqui, _vanishingDice, _statusText, _screenText;
+        private GameObject _aqui, _vanishingDice;
 
         private AquiController _objAquiController;
         private DiceController _currentDice;
-        private StatusTextController _objStatusText;
-        private ScreenTextController _objScreenText;
 
         private AudioSource _soundOne;
         private AudioSource _soundLevelup;
@@ -75,12 +74,7 @@ namespace SSTraveler.Game
                 _board.SetDice(0, 0, null);
                 _diceContainer.ReturnInstance(_currentDice);
             }
-
-            _statusText = GameObject.Find("StatusText");
-            _objStatusText = _statusText.GetComponent<StatusTextController>();
-            _screenText = GameObject.Find("ScreenText");
-            _objScreenText = _screenText.GetComponent<ScreenTextController>();
-
+            
             // BGM
             if (_gameType != 2)
             {
@@ -212,7 +206,7 @@ namespace SSTraveler.Game
                 }
                 else if (Input.GetKey(KeyCode.K))
                 {
-                    _gameProcessManager.AddScore(1000);
+                    _gameProcessManager.AddScore(100);
                 }
 
                 if (_objAquiController.X != _currentDice.X || _objAquiController.Z != _currentDice.Z)
@@ -271,11 +265,11 @@ namespace SSTraveler.Game
             _stageEffectManager.SetStage(nextStage);
             if (nextStage == 6)
             {
-                _objStatusText.SetText("Stage Changed! (ステージボーナスは無し!)");
+                StatusText.Value = "Stage Changed! (ステージボーナスは無し!)";
             }
             else
             {
-                _objStatusText.SetText("Stage Changed! (ステージボーナス: " + (nextStage + 1));
+                StatusText.Value = $"Stage Changed! (ステージボーナス: {nextStage + 1}";
             }
         }
 
@@ -346,7 +340,7 @@ namespace SSTraveler.Game
                 {
                     _isGameovered = true;
                     BgmManager.Instance.Stop();
-                    _objScreenText.SetText("Game Over!");
+                    ScreenText.Value = "Game Over!";
                     _objAquiController.DeathMotion();
                     return;
                 }
@@ -424,13 +418,13 @@ namespace SSTraveler.Game
                     }
 
                     _gameProcessManager.AddScore(count);
-                    _objStatusText.SetText("+" + count + " (ワンゾロバニッシュ!!)");
+                    StatusText.Value = $"+{count} (ワンゾロバニッシュ!!)";
                         
                     // ステージボーナス
                     if (_board[x, z].DiceNum == _gameProcessManager.Stage + 1)
                     {
                         _gameProcessManager.AddScore(count * 10);
-                        _objScreenText.SetText("Stage Bonus! +" + count * 10);
+                        ScreenText.Value = $"Stage Bonus! +{count * 10}";
                     }
 
                     _soundOne.PlayOneShot(_soundOne.clip);
@@ -457,13 +451,13 @@ namespace SSTraveler.Game
                     }
 
                     _gameProcessManager.AddScore(count * _board[x, z].DiceNum);
-                    _objStatusText.SetText("+" + count * _board[x, z].DiceNum);
+                    StatusText.Value = $"+{count * _board[x, z].DiceNum}";
 
                     // ステージボーナス
                     if (_board[x, z].DiceNum == _gameProcessManager.Stage + 1)
                     {
                         _gameProcessManager.AddScore(_board[x, z].DiceNum * count);
-                        _objScreenText.SetText("Stage Bonus! +" + _board[x, z].DiceNum * count);
+                        ScreenText.Value = $"Stage Bonus! +{_board[x, z].DiceNum * count}";
                     }
                     _soundVanish.PlayOneShot(_soundVanish.clip);
                 }
