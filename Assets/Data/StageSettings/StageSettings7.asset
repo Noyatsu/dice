@@ -16,3 +16,4 @@ MonoBehaviour:
   SkyboxMaterial: {fileID: 2100000, guid: 4c4f0c626fcaceb459d572a267739fdd, type: 2}
   Color1: {r: 0.9, g: 0.9900886, b: 1, a: 1}
   Color2: {r: 0.6563887, g: 0.753, b: 0.7458705, a: 1}
+  TextColor: {r: 1, g: 1, b: 1, a: 1}

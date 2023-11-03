@@ -4,7 +4,419 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4fd497d0-2423-43c3-a12c-297cec94321d" name="Changes" comment="" />
+    <list default="true" id="4fd497d0-2423-43c3-a12c-297cec94321d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SSTraveler/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SSTraveler/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBasicMultiChannelPerlinEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBasicMultiChannelPerlinEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBlendListCameraEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBlendListCameraEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBlenderSettingsEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBlenderSettingsEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBrainEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineBrainEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineClearShotEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineClearShotEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineColliderEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineColliderEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineComposerEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineComposerEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineConfinerEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineConfinerEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineExternalCameraEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineExternalCameraEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineFramingTransposerEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineFramingTransposerEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineFreeLookEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineFreeLookEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineGroupComposerEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineGroupComposerEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineHardLockToTargetEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineHardLockToTargetEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineHardLookAtEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineHardLookAtEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineMixingCameraEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineMixingCameraEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineOrbitalTransposerEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineOrbitalTransposerEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachinePOVEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachinePOVEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachinePathEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachinePathEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineScreenComposerGuides.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineScreenComposerGuides.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineSmoothPathEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineSmoothPathEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineStateDrivenCameraEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineStateDrivenCameraEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineTargetGroupEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineTargetGroupEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineTrackedDollyEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineTrackedDollyEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineTransposerEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineTransposerEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineVirtualCameraBaseEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineVirtualCameraBaseEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineVirtualCameraEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Editors/CinemachineVirtualCameraEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Menus.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Menus/CinemachineMenu.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Menus/CinemachineMenu.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/CinemachineBlendDefinitionPropertyDrawer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/CinemachineBlendDefinitionPropertyDrawer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/CinemachineTagFieldPropertyDrawer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/CinemachineTagFieldPropertyDrawer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/GetSetDrawer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/GetSetDrawer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/LensSettingsPropertyDrawer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/LensSettingsPropertyDrawer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/MinDrawer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/PropertyDrawers/MinDrawer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Resources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Resources/Cinemachine_header.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Resources/Cinemachine_header.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Resources/cm_logo_sm.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Resources/cm_logo_sm.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/BaseEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/BaseEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/EmbeddedAssetHelpers.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/EmbeddedAssetHelpers.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/SaveDuringPlay.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/SaveDuringPlay.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/ScriptableObjectUtility.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/ScriptableObjectUtility.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/SerializedPropertyHelper.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Utility/SerializedPropertyHelper.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Windows.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Windows/AboutWindow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Windows/AboutWindow.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Windows/CinemachineColliderPrefs.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Windows/CinemachineColliderPrefs.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Windows/CinemachineSettings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Editor/Windows/CinemachineSettings.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineBlendListCamera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineBlendListCamera.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineBrain.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineBrain.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineClearShot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineClearShot.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineCollider.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineCollider.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineConfiner.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineConfiner.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineDollyCart.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineDollyCart.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineExternalCamera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineExternalCamera.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineFollowZoom.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineFollowZoom.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineFreeLook.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineFreeLook.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineMixingCamera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineMixingCamera.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachinePath.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachinePath.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachinePipeline.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachinePipeline.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineSmoothPath.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineSmoothPath.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineSmoother.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineSmoother.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineStateDrivenCamera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineStateDrivenCamera.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineTargetGroup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineTargetGroup.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineVirtualCamera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Behaviours/CinemachineVirtualCamera.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineBasicMultiChannelPerlin.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineBasicMultiChannelPerlin.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineComposer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineComposer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineFramingTransposer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineFramingTransposer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineGroupComposer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineGroupComposer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineHardLockToTarget.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineHardLockToTarget.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineHardLookAt.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineHardLookAt.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineOrbitalTransposer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineOrbitalTransposer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachinePOV.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachinePOV.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineSameAsFollowObject.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineSameAsFollowObject.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineTrackedDolly.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineTrackedDolly.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineTransposer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Components/CinemachineTransposer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/AxisState.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/AxisState.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CameraState.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CameraState.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineBlend.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineBlend.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineBlenderSettings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineBlenderSettings.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineComponentBase.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineComponentBase.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineCore.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineCore.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineDebugLogger.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineDebugLogger.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineExtension.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachinePathBase.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachinePathBase.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachinePropertyAttribute.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachinePropertyAttribute.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineVirtualCameraBase.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/CinemachineVirtualCameraBase.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/GaussianFilter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/GaussianFilter.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/ICinemachineCamera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/ICinemachineCamera.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/ICinemachineComponent.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/ICinemachineComponent.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/LensSettings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/LensSettings.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/NoiseSettings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/NoiseSettings.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/Predictor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/Predictor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/ReflectionHelpers.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/ReflectionHelpers.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/SplineHelpers.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/SplineHelpers.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/UnityVectorExtensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Base/Runtime/Core/UnityVectorExtensions.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/CINEMACHINE_install.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/CINEMACHINE_install.pdf.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/CinemachineAPI.chm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/CinemachineAPI.chm.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Gizmos.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Gizmos/Cinemachine.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Gizmos/Cinemachine/cm_logo_lg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Gizmos/Cinemachine/cm_logo_lg.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/LICENSE.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/PostFX.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/PostFX/Editor.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/PostFX/Editor/Resources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/PostFX/Editor/Resources/PostProcessLayer.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/PostFX/Editor/Resources/PostProcessLayer.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_normal_extreme.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_normal_extreme.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_normal_mild.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_normal_mild.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_normal_strong.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_normal_strong.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_tele_mild.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_tele_mild.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_tele_strong.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_tele_strong.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_wideangle_mild.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_wideangle_mild.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_wideangle_strong.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Handheld_wideangle_strong.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Vibration.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Presets/Noise/Vibration.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/ReleaseNotes.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/ReleaseNotes.txt.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/CinemachineMixer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/CinemachineMixer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/CinemachineShot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/CinemachineShot.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/CinemachineTrack.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/CinemachineTrack.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/Editor.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/Editor/CinemachineShotEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cinemachine/Timeline/Editor/CinemachineShotEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings1.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings1.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings2.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings2.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings3.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings3.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings4.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings4.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings5.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings5.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings6.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings6.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings7.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Data/StageSettings/StageSettings7.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gizmos.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gizmos.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gizmos/Cinemachine.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gizmos/Cinemachine.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gizmos/Cinemachine/cm_logo_lg.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gizmos/Cinemachine/cm_logo_lg.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/BaseBox.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/BaseBox.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Board.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Board.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Dice.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Dice.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Playable.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Playable/MainCameraTimeline.playable" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Playable/MainCameraTimeline.playable.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/1PlayerGame.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/1PlayerGame.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/1PlayerGame/Global Volume Profile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/1PlayerGame/Global Volume Profile.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Data/StageEffectSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Data/StageEffectSettings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/DiceController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/DiceController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Game/IMainGameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Game/IMainGameController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/Game/MainGameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/Game/MainGameController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/StageEffectManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/StageEffectManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/UI/LevelText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/UI/LevelText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/UI/ScoreText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/UI/ScoreText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/UI/ScreenTextController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/UI/ScreenTextController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sources/UI/StatusTextController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sources/UI/StatusTextController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@damage.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@damage.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@death.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@death.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@idle.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@idle.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@jump.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@jump.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@lose.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@lose.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@run.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@run.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@walk.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Animations/FreeVoxelGirl@walk.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/AnimatorController.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/AnimatorController/DemoAnimation.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/AnimatorController/DemoAnimation.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/DemoScene.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/DemoScene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/Materials/Plane.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/DemoScene/Materials/Plane.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiBlackHairPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiBlackHairPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiRedHairPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiRedHairPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiSailorSuitBlackHairPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiSailorSuitBlackHairPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiSailorSuitPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiSailorSuitPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiSailorSuitRedHairPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/KadukiSailorSuitRedHairPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Kaduki.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Kaduki.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiBlackHair.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiBlackHair.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiRedHair.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiRedHair.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiSailorSuit.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiSailorSuit.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiSailorSuitBlackHair.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiSailorSuitBlackHair.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiSailorSuitRedHair.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/KadukiSailorSuitRedHair.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/FreeVoxelGirlBlackhair.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/FreeVoxelGirlBlackhair.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/FreeVoxelGirlRedhair.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/FreeVoxelGirlRedhair.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/Kaduki.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/Kaduki.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiBlackHair.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiBlackHair.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiRedHair.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiRedHair.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiSailorSuit.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiSailorSuit.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiSailorSuitBlackHair.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiSailorSuitBlackHair.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiSailorSuitRedHair.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/KadukiSailorSuitRedHair.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/voxkaduki02.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Materials/voxkaduki02.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/OldModels.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/OldModels/FreeVoxelGirl.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/OldModels/FreeVoxelGirl.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/OldModels/FreeVoxelGirlBlackhair.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/OldModels/FreeVoxelGirlBlackhair.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/OldModels/FreeVoxelGirlRedhair.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/OldModels/FreeVoxelGirlRedhair.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/FreeVoxelGirlBlackhair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/FreeVoxelGirlBlackhair.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/FreeVoxelGirlRedhair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/FreeVoxelGirlRedhair.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/Kaduki.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/Kaduki.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiBlackHair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiBlackHair.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiRedHair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiRedHair.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiSailorSuit.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiSailorSuit.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiSailorSuitBlackHair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiSailorSuitBlackHair.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiSailorSuitRedHair.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/KadukiSailorSuitRedHair.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/voxkaduki02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/Models/Texture/voxkaduki02.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/OldPrefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/OldPrefab/FreeVoxelGirlBlackhairPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/OldPrefab/FreeVoxelGirlBlackhairPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/OldPrefab/FreeVoxelGirlPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/OldPrefab/FreeVoxelGirlPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/OldPrefab/FreeVoxelGirlRedhairPrefab.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/OldPrefab/FreeVoxelGirlRedhairPrefab.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/ReadMe.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/VoxelGirl/ReadMe.txt.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureBlue(1.000,1.000)(0.000,0.000)(0.000,0.000,0.000),0.000,0.000.terrainlayer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureBlue(1.000,1.000)(0.000,0.000)(0.000,0.000,0.000),0.000,0.000.terrainlayer.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureBluecc0f254a2c535401.terrainlayer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureBluecc0f254a2c535401.terrainlayer.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureRed(1.000,1.000)(0.000,0.000)(0.000,0.000,0.000),0.000,0.000.terrainlayer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureRed(1.000,1.000)(0.000,0.000)(0.000,0.000,0.000),0.000,0.000.terrainlayer.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureRedcc0f254a2c535401.terrainlayer" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_TerrainAutoUpgrade/layer_UnitTextureRedcc0f254a2c535401.terrainlayer.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/dice.blend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/dice.blend.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/dice.blend1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/dice.blend1.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/dice1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/dice1.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Prefabs/BgmManager.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Prefabs/BgmManager.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Sample.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Sample/Sample.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Sample/Sample.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Scripts/BgmManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/BgmManager/Scripts/BgmManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Prefabs/FadeManager.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Prefabs/FadeManager.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Sample.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Sample/FadeSample.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Sample/FadeSample.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Sample/SampleScene.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Sample/SampleScene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Scripts/FadeManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/naichilab/FadeManager/Scripts/FadeManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/CurrentMaximizeLayout.dwlt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/Layouts/default-2022.dwlt" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/Layouts/default-2022.dwlt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,43 +425,50 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Sources/UI/MainMenuController.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2WhF4OZEpoOhSFR0HkQ4KYDjGHS" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="autoscrollToSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\nagatsushun\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
-      "C:\\Users\\nagatsushun\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
-      "C:\\Users\\nagatsushun\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\nagatsushun\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\nagatsushun\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\nagatsushun\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2019.4.40f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.12f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath C:\Users\nagatsushun\Documents\_Projects\_Personal\SSTraveler -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\nagatsushun\Documents\_Projects\_Personal\SSTraveler" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -57,7 +476,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2019.4.40f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.12f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\Users\nagatsushun\Documents\_Projects\_Personal\SSTraveler -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\nagatsushun\Documents\_Projects\_Personal\SSTraveler" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -94,6 +513,8 @@
       <option name="presentableId" value="Default" />
       <updated>1697176712803</updated>
       <workItem from="1697176714326" duration="952000" />
+      <workItem from="1698471497517" duration="28321000" />
+      <workItem from="1699021973047" duration="5567000" />
     </task>
     <servers />
   </component>
